@@ -1,11 +1,15 @@
 # Mobile Sports
 Project and assignments for the university course "Mobile Sports"
 
+**Team:** Eva Jobst, Stefan Schwaighofer
+
+**Possible Project:** Extending the existing application in order to gain specific data that is useful for mountain climbers.
+
 ### Assignment 1
 - 9th November 2017
 
 ##### Mobile Platform
-- Language: Android
+- Language: Java (Android)
 - IDE: Android Studio
 
 ##### Mockup
@@ -14,7 +18,7 @@ Project and assignments for the university course "Mobile Sports"
 - Extensions are possible through the Hamburger-Menu and the Overflow-Section
 
 ##### Use-Case-Analysis
-
+\# TODO
 
 ##### Effort Estimation
 | Task            | Estimated     | Actual |

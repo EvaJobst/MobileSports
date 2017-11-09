@@ -19,7 +19,26 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/startRecordingButton"
+        android:text="start recording"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/stopRecordingButton"
+        android:text="stop recording"
+        app:layout_constraintTop_toBottomOf="@+id/startRecordingButton"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/saveSensorDataButton"
-        android:text="save sensor data"/>
+        android:text="save sensor data"
+        app:layout_constraintTop_toBottomOf="@+id/stopRecordingButton"/>
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lineChart"/>
 
 </android.support.constraint.ConstraintLayout>

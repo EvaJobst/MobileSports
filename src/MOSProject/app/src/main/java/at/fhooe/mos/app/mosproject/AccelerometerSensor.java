@@ -36,4 +36,8 @@ public class AccelerometerSensor implements SensorEventListener {
     public ArrayList<float[]> getRecordedSensorData(){
         return accelerometerSensorEvents;
     }
+
+    public void clearRecordedData(){
+        accelerometerSensorEvents.clear();
+    }
 }

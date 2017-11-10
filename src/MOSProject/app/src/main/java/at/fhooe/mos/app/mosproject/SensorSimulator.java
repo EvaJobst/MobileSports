@@ -1,0 +1,69 @@
+package at.fhooe.mos.app.mosproject;
+
+import android.hardware.Sensor;
+import android.hardware.SensorEventListener;
+import android.os.Handler;
+
+import java.util.ArrayList;
+
+/**
+ * Created by stefan on 10.11.2017.
+ */
+
+public class SensorSimulator {
+    private ArrayList<SimulatedSensorEventListener> sensorEventListeners = new ArrayList<>();
+
+    private int nextSensorEventIndex = 0;
+    private int maxSensorEventIndex = 0;
+    private boolean isRunning = false;
+    private ArrayList<SensorEventData> sensorEvents = new ArrayList<>();
+
+    Handler handler = new Handler();
+
+    public void registerListener(SimulatedSensorEventListener listener)
+    {
+        sensorEventListeners.add(listener);
+    }
+
+    public void setSensorEvents(ArrayList<SensorEventData> sensorEvents)
+    {
+        this.sensorEvents = sensorEvents;
+    }
+
+    public void start()
+    {
+        isRunning = true;
+        nextSensorEventIndex = 0;
+        maxSensorEventIndex = sensorEvents.size() - 1;
+        runNextSimulationStep();
+    }
+
+    public void stop()
+    {
+        isRunning = false;
+    }
+
+    private void runNextSimulationStep()
+    {
+        if(isRunning && nextSensorEventIndex < maxSensorEventIndex)
+        {
+            SensorEventData sensorEventData = sensorEvents.get(nextSensorEventIndex);
+            for (SimulatedSensorEventListener listener : sensorEventListeners) {
+                listener.onSensorChanged(sensorEventData);
+            }
+
+            long timeBetweenEvents = sensorEvents.get(nextSensorEventIndex+1).getTimestamp() - sensorEventData.getTimestamp();
+
+            timeBetweenEvents = timeBetweenEvents / 1000000L;
+
+            nextSensorEventIndex++;
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    runNextSimulationStep();
+                }
+            }, timeBetweenEvents);
+        }
+    }
+}

@@ -13,28 +13,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements StepEventListener {
 
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
-    private AccelerometerSensor accelerometerSensor;
+    private SensorRecorder sensorRecorder;
+    private StepCounter stepCounter;
+    private SensorSimulator sensorSimulator;
 
+    private TextView infoTextView;
+
+    ArrayList<SensorEventData> recordedSensorData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,33 +41,43 @@ public class MainActivity extends AppCompatActivity {
 
         final Context thisContext = this;
 
-        accelerometerSensor = new AccelerometerSensor();
+        sensorRecorder = new SensorRecorder();
+        stepCounter = new StepCounter();
+
+        stepCounter.registerListener(this);
 
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        final LineChart lineChart = (LineChart) findViewById(R.id.lineChart);
+        senSensorManager.registerListener(sensorRecorder, senAccelerometer , SensorManager.SENSOR_DELAY_FASTEST);
 
-        final TextView infoTextView = (TextView) findViewById(R.id.infoTextView);
+        final LineChart lineChart = findViewById(R.id.lineChart);
 
-        final Button startRecordingButton = (Button) findViewById(R.id.startRecordingButton);
-        final Button stopRecordingButton = (Button) findViewById(R.id.stopRecordingButton);
-        final Button saveSensorDataButton = (Button) findViewById(R.id.saveSensorDataButton);
+        infoTextView = findViewById(R.id.infoTextView);
+
+        final Button startRecordingButton = findViewById(R.id.startRecordingButton);
+        final Button stopRecordingButton = findViewById(R.id.stopRecordingButton);
+        final Button saveSensorDataButton = findViewById(R.id.saveSensorDataButton);
+        final Button startSensorSimulator = findViewById(R.id.startSensorSimulator);
+
+        sensorSimulator = new SensorSimulator();
+        sensorSimulator.registerListener(stepCounter);
+        recordedSensorData = loadData();
 
         startRecordingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                accelerometerSensor.clearRecordedData();
-                senSensorManager.registerListener(accelerometerSensor, senAccelerometer , SensorManager.SENSOR_DELAY_FASTEST);
+                sensorRecorder.clearRecordedData();
+                sensorRecorder.startRecording();
             }
         });
 
         stopRecordingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                senSensorManager.unregisterListener(accelerometerSensor);
+                sensorRecorder.stopRecording();
 
-                ArrayList<float[]> recordedSensorData = accelerometerSensor.getRecordedSensorData();
+                recordedSensorData = sensorRecorder.getRecordedData();
 
                 drawChart(lineChart, recordedSensorData);
 
@@ -80,16 +88,30 @@ public class MainActivity extends AppCompatActivity {
         saveSensorDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList<float[]> recordedSensorData = accelerometerSensor.getRecordedSensorData();
-
                 saveData(recordedSensorData);
 
                 Toast.makeText(thisContext, "saved " + recordedSensorData.size() + " sensor events", Toast.LENGTH_SHORT).show();
             }
         });
 
+        startSensorSimulator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sensorSimulator.stop();
 
-        ArrayList<float[]> sensorData = loadData();
+                if(recordedSensorData != null)
+                {
+                    sensorSimulator.setSensorEvents(recordedSensorData);
+
+                    sensorSimulator.start();
+
+                    drawChart(lineChart, recordedSensorData);
+                }
+            }
+        });
+
+
+
 
         //filter
         /*
@@ -107,10 +129,10 @@ public class MainActivity extends AppCompatActivity {
             sensorData.set(i, filteredValues);
         }*/
 
-        drawChart(lineChart, sensorData);
+
     }
 
-    private void drawChart(LineChart lineChart, ArrayList<float[]> sensorData){
+    private void drawChart(LineChart lineChart, ArrayList<SensorEventData> sensorData){
 
         ArrayList<String> labels = new ArrayList<String>();
 
@@ -119,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         for(int x = 0;x<3;x++) {
             ArrayList<Entry> entries = new ArrayList<>();
             for(int i=0;i<sensorData.size();i++){
-                entries.add(new Entry(sensorData.get(i)[x], i));
+                entries.add(new Entry(sensorData.get(i).getValues()[x], i));
                 if(x==0)
                     labels.add("" + i);
             }
@@ -145,23 +167,24 @@ public class MainActivity extends AppCompatActivity {
         //lineChart.animateY(5000);
     }
 
-    private ArrayList<float[]> loadData(){
+    private ArrayList<SensorEventData> loadData(){
         SharedPreferences prefs = getSharedPreferences("accelerometerData", Context.MODE_PRIVATE);
 
-        Type listType = new TypeToken<ArrayList<float[]>>(){}.getType();
+        Type listType = new TypeToken<ArrayList<SensorEventData>>(){}.getType();
 
-        String jsonString = prefs.getString("data", "[]");
-        ArrayList<float[]> data = new Gson().fromJson(jsonString, listType);
+        String jsonString = prefs.getString("data2", "[]");
+        ArrayList<SensorEventData> data = new Gson().fromJson(jsonString, listType);
 
         return data;
+
     }
 
-    private void saveData(ArrayList<float[]> recordedSensorData){
+    private void saveData(ArrayList<SensorEventData> recordedSensorData){
         SharedPreferences prefs = getSharedPreferences("accelerometerData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
         String jsonString = new Gson().toJson(recordedSensorData);
-        editor.putString("data", jsonString);
+        editor.putString("data2", jsonString);
 
         editor.commit();
 
@@ -187,11 +210,16 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onPause() {
         super.onPause();
-        senSensorManager.unregisterListener(accelerometerSensor);
+        senSensorManager.unregisterListener(sensorRecorder);
     }
 
     protected void onResume() {
         super.onResume();
-        senSensorManager.registerListener(accelerometerSensor, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        senSensorManager.registerListener(sensorRecorder, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    public void onStepEvent() {
+        infoTextView.setText("steps: " + stepCounter.getTotalStepCount());
     }
 }

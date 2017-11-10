@@ -5,10 +5,10 @@ package at.fhooe.mos.app.mosproject;
  */
 
 public class SensorEventData {
-    private final int type;
-    private final int accuracy;
-    private final long timestamp;
-    private final float[] values;
+    public int type;  //TODO
+    public int accuracy;
+    public long timestamp;
+    public float[] values;
 
     public SensorEventData(int type, int accuracy, long timestamp, float[] values) {
         this.type = type;

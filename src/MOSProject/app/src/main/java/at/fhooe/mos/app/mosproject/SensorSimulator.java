@@ -5,6 +5,7 @@ import android.hardware.SensorEventListener;
 import android.os.Handler;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by stefan on 10.11.2017.
@@ -16,7 +17,7 @@ public class SensorSimulator {
     private int nextSensorEventIndex = 0;
     private int maxSensorEventIndex = 0;
     private boolean isRunning = false;
-    private ArrayList<SensorEventData> sensorEvents = new ArrayList<>();
+    private List<SensorEventData> sensorEvents = new ArrayList<>();
 
     Handler handler = new Handler();
 
@@ -25,7 +26,7 @@ public class SensorSimulator {
         sensorEventListeners.add(listener);
     }
 
-    public void setSensorEvents(ArrayList<SensorEventData> sensorEvents)
+    public void setSensorEvents(List<SensorEventData> sensorEvents)
     {
         this.sensorEvents = sensorEvents;
     }

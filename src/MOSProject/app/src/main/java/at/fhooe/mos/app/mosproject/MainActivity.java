@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements StepEventListener
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
     private SensorRecorder sensorRecorder;
-    private StepCounter stepCounter;
+    private StepDetector stepCounter;
     private SensorSimulator sensorSimulator;
 
     private TextView infoTextView;
@@ -71,12 +71,12 @@ int index = 0;
         lineData.addDataSet(lds3);
 
         sensorRecorder = new SensorRecorder();
-        stepCounter = new StepCounter();
+        stepCounter = new StepDetector();
 
         stepCounter.registerListener(this);
 
 
-        stepCounter.registerDebugListener(new StepCounter.DebugEventListener() {
+        stepCounter.registerDebugListener(new StepDetector.DebugEventListener() {
             @Override
             public void onDebugEvent(float[] data) {
 

@@ -5,13 +5,12 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 
 import java.util.ArrayList;
-import java.util.function.Function;
 
 /**
  * Created by stefan on 10.11.2017.
  */
 
-public class StepCounter implements SensorEventListener, SimulatedSensorEventListener {
+public class StepDetector implements SensorEventListener, SimulatedSensorEventListener {
 
     private ArrayList<StepEventListener> stepEventListeners = new ArrayList<>();
 
@@ -19,15 +18,20 @@ public class StepCounter implements SensorEventListener, SimulatedSensorEventLis
 
     private int totalStepCount = 0;
 
-    private float[][] filterBuffer = new float[][]{{0,0,0,0}, {0,0,0,0}, {0,0,0,0}};
+    private AverageFilter[] averageFilters = new AverageFilter[]
+            {
+                    new AverageFilter(4),
+                    new AverageFilter(4),
+                    new AverageFilter(4)
+            };
 
     @Override   //from SensorEventListener
     public void onSensorChanged(SensorEvent sensorEvent) {
 
-        if(sensorEvent.sensor.getType() != Sensor.TYPE_ACCELEROMETER)
+        if (sensorEvent.sensor.getType() != Sensor.TYPE_ACCELEROMETER)
             return;
 
-        if(sensorEvent.values.length != 3)
+        if (sensorEvent.values.length != 3)
             return;
 
         processNewSensorValues(sensorEvent.values);
@@ -40,43 +44,29 @@ public class StepCounter implements SensorEventListener, SimulatedSensorEventLis
 
     @Override   //from SimulatedSensorEventListener
     public void onSensorChanged(SensorEventData sensorEventData) {
-        if(sensorEventData.getType() != Sensor.TYPE_ACCELEROMETER)
+        if (sensorEventData.getType() != Sensor.TYPE_ACCELEROMETER)
             return;
 
-        if(sensorEventData.getValues().length != 3)
+        if (sensorEventData.getValues().length != 3)
             return;
 
         processNewSensorValues(sensorEventData.getValues());
     }
 
-    private float[] filter(float[] values)
-    {
+    private float[] filter(float[] values) {
         float[] filteredVales = new float[values.length];
 
-        for(int x = 0; x < filterBuffer.length ; x++)
-        {
-            float sum = 0;
-            for (int i = 0; i < filterBuffer[x].length - 1; i++) {
-                filterBuffer[x][i] = filterBuffer[x][i + 1];
-
-                sum += filterBuffer[x][i];
-            }
-
-            sum += values[x];
-
-            filterBuffer[x][filterBuffer[x].length - 1] = values[x];
-
-            filteredVales[x] = sum / filterBuffer[x].length;
+        for (int i = 0; i < averageFilters.length; i++) {
+            filteredVales[i] = averageFilters[i].filter(values[i]);
         }
 
         return filteredVales;
     }
 
-    private void processNewSensorValues(float[] values)
-    {
+    private void processNewSensorValues(float[] values) {
         float[] filteredValues = filter(values);
 
-        if(debugListener != null)
+        if (debugListener != null)
             debugListener.onDebugEvent(filteredValues);
 
         totalStepCount++;
@@ -84,26 +74,25 @@ public class StepCounter implements SensorEventListener, SimulatedSensorEventLis
         notifyListeners();
     }
 
-    private void notifyListeners(){
+    private void notifyListeners() {
         for (StepEventListener listener : stepEventListeners) {
             listener.onStepEvent();
         }
     }
 
-    public void registerListener(StepEventListener listener)
-    {
+    public void registerListener(StepEventListener listener) {
         stepEventListeners.add(listener);
     }
 
-    public void registerDebugListener(DebugEventListener debugListener){
+    public void registerDebugListener(DebugEventListener debugListener) {
         this.debugListener = debugListener;
     }
 
-    public int getTotalStepCount(){
+    public int getTotalStepCount() {
         return totalStepCount;
     }
 
-    public interface DebugEventListener{
+    public interface DebugEventListener {
         void onDebugEvent(float[] data);
     }
 }

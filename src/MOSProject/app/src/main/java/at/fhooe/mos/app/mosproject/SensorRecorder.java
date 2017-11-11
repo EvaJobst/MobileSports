@@ -16,8 +16,6 @@ public class SensorRecorder implements SensorEventListener {
 
     private boolean isRecording = false;
 
-    StepDetector.DebugEventListener debugListener;
-
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
 
@@ -28,18 +26,11 @@ public class SensorRecorder implements SensorEventListener {
         if(isRecording){
             recordedSensorEvents.add(eventData);
         }
-
-        if(debugListener != null)
-            debugListener.onDebugEvent(sensorEvent.values);
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
 
-    }
-
-    public void registerDebugListener(StepDetector.DebugEventListener debugListener) {
-        this.debugListener = debugListener;
     }
 
     public void startRecording()

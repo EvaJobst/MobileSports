@@ -14,8 +14,6 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
 
     private ArrayList<StepEventListener> stepEventListeners = new ArrayList<>();
 
-    DebugEventListener debugListener;
-
     private int totalStepCount = 0;
 
     private AverageFilter[] averageFilters = new AverageFilter[]
@@ -61,9 +59,6 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
             filteredValues[i] = averageFilters[i].filter(values[i]);
         }
 
-        if (debugListener != null)
-            debugListener.onDebugEvent(filteredValues);
-
         totalStepCount++;
 
         notifyListeners();
@@ -79,15 +74,7 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
         stepEventListeners.add(listener);
     }
 
-    public void registerDebugListener(DebugEventListener debugListener) {
-        this.debugListener = debugListener;
-    }
-
     public int getTotalStepCount() {
         return totalStepCount;
-    }
-
-    public interface DebugEventListener {
-        void onDebugEvent(float[] data);
     }
 }

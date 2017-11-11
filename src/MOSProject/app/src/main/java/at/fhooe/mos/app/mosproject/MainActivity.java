@@ -16,6 +16,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -45,10 +46,16 @@ int index = 0;
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        // SENSOR_DELAY_UI: 60,000 microsecond delay
-        // SENSOR_DELAY_GAME: 20,000 microsecond delay => 50 vales per second
-        // SENSOR_DELAY_FASTEST: 0 microsecond delay
-        senSensorManager.registerListener(sensorRecorder, senAccelerometer , SensorManager.SENSOR_DELAY_GAME);
+        sensorRecorder = new SensorRecorder();
+
+        stepDetector = new StepDetector();
+
+        stepDetector.registerListener(this);
+
+        sensorSimulator = new SensorSimulator();
+        sensorSimulator.registerListener(stepDetector);
+
+        recordedSensorData = loadData();
 
         final LineChart lineChart = findViewById(R.id.lineChart);
 
@@ -58,75 +65,6 @@ int index = 0;
         final Button stopRecordingButton = findViewById(R.id.stopRecordingButton);
         final Button saveSensorDataButton = findViewById(R.id.saveSensorDataButton);
         final Button startSensorSimulator = findViewById(R.id.startSensorSimulator);
-
-        lineChart.setData(new LineData(new String[]{}));
-
-        LineData lineData = lineChart.getData();
-        LineDataSet lds1 = new LineDataSet(new ArrayList<Entry>(), "x=" + 1);
-        lds1.setColor(Color.rgb(255,0,0));
-        LineDataSet lds2 = new LineDataSet(new ArrayList<Entry>(), "x=" + 2);
-        lds2.setColor(Color.rgb(0,255,0));
-        LineDataSet lds3 = new LineDataSet(new ArrayList<Entry>(), "x=" + 3);
-        lds3.setColor(Color.rgb(0,0,255));
-
-        lineData.addDataSet(lds1);
-        lineData.addDataSet(lds2);
-        lineData.addDataSet(lds3);
-
-        StepDetector.DebugEventListener debugEventListener = new StepDetector.DebugEventListener() {
-            @Override
-            public void onDebugEvent(float[] data) {
-
-                LineData lineData = lineChart.getData();
-
-                if (lineData != null) {
-
-                    // get the dataset where you want to add the entry
-                    LineDataSet set1 = lineData.getDataSetByIndex(0);
-                    LineDataSet set2 = lineData.getDataSetByIndex(1);
-                    LineDataSet set3 = lineData.getDataSetByIndex(2);
-
-                    if(set1.getEntryCount() > 200)
-                    {
-                        set1.removeEntry(0);
-                        set2.removeEntry(0);
-                        set3.removeEntry(0);
-                    }
-
-                    set1.addEntry(new Entry(data[0], index));
-                    set2.addEntry(new Entry(data[1], index));
-                    set3.addEntry(new Entry(data[2], index));
-                    set1.notifyDataSetChanged();
-                    set2.notifyDataSetChanged();
-                    set3.notifyDataSetChanged();
-                    // add a new x-value first
-                    lineData.getXVals().add("" + index);
-                    //lineData.addEntry(new Entry(data[0], index++), 0);
-                    lineData.notifyDataChanged();
-                    // let the chart know it's data has changed
-                    lineChart.notifyDataSetChanged();
-                    lineChart.invalidate();
-                    index++;
-                }
-
-            }
-        };
-
-        sensorRecorder = new SensorRecorder();
-
-        //sensorRecorder.registerDebugListener(debugEventListener);
-
-        stepDetector = new StepDetector();
-
-        stepDetector.registerListener(this);
-
-        stepDetector.registerDebugListener(debugEventListener);
-
-
-
-        sensorSimulator = new SensorSimulator();
-        sensorSimulator.registerListener(stepDetector);
-        recordedSensorData = loadData();
 
         startRecordingButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,51 +103,27 @@ int index = 0;
 
                 if(recordedSensorData != null)
                 {
-                    //filter
-/*
-                    for(int i=3;i<recordedSensorData.size();i++){
-                        SensorEventData tmpSensorEven = recordedSensorData.get(i);
-
-                        float[] sumValues = new float[3];
-                        sumValues[0] = tmpSensorEven.getValues()[0] + recordedSensorData.get(i - 1).getValues()[0] + recordedSensorData.get(i - 2).getValues()[0] + recordedSensorData.get(i - 3).getValues()[0];
-                        sumValues[1] = tmpSensorEven.getValues()[1] + recordedSensorData.get(i - 1).getValues()[1] + recordedSensorData.get(i - 2).getValues()[1] + recordedSensorData.get(i - 3).getValues()[1];
-                        sumValues[2] = tmpSensorEven.getValues()[2] + recordedSensorData.get(i - 1).getValues()[2] + recordedSensorData.get(i - 2).getValues()[2] + recordedSensorData.get(i - 3).getValues()[2];
-
-                        float[] filteredValues = new float[3];
-                        filteredValues[0] = sumValues[0]/4;
-                        filteredValues[1] = sumValues[1]/4;
-                        filteredValues[2] = sumValues[2]/4;
-
-                        tmpSensorEven.values = filteredValues;
-
-                        recordedSensorData.set(i, tmpSensorEven);
-                    }
-*/
                     sensorSimulator.setSensorEvents(recordedSensorData/*.subList(recordedSensorData.size()/5,recordedSensorData.size()/5+recordedSensorData.size()/5)*/);
 
                     sensorSimulator.start();
 
-                    //drawChart(lineChart, recordedSensorData.subList(recordedSensorData.size()/5,recordedSensorData.size()/5+recordedSensorData.size()/5));
+                    drawChart(lineChart, recordedSensorData/*.subList(recordedSensorData.size()/5,recordedSensorData.size()/5+recordedSensorData.size()/5)*/);
                 }
             }
         });
-
-
     }
 
 
     private void drawChart(LineChart lineChart, List<SensorEventData> sensorData){
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
 
-        ArrayList<String> labels = new ArrayList<String>();
+        if(sensorData.size() == 0)
+            return;
 
-        ArrayList<LineDataSet> dataSets = new ArrayList<>();
-
-        for(int x = 0;x<3;x++) {
+        for(int x = 0;x<sensorData.get(0).getValues().length;x++) {
             ArrayList<Entry> entries = new ArrayList<>();
             for(int i=0;i<sensorData.size();i++){
-                entries.add(new Entry(sensorData.get(i).getValues()[x], i));
-                if(x==0)
-                    labels.add("" + i);
+                entries.add(new Entry(i, sensorData.get(i).getValues()[x]));
             }
 
             LineDataSet dataSet = new LineDataSet(entries, "x=" + x);
@@ -220,17 +134,15 @@ int index = 0;
                 dataSet.setColor(Color.rgb(0,255,0));
             if(x==2)
                 dataSet.setColor(Color.rgb(0,0,255));
+
             dataSets.add(dataSet);
         }
 
 
-        LineData data = new LineData(labels, dataSets);
-        //dataset.setDrawCubic(true);
-        //dataset.setDrawFilled(true);
+        LineData data = new LineData(dataSets);
 
         lineChart.clear();
         lineChart.setData(data);
-        //lineChart.animateY(5000);
     }
 
     private ArrayList<SensorEventData> loadData(){
@@ -253,25 +165,6 @@ int index = 0;
         editor.putString("data2", jsonString);
 
         editor.commit();
-
-        /*
-        try {
-            FileOutputStream fos = openFileOutput("accelerometerData", Context.MODE_PRIVATE);
-            ObjectOutputStream os = new ObjectOutputStream(fos);
-            os.writeObject(recordedSensorData);
-
-            os.close();
-            fos.close();
-        }
-        catch (FileNotFoundException e)
-        {
-
-        }
-        catch (IOException e)
-        {
-
-        }
-        */
     }
 
     protected void onPause() {
@@ -281,7 +174,10 @@ int index = 0;
 
     protected void onResume() {
         super.onResume();
-        senSensorManager.registerListener(sensorRecorder, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        // SENSOR_DELAY_UI: 60,000 microsecond delay
+        // SENSOR_DELAY_GAME: 20,000 microsecond delay => 50 vales per second
+        // SENSOR_DELAY_FASTEST: 0 microsecond delay
+        senSensorManager.registerListener(sensorRecorder, senAccelerometer, SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override

@@ -53,18 +53,13 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
         processNewSensorValues(sensorEventData.getValues());
     }
 
-    private float[] filter(float[] values) {
-        float[] filteredVales = new float[values.length];
+    private void processNewSensorValues(float[] values) {
+
+        float[] filteredValues = new float[values.length];
 
         for (int i = 0; i < averageFilters.length; i++) {
-            filteredVales[i] = averageFilters[i].filter(values[i]);
+            filteredValues[i] = averageFilters[i].filter(values[i]);
         }
-
-        return filteredVales;
-    }
-
-    private void processNewSensorValues(float[] values) {
-        float[] filteredValues = filter(values);
 
         if (debugListener != null)
             debugListener.onDebugEvent(filteredValues);

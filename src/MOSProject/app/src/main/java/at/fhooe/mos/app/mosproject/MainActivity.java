@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements StepEventListener
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
     private SensorRecorder sensorRecorder;
-    private StepDetector stepCounter;
+    private StepDetector stepDetector;
     private SensorSimulator sensorSimulator;
 
     private TextView infoTextView;
@@ -45,7 +45,10 @@ int index = 0;
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        senSensorManager.registerListener(sensorRecorder, senAccelerometer , SensorManager.SENSOR_DELAY_FASTEST);
+        // SENSOR_DELAY_UI: 60,000 microsecond delay
+        // SENSOR_DELAY_GAME: 20,000 microsecond delay => 50 vales per second
+        // SENSOR_DELAY_FASTEST: 0 microsecond delay
+        senSensorManager.registerListener(sensorRecorder, senAccelerometer , SensorManager.SENSOR_DELAY_GAME);
 
         final LineChart lineChart = findViewById(R.id.lineChart);
 
@@ -70,13 +73,7 @@ int index = 0;
         lineData.addDataSet(lds2);
         lineData.addDataSet(lds3);
 
-        sensorRecorder = new SensorRecorder();
-        stepCounter = new StepDetector();
-
-        stepCounter.registerListener(this);
-
-
-        stepCounter.registerDebugListener(new StepDetector.DebugEventListener() {
+        StepDetector.DebugEventListener debugEventListener = new StepDetector.DebugEventListener() {
             @Override
             public void onDebugEvent(float[] data) {
 
@@ -88,6 +85,13 @@ int index = 0;
                     LineDataSet set1 = lineData.getDataSetByIndex(0);
                     LineDataSet set2 = lineData.getDataSetByIndex(1);
                     LineDataSet set3 = lineData.getDataSetByIndex(2);
+
+                    if(set1.getEntryCount() > 200)
+                    {
+                        set1.removeEntry(0);
+                        set2.removeEntry(0);
+                        set3.removeEntry(0);
+                    }
 
                     set1.addEntry(new Entry(data[0], index));
                     set2.addEntry(new Entry(data[1], index));
@@ -106,11 +110,22 @@ int index = 0;
                 }
 
             }
-        });
+        };
+
+        sensorRecorder = new SensorRecorder();
+
+        //sensorRecorder.registerDebugListener(debugEventListener);
+
+        stepDetector = new StepDetector();
+
+        stepDetector.registerListener(this);
+
+        stepDetector.registerDebugListener(debugEventListener);
+
 
 
         sensorSimulator = new SensorSimulator();
-        sensorSimulator.registerListener(stepCounter);
+        sensorSimulator.registerListener(stepDetector);
         recordedSensorData = loadData();
 
         startRecordingButton.setOnClickListener(new View.OnClickListener() {
@@ -170,7 +185,7 @@ int index = 0;
                         recordedSensorData.set(i, tmpSensorEven);
                     }
 */
-                    sensorSimulator.setSensorEvents(recordedSensorData.subList(recordedSensorData.size()/5,recordedSensorData.size()/5+recordedSensorData.size()/5));
+                    sensorSimulator.setSensorEvents(recordedSensorData/*.subList(recordedSensorData.size()/5,recordedSensorData.size()/5+recordedSensorData.size()/5)*/);
 
                     sensorSimulator.start();
 
@@ -271,6 +286,6 @@ int index = 0;
 
     @Override
     public void onStepEvent() {
-        infoTextView.setText("steps: " + stepCounter.getTotalStepCount());
+        infoTextView.setText("steps: " + stepDetector.getTotalStepCount());
     }
 }

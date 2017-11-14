@@ -1,5 +1,6 @@
 package at.fhooe.mos.app.mosproject;
 
+import android.database.Observable;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.os.Handler;
@@ -13,13 +14,17 @@ import java.util.List;
 
 public class SensorSimulator {
     private ArrayList<SimulatedSensorEventListener> sensorEventListeners = new ArrayList<>();
-
+    private SimulationFinishedEvent simulationFinishedEvent;
     private int nextSensorEventIndex = 0;
     private int maxSensorEventIndex = 0;
     private boolean isRunning = false;
     private List<SensorEventData> sensorEvents = new ArrayList<>();
 
     Handler handler = new Handler();
+
+    public void registerSimulationFinishedEvent(SimulationFinishedEvent simulationFinishedEvent) {
+        this.simulationFinishedEvent = simulationFinishedEvent;
+    }
 
     public void registerListener(SimulatedSensorEventListener listener)
     {
@@ -65,6 +70,10 @@ public class SensorSimulator {
                     runNextSimulationStep();
                 }
             }, timeBetweenEvents);
+        }
+        else{
+            if(simulationFinishedEvent != null)
+                simulationFinishedEvent.onSimulationFinished();
         }
     }
 }

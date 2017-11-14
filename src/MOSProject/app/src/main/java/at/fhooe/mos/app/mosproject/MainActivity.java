@@ -16,7 +16,9 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -24,7 +26,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements StepEventListener {
+public class MainActivity extends AppCompatActivity implements StepEventListener, SimulationFinishedEvent {
 
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
@@ -32,8 +34,11 @@ public class MainActivity extends AppCompatActivity implements StepEventListener
     private StepDetector stepDetector;
     private SensorSimulator sensorSimulator;
 
+    private int stepCounter = 0;
+
     private TextView infoTextView;
-int index = 0;
+    private LineChart lineChart;
+    int index = 0;
     ArrayList<SensorEventData> recordedSensorData;
 
     @Override
@@ -54,10 +59,11 @@ int index = 0;
 
         sensorSimulator = new SensorSimulator();
         sensorSimulator.registerListener(stepDetector);
+        sensorSimulator.registerSimulationFinishedEvent(this);
 
         recordedSensorData = loadData();
 
-        final LineChart lineChart = findViewById(R.id.lineChart);
+        lineChart = findViewById(R.id.lineChart);
 
         infoTextView = findViewById(R.id.infoTextView);
 
@@ -78,11 +84,8 @@ int index = 0;
             @Override
             public void onClick(View view) {
                 sensorRecorder.stopRecording();
-
                 recordedSensorData = sensorRecorder.getRecordedData();
-
                 drawChart(lineChart, recordedSensorData);
-
                 Toast.makeText(thisContext, "recorded " + recordedSensorData.size() + " sensor events", Toast.LENGTH_SHORT).show();
             }
         });
@@ -91,7 +94,6 @@ int index = 0;
             @Override
             public void onClick(View view) {
                 saveData(recordedSensorData);
-
                 Toast.makeText(thisContext, "saved " + recordedSensorData.size() + " sensor events", Toast.LENGTH_SHORT).show();
             }
         });
@@ -99,15 +101,14 @@ int index = 0;
         startSensorSimulator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                stepCounter = 0;
                 sensorSimulator.stop();
 
                 if(recordedSensorData != null)
                 {
-                    sensorSimulator.setSensorEvents(recordedSensorData/*.subList(recordedSensorData.size()/5,recordedSensorData.size()/5+recordedSensorData.size()/5)*/);
-
+                    sensorSimulator.setSensorEvents(recordedSensorData);
                     sensorSimulator.start();
-
-                    drawChart(lineChart, recordedSensorData/*.subList(recordedSensorData.size()/5,recordedSensorData.size()/5+recordedSensorData.size()/5)*/);
+                    drawChart(lineChart, recordedSensorData);
                 }
             }
         });
@@ -128,12 +129,21 @@ int index = 0;
 
             LineDataSet dataSet = new LineDataSet(entries, "x=" + x);
 
-            if(x==0)
-                dataSet.setColor(Color.rgb(255,0,0));
-            if(x==1)
-                dataSet.setColor(Color.rgb(0,255,0));
-            if(x==2)
-                dataSet.setColor(Color.rgb(0,0,255));
+            if(x==0) {
+                dataSet.setColor(Color.rgb(255, 0, 0));
+                dataSet.setDrawCircleHole(false);
+                dataSet.setDrawCircles(false);
+            }
+            if(x==1) {
+                dataSet.setColor(Color.rgb(0, 255, 0));
+                dataSet.setDrawCircleHole(false);
+                dataSet.setDrawCircles(false);
+            }
+            if(x==2) {
+                dataSet.setColor(Color.rgb(0, 0, 255));
+                dataSet.setDrawCircleHole(false);
+                dataSet.setDrawCircles(false);
+            }
 
             dataSets.add(dataSet);
         }
@@ -182,6 +192,58 @@ int index = 0;
 
     @Override
     public void onStepEvent() {
-        infoTextView.setText("steps: " + stepDetector.getTotalStepCount());
+        stepCounter++;
+        infoTextView.setText("steps: " + stepCounter);
+    }
+
+    @Override
+    public void onSimulationFinished() {
+        List<float[]> data = stepDetector.getChartValues();
+
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+
+        if(data.size() == 0)
+            return;
+
+        for(int x = 0;x<data.get(0).length;x++) {
+            ArrayList<Entry> entries = new ArrayList<>();
+            for(int i=0;i<data.size();i++){
+                entries.add(new Entry(i, data.get(i)[x]));
+            }
+
+            LineDataSet dataSet = new LineDataSet(entries, "x=" + x);
+
+            if(x==0) {
+                dataSet.setColor(Color.rgb(255, 0, 0));
+                dataSet.setDrawCircles(false);
+            }
+            if(x==1) {
+                dataSet.setColor(Color.rgb(0, 255, 0));
+                dataSet.setDrawCircles(false);
+                dataSet.enableDashedLine(10f, 10f, 0);
+            }
+            if(x==2) {
+                dataSet.setColor(Color.rgb(0, 0, 255));
+                dataSet.setDrawCircles(false);
+                dataSet.enableDashedLine(10f, 10f, 0);
+            }
+            if(x==3) {
+                dataSet.setColor(Color.rgb(200, 100, 0));
+                dataSet.setDrawCircles(false);
+                dataSet.enableDashedLine(10f, 10f, 0);
+            }
+            if(x==4) {
+                dataSet.setColor(Color.rgb(255, 255, 255));
+                dataSet.setDrawCircleHole(false);
+                dataSet.setLineWidth(0);
+            }
+
+            dataSets.add(dataSet);
+        }
+
+        LineData lineData = new LineData(dataSets);
+
+        lineChart.clear();
+        lineChart.setData(lineData);
     }
 }

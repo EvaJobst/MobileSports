@@ -31,9 +31,9 @@ public class MainActivity extends AppCompatActivity implements StepEventListener
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
     private SensorRecorder sensorRecorder;
-    private StepDetector stepDetector;
     private SensorSimulator sensorSimulator;
 
+    private StepDetector stepDetector;
     private int stepCounter = 0;
 
     private TextView infoTextView;
@@ -46,20 +46,10 @@ public class MainActivity extends AppCompatActivity implements StepEventListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Context thisContext = this;
-
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         sensorRecorder = new SensorRecorder();
-
-        stepDetector = new StepDetector();
-
-        stepDetector.registerListener(this);
-
-        sensorSimulator = new SensorSimulator();
-        sensorSimulator.registerListener(stepDetector);
-        sensorSimulator.registerSimulationFinishedEvent(this);
 
         recordedSensorData = loadData();
 
@@ -86,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements StepEventListener
                 sensorRecorder.stopRecording();
                 recordedSensorData = sensorRecorder.getRecordedData();
                 drawChart(lineChart, recordedSensorData);
-                Toast.makeText(thisContext, "recorded " + recordedSensorData.size() + " sensor events", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "recorded " + recordedSensorData.size() + " sensor events", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -94,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements StepEventListener
             @Override
             public void onClick(View view) {
                 saveData(recordedSensorData);
-                Toast.makeText(thisContext, "saved " + recordedSensorData.size() + " sensor events", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "saved " + recordedSensorData.size() + " sensor events", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -102,7 +92,13 @@ public class MainActivity extends AppCompatActivity implements StepEventListener
             @Override
             public void onClick(View view) {
                 stepCounter = 0;
-                sensorSimulator.stop();
+                sensorSimulator = new SensorSimulator();
+                sensorSimulator.registerSimulationFinishedEvent(MainActivity.this);
+
+                stepDetector = new StepDetector();
+                stepDetector.registerListener(MainActivity.this);
+
+                sensorSimulator.registerListener(stepDetector);
 
                 if(recordedSensorData != null)
                 {
@@ -198,6 +194,9 @@ public class MainActivity extends AppCompatActivity implements StepEventListener
 
     @Override
     public void onSimulationFinished() {
+        if(stepDetector == null)
+            return;
+
         List<float[]> data = stepDetector.getChartValues();
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
@@ -218,19 +217,16 @@ public class MainActivity extends AppCompatActivity implements StepEventListener
                 dataSet.setDrawCircles(false);
             }
             if(x==1) {
-                dataSet.setColor(Color.rgb(0, 255, 0));
+                dataSet.setColor(Color.argb(100, 0, 255, 0));
                 dataSet.setDrawCircles(false);
-                dataSet.enableDashedLine(10f, 10f, 0);
             }
             if(x==2) {
-                dataSet.setColor(Color.rgb(0, 0, 255));
+                dataSet.setColor(Color.argb(75, 0, 0, 255));
                 dataSet.setDrawCircles(false);
-                dataSet.enableDashedLine(10f, 10f, 0);
             }
             if(x==3) {
-                dataSet.setColor(Color.rgb(200, 100, 0));
+                dataSet.setColor(Color.argb(75, 200, 100, 0));
                 dataSet.setDrawCircles(false);
-                dataSet.enableDashedLine(10f, 10f, 0);
             }
             if(x==4) {
                 dataSet.setColor(Color.rgb(255, 255, 255));

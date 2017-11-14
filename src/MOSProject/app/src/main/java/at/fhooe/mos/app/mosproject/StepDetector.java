@@ -5,25 +5,27 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 
 /**
  * Created by stefan on 10.11.2017.
  */
 
 public class StepDetector implements SensorEventListener, SimulatedSensorEventListener {
-    ArrayList<float[]> chartValues = new ArrayList<>();
+    public static final float PECISION = 0.15f;
+    private ArrayList<float[]> chartValues = new ArrayList<>();
 
     private float[] min = minInstance();
     private float[] max = maxInstance();
 
-    private float[] threshold = new float[3];
-    private float[] precision = new float[3];
-    private float[] oldSample = new float[3];
-    private float[] newSample = new float[3];
-    private float[] accelerationChange = new float[3];
-    private int previousIdx = 0;
+    private float[] lastMin = new float[]{0, 0, 0};
+    private float[] lastMax = new float[]{0, 0, 0};
+
+    private float[] dynamicThreshold = new float[]{0, 0, 0};
+    private float[] dynamicPrecision = new float[]{0, 0, 0};
+    private float[] oldSample = new float[]{0, 0, 0};
+    private float[] newSample = new float[]{0, 0, 0};
+
+    private int largestAxesIdx = -1;
 
     private ArrayList<StepEventListener> stepEventListeners = new ArrayList<>();
 
@@ -72,91 +74,73 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
             result[i] = averageFilters[i].filter(values[i]);
         }
 
+        //skip values if buffer of filters is not full yet
+        for (int i = 0; i < averageFilters.length; i++) {
+            if (!averageFilters[i].isFilterBufferFull()) {
+                return;
+            }
+        }
 
         // STEP DETECTION
-        for(int j = 0; j < result.length; j++) {
-            if(max[j] < result[j]) {
-                max[j] = result[j];
-            }
-
-            if(min[j] > result[j]) {
-                min[j] = result[j];
-            }
-        }
-
-        float newMin = 0;
-        float newMax = 0;
-
-        if(min[previousIdx] != Float.MAX_VALUE) {
-            newMin = min[previousIdx];
-        }
-
-        if(max[previousIdx] != Float.MIN_VALUE) {
-            newMax = max[previousIdx];
+        for (int i = 0; i < result.length; i++) {
+            max[i] = Math.max(max[i], result[i]);
+            min[i] = Math.min(min[i], result[i]);
         }
 
         samplingCounter++;
 
-        if(samplingCounter == 50) {
+        if (samplingCounter == 50) {
             samplingCounter = 0;
 
-            for(int i = 0; i < max.length; i++) {
-                threshold[i] = (max[i] + min[i])/2;
-                precision[i] = 0.15f * Math.abs(max[i] - min[i]);
+            float[] maxAbsolute = new float[3];
+
+            for (int i = 0; i < max.length; i++) {
+                lastMin[i] = min[i];
+                lastMax[i] = max[i];
+
+                dynamicThreshold[i] = (max[i] + min[i]) / 2;
+                dynamicPrecision[i] = PECISION * Math.abs(max[i] - min[i]);
+
+                maxAbsolute[i] = Math.max(Math.abs(max[i]), Math.abs(min[i]));
+            }
+
+            if (maxAbsolute[0] > maxAbsolute[1] && maxAbsolute[0] > maxAbsolute[2]) {
+                largestAxesIdx = 0;
+            } else if (maxAbsolute[1] > maxAbsolute[0] && maxAbsolute[1] > maxAbsolute[2]) {
+                largestAxesIdx = 1;
+            } else if (maxAbsolute[2] > maxAbsolute[0] && maxAbsolute[2] > maxAbsolute[1]) {
+                largestAxesIdx = 2;
             }
 
             min = minInstance();
             max = maxInstance();
         }
 
-        accelerationChange = max;
-
-        for(int i = 0; i < newSample.length; i++) {
-            if(Math.abs(result[i] - newSample[i]) > precision[i] ) {
+        for (int i = 0; i < newSample.length; i++) {
+            if (Math.abs(result[i] - newSample[i]) > dynamicPrecision[i]) {
                 newSample[i] = result[i];
-
-                //
             }
         }
 
-        int largestIdx = -1;
+        float[] chartValue = new float[]{0, 0, 0, 0, 0};
 
-        if(accelerationChange[0] > accelerationChange[1] &&
-                accelerationChange[0] > accelerationChange[2]) {
-            largestIdx = 0;
-        }
-        else if(accelerationChange[1] > accelerationChange[0] &&
-                accelerationChange[1] > accelerationChange[2]) {
-            largestIdx = 1;
-        }
-        else if(accelerationChange[2] > accelerationChange[0] &&
-                accelerationChange[2] > accelerationChange[1]) {
-            largestIdx = 2;
-        }
-
-        float stepHeight = 0;
-
-        if(largestIdx != -1) {
-            if(Math.abs(oldSample[largestIdx]) > Math.abs(threshold[largestIdx]) &&
-                    Math.abs(threshold[largestIdx]) > Math.abs(newSample[largestIdx])) {
+        if (largestAxesIdx != -1) {
+            if (Math.abs(oldSample[largestAxesIdx]) > Math.abs(dynamicThreshold[largestAxesIdx]) &&
+                    Math.abs(dynamicThreshold[largestAxesIdx]) > Math.abs(newSample[largestAxesIdx])) {
                 notifyListeners(); // if a step has been detected
-                previousIdx = largestIdx;
-                stepHeight = result[previousIdx];
+
+                chartValue[4] = result[largestAxesIdx];
             }
+
+            chartValue[0] = result[largestAxesIdx];
+            chartValue[1] = dynamicThreshold[largestAxesIdx];
+            chartValue[2] = lastMin[largestAxesIdx];
+            chartValue[3] = lastMax[largestAxesIdx];
         }
 
-        for(int i = 0; i < oldSample.length; i++) {
+        for (int i = 0; i < oldSample.length; i++) {
             oldSample[i] = newSample[i];
         }
-
-
-        float[] chartValue = new float[] {
-                result[previousIdx],
-                threshold[previousIdx],
-                newMin,
-                newMax,
-                stepHeight
-        };
 
         chartValues.add(chartValue);
     }
@@ -168,18 +152,18 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
     }
 
     private float[] minInstance() {
-        return new float[] {
-            Float.MAX_VALUE,
-            Float.MAX_VALUE,
-            Float.MAX_VALUE
+        return new float[]{
+                Float.MAX_VALUE,
+                Float.MAX_VALUE,
+                Float.MAX_VALUE
         };
     }
 
     private float[] maxInstance() {
-        return new float[] {
-            Float.MIN_VALUE,
-            Float.MIN_VALUE,
-            Float.MIN_VALUE
+        return new float[]{
+                Float.MIN_VALUE,
+                Float.MIN_VALUE,
+                Float.MIN_VALUE
         };
     }
 

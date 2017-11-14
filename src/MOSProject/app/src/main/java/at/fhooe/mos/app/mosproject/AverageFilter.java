@@ -9,6 +9,8 @@ public class AverageFilter {
     private int amount;
     private float[] filterBuffer;
 
+    private int valuesInBuffer = 0;
+
     public AverageFilter(int amount){
         this.amount = amount;
         this.filterBuffer = new float[amount];
@@ -29,6 +31,13 @@ public class AverageFilter {
 
         filteredData = filteredData / amount;
 
+        if(!isFilterBufferFull())
+            valuesInBuffer++;
+
         return filteredData;
+    }
+
+    public Boolean isFilterBufferFull(){
+        return valuesInBuffer >= amount;
     }
 }

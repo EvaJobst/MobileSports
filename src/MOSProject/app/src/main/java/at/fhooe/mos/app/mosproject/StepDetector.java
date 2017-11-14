@@ -74,13 +74,6 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
             result[i] = averageFilters[i].filter(values[i]);
         }
 
-        //skip values if buffer of filters is not full yet
-        for (int i = 0; i < averageFilters.length; i++) {
-            if (!averageFilters[i].isFilterBufferFull()) {
-                return;
-            }
-        }
-
         // STEP DETECTION
         for (int i = 0; i < result.length; i++) {
             max[i] = Math.max(max[i], result[i]);

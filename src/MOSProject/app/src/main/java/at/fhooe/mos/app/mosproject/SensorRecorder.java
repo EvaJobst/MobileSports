@@ -43,6 +43,10 @@ public class SensorRecorder implements SensorEventListener {
         isRecording = false;
     }
 
+    public boolean isRecording() {
+        return  isRecording;
+    }
+
     public ArrayList<SensorEventData> getRecordedData(){
         return recordedSensorEvents;
     }

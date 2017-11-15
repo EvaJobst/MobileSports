@@ -15,15 +15,15 @@
        <Button
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
-           android:id="@+id/startRecordingButton"
+           android:id="@+id/recordingButton"
            android:text="start recording"/>
 
        <Button
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
-           android:id="@+id/stopRecordingButton"
-           android:text="stop recording"
-           app:layout_constraintTop_toBottomOf="@+id/startRecordingButton"/>
+           android:id="@+id/liveStepDetection"
+           android:text="start live"
+           app:layout_constraintTop_toBottomOf="@+id/recordingButton"/>
 
        <Button
            android:layout_width="wrap_content"

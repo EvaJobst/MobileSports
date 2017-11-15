@@ -11,7 +11,8 @@ import java.util.ArrayList;
  */
 
 public class StepDetector implements SensorEventListener, SimulatedSensorEventListener {
-    public static final float PECISION = 0.15f;
+    public static final float PRECISION = 0.15f;
+    public static final float MIN_DYNAMIC_PRECISION = 0.5f;
     private ArrayList<float[]> chartValues = new ArrayList<>();
 
     private float[] min = minInstance();
@@ -92,7 +93,9 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
                 lastMax[i] = max[i];
 
                 dynamicThreshold[i] = (max[i] + min[i]) / 2;
-                dynamicPrecision[i] = PECISION * Math.abs(max[i] - min[i]);
+
+                dynamicPrecision[i] = PRECISION * Math.abs(max[i] - min[i]);
+                dynamicPrecision[i] = Math.max(dynamicPrecision[i], MIN_DYNAMIC_PRECISION);
 
                 maxAbsolute[i] = Math.max(Math.abs(max[i]), Math.abs(min[i]));
             }
@@ -118,8 +121,8 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
         float[] chartValue = new float[]{0, 0, 0, 0, 0};
 
         if (largestAxesIdx != -1) {
-            if (Math.abs(oldSample[largestAxesIdx]) > Math.abs(dynamicThreshold[largestAxesIdx]) &&
-                    Math.abs(dynamicThreshold[largestAxesIdx]) > Math.abs(newSample[largestAxesIdx])) {
+            if (oldSample[largestAxesIdx] > dynamicThreshold[largestAxesIdx] &&
+                    dynamicThreshold[largestAxesIdx] > newSample[largestAxesIdx]) {
                 notifyListeners(); // if a step has been detected
 
                 chartValue[4] = result[largestAxesIdx];
@@ -154,9 +157,9 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
 
     private float[] maxInstance() {
         return new float[]{
-                Float.MIN_VALUE,
-                Float.MIN_VALUE,
-                Float.MIN_VALUE
+                Float.MAX_VALUE * (-1),  //MAX_VALUE * -1 is the lowest number, MIN_VALUE is the lowest precision of float
+                Float.MAX_VALUE * (-1),
+                Float.MAX_VALUE * (-1)
         };
     }
 

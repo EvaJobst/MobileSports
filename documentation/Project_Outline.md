@@ -10,6 +10,7 @@
 
 ##### Activities
 - CurrentTourActivity (MainActivity)
+  - NoCurrentTour: Weather, Current Respiration, Current Pulse, Time of Start, Time since Start, burned Calories, Steps taken
 - TourOverviewActivity
 - TourDetailActivity
 

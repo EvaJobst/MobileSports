@@ -1,10 +1,12 @@
-package at.fhooe.mos.app.mosproject;
+package at.fhooe.mos.app.mosproject.pedometer;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 
 import java.util.ArrayList;
+
+import at.fhooe.mos.app.mosproject.pedometer.simulator.SimulatedSensorEventListener;
 
 /**
  * Created by stefan on 10.11.2017.

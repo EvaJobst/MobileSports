@@ -1,4 +1,4 @@
-package at.fhooe.mos.app.mosproject;
+package at.fhooe.mos.app.mosproject.pedometer;
 
 /**
  * Created by stefan on 10.11.2017.

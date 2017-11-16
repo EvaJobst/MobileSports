@@ -1,4 +1,4 @@
-package at.fhooe.mos.app.mosproject;
+package at.fhooe.mos.app.mosproject.ui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -23,6 +23,14 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import at.fhooe.mos.app.mosproject.R;
+import at.fhooe.mos.app.mosproject.pedometer.SensorEventData;
+import at.fhooe.mos.app.mosproject.pedometer.SensorRecorder;
+import at.fhooe.mos.app.mosproject.pedometer.simulator.SensorSimulator;
+import at.fhooe.mos.app.mosproject.pedometer.simulator.SimulationFinishedEvent;
+import at.fhooe.mos.app.mosproject.pedometer.StepDetector;
+import at.fhooe.mos.app.mosproject.pedometer.StepEventListener;
 
 public class MainActivity extends AppCompatActivity implements StepEventListener, SimulationFinishedEvent {
 

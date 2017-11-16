@@ -13,7 +13,7 @@ Project and assignments for the university course "Mobile Sports"
 - IDE: Android Studio
 
 ##### Mockup
-<img src="images/pedometer_mockup.png" alt="Pedometer Mockup" width="200">
+<img src="../images/pedometer_mockup.png" alt="Pedometer Mockup" width="200">
 
 - Extensions are possible through the Hamburger-Menu and the Overflow-Section
 
@@ -28,4 +28,4 @@ Project and assignments for the university course "Mobile Sports"
 | Development     | 8h            | 12h |
 
 ##### Current Development
-<img src="images/step_detection_screenshot.jpg" alt="Pedometer Mockup" width="200">
+<img src="../images/step_detection_screenshot.jpg" alt="Pedometer Mockup" width="200">

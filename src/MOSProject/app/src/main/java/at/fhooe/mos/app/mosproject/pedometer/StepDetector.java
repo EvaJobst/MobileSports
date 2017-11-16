@@ -34,6 +34,8 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
 
     private int samplingCounter = 0;
 
+    private boolean generateChartValues = false;
+
     private AverageFilter[] averageFilters = new AverageFilter[]
             {
                     new AverageFilter(4), //x
@@ -140,7 +142,9 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
             oldSample[i] = newSample[i];
         }
 
-        chartValues.add(chartValue);
+        if(generateChartValues){
+            chartValues.add(chartValue);
+        }
     }
 
     private void notifyListeners() {
@@ -167,6 +171,10 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
 
     public void registerListener(StepEventListener listener) {
         stepEventListeners.add(listener);
+    }
+
+    public void enableChartValueGeneration(){
+        generateChartValues = true;
     }
 
     public ArrayList<float[]> getChartValues() {

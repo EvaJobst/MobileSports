@@ -1,7 +1,6 @@
 package at.fhooe.mos.app.mosproject.ui;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -16,10 +15,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -183,30 +179,14 @@ public class StepDetectorTestActivity extends AppCompatActivity implements StepE
         if(recordedSensorData.size() == 0)
             return;
 
-        for(int x = 0;x<recordedSensorData.get(0).getValues().length;x++) {
+        for(int x = 0; x < recordedSensorData.get(0).getValues().length; x++) {
             ArrayList<Entry> entries = new ArrayList<>();
             for(int i=0;i<recordedSensorData.size();i++) {
                 entries.add(new Entry(i, recordedSensorData.get(i).getValues()[x]));
             }
 
             LineDataSet dataSet = new LineDataSet(entries, "x=" + x);
-
-            if(x==0) {
-                dataSet.setColor(Color.rgb(255, 0, 0));
-                dataSet.setDrawCircleHole(false);
-                dataSet.setDrawCircles(false);
-            }
-            if(x==1) {
-                dataSet.setColor(Color.rgb(0, 255, 0));
-                dataSet.setDrawCircleHole(false);
-                dataSet.setDrawCircles(false);
-            }
-            if(x==2) {
-                dataSet.setColor(Color.rgb(0, 0, 255));
-                dataSet.setDrawCircleHole(false);
-                dataSet.setDrawCircles(false);
-            }
-
+            dataSet = ChartVisualization.chart(dataSet, x);
             dataSets.add(dataSet);
         }
 
@@ -228,36 +208,14 @@ public class StepDetectorTestActivity extends AppCompatActivity implements StepE
         if(data.size() == 0)
             return;
 
-        for(int x = 0;x<data.get(0).length;x++) {
+        for(int x = 0; x < data.get(0).length; x++) {
             ArrayList<Entry> entries = new ArrayList<>();
             for(int i=0;i<data.size();i++){
                 entries.add(new Entry(i, data.get(i)[x]));
             }
 
             LineDataSet dataSet = new LineDataSet(entries, "x=" + x);
-
-            if(x==0) {
-                dataSet.setColor(Color.rgb(255, 0, 0));
-                dataSet.setDrawCircles(false);
-            }
-            if(x==1) {
-                dataSet.setColor(Color.argb(100, 0, 255, 0));
-                dataSet.setDrawCircles(false);
-            }
-            if(x==2) {
-                dataSet.setColor(Color.argb(75, 0, 0, 255));
-                dataSet.setDrawCircles(false);
-            }
-            if(x==3) {
-                dataSet.setColor(Color.argb(75, 200, 100, 0));
-                dataSet.setDrawCircles(false);
-            }
-            if(x==4) {
-                dataSet.setColor(Color.rgb(255, 255, 255));
-                dataSet.setDrawCircleHole(false);
-                dataSet.setLineWidth(0);
-            }
-
+            dataSet = ChartVisualization.details(dataSet, x);
             dataSets.add(dataSet);
         }
 

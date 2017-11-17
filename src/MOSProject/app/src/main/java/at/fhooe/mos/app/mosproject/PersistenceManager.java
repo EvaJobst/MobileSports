@@ -1,0 +1,56 @@
+package at.fhooe.mos.app.mosproject;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
+
+/**
+ * Created by Eva on 17.11.2017.
+ */
+
+public class PersistenceManager {
+    private String ACCELEROMETER_KEY = "accelerometer";
+    private String TRAINING_IDS_KEY = "training_ids";
+    private SharedPreferences preferences;
+
+    public PersistenceManager(Context context) {
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    public void setAccelerometer() {
+
+    }
+
+    public String getAccelerometer() {
+        return null;
+    }
+
+    public ArrayList<String> getTrainingIds() {
+        String json = preferences.getString(TRAINING_IDS_KEY, null);
+        if (json == null) {
+            return new ArrayList<>();
+        }
+
+        Type type = new TypeToken<List<String>>(){}.getType();
+        Gson gson = new Gson();
+        return gson.fromJson(json, type);
+    }
+
+    public void setTrainingIds(ArrayList<String> ids) {
+        preferences.edit().putString(TRAINING_IDS_KEY, new Gson().toJson(ids)).apply();
+    }
+
+    public void addTrainingId(String id) {
+        ArrayList<String> ids = getTrainingIds();
+        ids.add(id);
+        setTrainingIds(ids);
+    }
+}

@@ -7,7 +7,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +23,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.fhooe.mos.app.mosproject.PersistenceManager;
 import at.fhooe.mos.app.mosproject.R;
 import at.fhooe.mos.app.mosproject.pedometer.SensorEventData;
 import at.fhooe.mos.app.mosproject.pedometer.SensorRecorder;
@@ -31,23 +31,134 @@ import at.fhooe.mos.app.mosproject.pedometer.simulator.SensorSimulator;
 import at.fhooe.mos.app.mosproject.pedometer.simulator.SimulationFinishedEvent;
 import at.fhooe.mos.app.mosproject.pedometer.StepDetector;
 import at.fhooe.mos.app.mosproject.pedometer.StepEventListener;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class StepDetectorTestActivity extends AppCompatActivity implements StepEventListener, SimulationFinishedEvent {
-
     private SensorManager sensorManager;
     private Sensor sensorAccelerometer;
     private SensorRecorder sensorRecorder;
     private SensorSimulator sensorSimulator;
+    private PersistenceManager persistenceManager;
 
     private StepDetector stepDetector;
     private int stepCounter = 0;
 
-    private TextView infoTextView;
-    private LineChart lineChart;
     int index = 0;
     ArrayList<SensorEventData> recordedSensorData;
 
     boolean liveStepDetectionActive = false;
+
+    @BindView(R.id.lineChart)
+    LineChart lineChart;
+
+    @BindView(R.id.infoTextView)
+    TextView infoTextView;
+
+    @BindView(R.id.recordingButton)
+    Button recordingButton;
+
+    @BindView(R.id.liveStepDetection)
+    Button liveStepDetection;
+
+    @BindView(R.id.saveSensorDataButton)
+    Button saveSensorDataButton;
+
+    @BindView(R.id.startSensorSimulator)
+    Button startSensorSimulator;
+
+    @OnClick(R.id.recordingButton)
+    public void onRecordingClick() {
+        if(liveStepDetectionActive) {
+            Toast.makeText(StepDetectorTestActivity.this, "live step detection is running", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(!sensorRecorder.isRecording()) {
+            sensorRecorder.clearRecordedData();
+            sensorRecorder.startRecording();
+
+            resetStepCounter();
+            lineChart.clear();
+
+            recordingButton.setText("stop recording");
+            Toast.makeText(StepDetectorTestActivity.this, "recording started", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            sensorRecorder.stopRecording();
+            recordedSensorData = sensorRecorder.getRecordedData();
+
+            drawRecordedSensorDataChart();
+
+            recordingButton.setText("start recording");
+            Toast.makeText(StepDetectorTestActivity.this, "recorded " + recordedSensorData.size() + " sensor events", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @OnClick(R.id.liveStepDetection)
+    public void onLiveStepDetectionClick() {
+        if(!liveStepDetectionActive) {
+            liveStepDetectionActive = true;
+
+            resetStepCounter();
+            lineChart.clear();
+
+            stepDetector = new StepDetector();
+            stepDetector.enableChartValueGeneration();
+            stepDetector.registerListener(StepDetectorTestActivity.this);
+
+            sensorManager.registerListener(stepDetector, sensorAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+
+            liveStepDetection.setText("stop live");
+            Toast.makeText(StepDetectorTestActivity.this, "live step detection started", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            liveStepDetectionActive = false;
+
+            sensorManager.unregisterListener(stepDetector);
+            drawStepDetectionDetailsChart();
+
+            liveStepDetection.setText("start live");
+            Toast.makeText(StepDetectorTestActivity.this, "live step detection stopped", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @OnClick(R.id.saveSensorDataButton)
+    public void onSaveSensorDataClick() {
+        if(liveStepDetectionActive) {
+            Toast.makeText(StepDetectorTestActivity.this, "live step detection is running", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        saveData(recordedSensorData);
+        Toast.makeText(StepDetectorTestActivity.this, "saved " + recordedSensorData.size() + " sensor events", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.startSensorSimulator)
+    public void onStartSensorSimulatorClick() {
+        if(liveStepDetectionActive) {
+            Toast.makeText(StepDetectorTestActivity.this, "live step detection is running", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        resetStepCounter();
+
+        sensorSimulator = new SensorSimulator();
+        sensorSimulator.registerSimulationFinishedEvent(StepDetectorTestActivity.this);
+
+        stepDetector = new StepDetector();
+        stepDetector.enableChartValueGeneration();
+        stepDetector.registerListener(StepDetectorTestActivity.this);
+
+        sensorSimulator.registerListener(stepDetector);
+
+        if(recordedSensorData != null) {
+            sensorSimulator.setSensorEvents(recordedSensorData);
+            sensorSimulator.start();
+            drawRecordedSensorDataChart();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,123 +170,10 @@ public class StepDetectorTestActivity extends AppCompatActivity implements StepE
 
         sensorRecorder = new SensorRecorder();
 
+        persistenceManager = new PersistenceManager(this);
         recordedSensorData = loadData();
 
-        lineChart = findViewById(R.id.lineChart);
-
-        infoTextView = findViewById(R.id.infoTextView);
-
-        final Button recordingButton = findViewById(R.id.recordingButton);
-        final Button liveStepDetection = findViewById(R.id.liveStepDetection);
-        final Button saveSensorDataButton = findViewById(R.id.saveSensorDataButton);
-        final Button startSensorSimulator = findViewById(R.id.startSensorSimulator);
-
-        recordingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(liveStepDetectionActive == true)
-                {
-                    Toast.makeText(StepDetectorTestActivity.this, "live step detection is running", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if(sensorRecorder.isRecording() == false)
-                {
-                    sensorRecorder.clearRecordedData();
-                    sensorRecorder.startRecording();
-
-                    resetStepCounter();
-                    lineChart.clear();
-
-                    recordingButton.setText("stop recording");
-                    Toast.makeText(StepDetectorTestActivity.this, "recording started", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    sensorRecorder.stopRecording();
-                    recordedSensorData = sensorRecorder.getRecordedData();
-
-                    drawRecordedSensorDataChart();
-
-                    recordingButton.setText("start recording");
-                    Toast.makeText(StepDetectorTestActivity.this, "recorded " + recordedSensorData.size() + " sensor events", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        liveStepDetection.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(liveStepDetectionActive == false)
-                {
-                    liveStepDetectionActive = true;
-
-                    resetStepCounter();
-                    lineChart.clear();
-
-                    stepDetector = new StepDetector();
-                    stepDetector.enableChartValueGeneration();
-                    stepDetector.registerListener(StepDetectorTestActivity.this);
-
-                    sensorManager.registerListener(stepDetector, sensorAccelerometer, SensorManager.SENSOR_DELAY_GAME);
-
-                    liveStepDetection.setText("stop live");
-                    Toast.makeText(StepDetectorTestActivity.this, "live step detection started", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    liveStepDetectionActive = false;
-
-                    sensorManager.unregisterListener(stepDetector);
-                    drawStepDetectionDetailsChart();
-
-                    liveStepDetection.setText("start live");
-                    Toast.makeText(StepDetectorTestActivity.this, "live step detection stopped", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        saveSensorDataButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(liveStepDetectionActive == true)
-                {
-                    Toast.makeText(StepDetectorTestActivity.this, "live step detection is running", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                saveData(recordedSensorData);
-                Toast.makeText(StepDetectorTestActivity.this, "saved " + recordedSensorData.size() + " sensor events", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        startSensorSimulator.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(liveStepDetectionActive == true)
-                {
-                    Toast.makeText(StepDetectorTestActivity.this, "live step detection is running", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                resetStepCounter();
-
-                sensorSimulator = new SensorSimulator();
-                sensorSimulator.registerSimulationFinishedEvent(StepDetectorTestActivity.this);
-
-                stepDetector = new StepDetector();
-                stepDetector.enableChartValueGeneration();
-                stepDetector.registerListener(StepDetectorTestActivity.this);
-
-                sensorSimulator.registerListener(stepDetector);
-
-                if(recordedSensorData != null)
-                {
-                    sensorSimulator.setSensorEvents(recordedSensorData);
-                    sensorSimulator.start();
-                    drawRecordedSensorDataChart();
-                }
-            }
-        });
+        ButterKnife.bind(this);
     }
 
 
@@ -187,7 +185,7 @@ public class StepDetectorTestActivity extends AppCompatActivity implements StepE
 
         for(int x = 0;x<recordedSensorData.get(0).getValues().length;x++) {
             ArrayList<Entry> entries = new ArrayList<>();
-            for(int i=0;i<recordedSensorData.size();i++){
+            for(int i=0;i<recordedSensorData.size();i++) {
                 entries.add(new Entry(i, recordedSensorData.get(i).getValues()[x]));
             }
 
@@ -269,28 +267,6 @@ public class StepDetectorTestActivity extends AppCompatActivity implements StepE
         lineChart.setData(lineData);
     }
 
-    private ArrayList<SensorEventData> loadData(){
-        SharedPreferences prefs = getSharedPreferences("accelerometerData", Context.MODE_PRIVATE);
-
-        Type listType = new TypeToken<ArrayList<SensorEventData>>(){}.getType();
-
-        String jsonString = prefs.getString("data2", "[]");
-        ArrayList<SensorEventData> data = new Gson().fromJson(jsonString, listType);
-
-        return data;
-
-    }
-
-    private void saveData(ArrayList<SensorEventData> recordedSensorData){
-        SharedPreferences prefs = getSharedPreferences("accelerometerData", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        String jsonString = new Gson().toJson(recordedSensorData);
-        editor.putString("data2", jsonString);
-
-        editor.commit();
-    }
-
     protected void onPause() {
         super.onPause();
         sensorManager.unregisterListener(sensorRecorder);
@@ -311,6 +287,14 @@ public class StepDetectorTestActivity extends AppCompatActivity implements StepE
 
     private void updateStepCounterTextView(){
         infoTextView.setText("steps: " + stepCounter);
+    }
+
+    private ArrayList<SensorEventData> loadData(){
+        return persistenceManager.getAccelerometer();
+    }
+
+    private void saveData(ArrayList<SensorEventData> recordedSensorData){
+        persistenceManager.setAccelerometer(recordedSensorData);
     }
 
     @Override

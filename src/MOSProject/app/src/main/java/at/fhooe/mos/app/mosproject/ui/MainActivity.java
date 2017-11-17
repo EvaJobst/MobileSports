@@ -15,6 +15,9 @@ import android.widget.TextView;
 
 import at.fhooe.mos.app.mosproject.R;
 import at.fhooe.mos.app.mosproject.StepDetectorService;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements StepDetectorService.Listener {
 
@@ -24,7 +27,39 @@ public class MainActivity extends AppCompatActivity implements StepDetectorServi
 
     private boolean isStepDetectorServiceRunning = false;
 
-    private TextView stepCountTextView;
+    @BindView(R.id.stepCount)
+    TextView stepCountTextView;
+
+    @BindView(R.id.launchStepDetectorTestActivityButton)
+    Button launchStepDetectorTestActivityButton;
+
+    @BindView(R.id.startStopStepDetectorService)
+    Button startStopStepDetectorService;
+
+    @OnClick(R.id.launchStepDetectorTestActivityButton)
+    public void onStepDetectorTestClick() {
+        Intent intent = new Intent(MainActivity.this, StepDetectorTestActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.startStopStepDetectorService)
+    public void onStepDetectorServiceClick() {
+        if (isStepDetectorServiceRunning) {
+            isStepDetectorServiceRunning = false;
+
+            unbindStepDetectorService();
+            stopService(stepDetectorServiceIntent);
+
+            startStopStepDetectorService.setText("Start Step Detector");
+        } else {
+            isStepDetectorServiceRunning = true;
+
+            startService(stepDetectorServiceIntent);
+            bindStepDetectorService();
+
+            startStopStepDetectorService.setText("Stop Step Detector");
+        }
+    }
 
 
     @Override
@@ -36,39 +71,7 @@ public class MainActivity extends AppCompatActivity implements StepDetectorServi
         stepDetectorServiceIntent = new Intent(MainActivity.this, StepDetectorService.class);
         stepDetectorServiceConnection = new StepDetectorServiceConnection();
 
-        stepCountTextView = findViewById(R.id.stepCount);
-
-        final Button launchStepDetectorTestActivityButton = findViewById(R.id.launchStepDetectorTestActivityButton);
-        final Button startStopStepDetectorService = findViewById(R.id.startStopStepDetectorService);
-
-        launchStepDetectorTestActivityButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, StepDetectorTestActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        startStopStepDetectorService.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isStepDetectorServiceRunning) {
-                    isStepDetectorServiceRunning = false;
-
-                    unbindStepDetectorService();
-                    stopService(stepDetectorServiceIntent);
-
-                    startStopStepDetectorService.setText("Start Step Detector");
-                } else {
-                    isStepDetectorServiceRunning = true;
-
-                    startService(stepDetectorServiceIntent);
-                    bindStepDetectorService();
-
-                    startStopStepDetectorService.setText("Stop Step Detector");
-                }
-            }
-        });
+        ButterKnife.bind(this);
     }
 
     @Override

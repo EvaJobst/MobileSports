@@ -11,13 +11,15 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.fhooe.mos.app.mosproject.pedometer.SensorEventData;
+
 
 /**
  * Created by Eva on 17.11.2017.
  */
 
 public class PersistenceManager {
-    private String ACCELEROMETER_KEY = "accelerometer";
+    private String ACCELEROMETER_KEY = "data2";
     private String TRAINING_IDS_KEY = "training_ids";
     private SharedPreferences preferences;
 
@@ -25,12 +27,16 @@ public class PersistenceManager {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public void setAccelerometer() {
-
+    public void setAccelerometer(ArrayList<SensorEventData> data) {
+        preferences.edit().putString(ACCELEROMETER_KEY, new Gson().toJson(data)).apply();
     }
 
-    public String getAccelerometer() {
-        return null;
+    public ArrayList<SensorEventData> getAccelerometer() {
+        Type type = new TypeToken<ArrayList<SensorEventData>>(){}.getType();
+        String json = preferences.getString(ACCELEROMETER_KEY, "[]");
+        ArrayList<SensorEventData> data = new Gson().fromJson(json, type);
+
+        return data;
     }
 
     public ArrayList<String> getTrainingIds() {

@@ -13,8 +13,9 @@ import at.fhooe.mos.app.mosproject.pedometer.simulator.SimulatedSensorEventListe
  */
 
 public class StepDetector implements SensorEventListener, SimulatedSensorEventListener {
-    public static final float PRECISION = 0.15f;
+    public static final float PRECISION = 0.20f;
     public static final float MIN_DYNAMIC_PRECISION = 0.5f;
+    public static final int MIN_TIME_BETWEEN_STEPS_MS = 200;
     private ArrayList<float[]> chartValues = new ArrayList<>();
 
     private float[] min = minInstance();
@@ -33,6 +34,8 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
     private ArrayList<StepEventListener> stepEventListeners = new ArrayList<>();
 
     private int samplingCounter = 0;
+
+    private long lastDetectedStepTimeMs = 0;
 
     private boolean generateChartValues = false;
 
@@ -127,9 +130,13 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
         if (largestAxesIdx != -1) {
             if (oldSample[largestAxesIdx] > dynamicThreshold[largestAxesIdx] &&
                     dynamicThreshold[largestAxesIdx] > newSample[largestAxesIdx]) {
-                notifyListeners(); // if a step has been detected
+                if((System.currentTimeMillis() - lastDetectedStepTimeMs) > MIN_TIME_BETWEEN_STEPS_MS){
+                    notifyListeners(); // if a step has been detected
 
-                chartValue[4] = result[largestAxesIdx];
+                    chartValue[4] = result[largestAxesIdx];
+                }
+
+                lastDetectedStepTimeMs = System.currentTimeMillis();
             }
 
             chartValue[0] = result[largestAxesIdx];

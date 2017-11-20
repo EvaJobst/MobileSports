@@ -25,10 +25,10 @@ import at.fhooe.mos.app.mosproject.ui.MainActivity;
 
 public class StepDetectorService extends Service implements StepEventListener {
 
-    private SensorManager mSensorManager;
-    private Sensor mSensor;
-    private StepDetector mStepDetector;
-    private ScreenOffBroadcastReceiver mReceiver;
+    private SensorManager sensorManager;
+    private Sensor accelerometerSensor;
+    private StepDetector stepDetector;
+    private ScreenOffBroadcastReceiver screenOffBroadcastReceiver;
     private PowerManager.WakeLock wakeLock;
     private boolean aggressiveWakeLock = true;
 
@@ -52,30 +52,30 @@ public class StepDetectorService extends Service implements StepEventListener {
 
         acquireWakeLock();
 
-        mStepDetector = new StepDetector();
-        mStepDetector.registerListener(this);
+        stepDetector = new StepDetector();
+        stepDetector.registerListener(this);
 
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         registerSensorListeners();
 
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
-        mReceiver = new ScreenOffBroadcastReceiver();
-        registerReceiver(mReceiver, filter);
+        screenOffBroadcastReceiver = new ScreenOffBroadcastReceiver();
+        registerReceiver(screenOffBroadcastReceiver, filter);
 
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         initNotificationBuilder();
         updateNotification();
 
-        Toast.makeText(this, "sensor service started", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "accelerometerSensor service started", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onDestroy() {
         notificationManager.cancel(notificationId);
 
-        unregisterReceiver(mReceiver);
+        unregisterReceiver(screenOffBroadcastReceiver);
 
         unregisterSensorListeners();
 
@@ -83,7 +83,7 @@ public class StepDetectorService extends Service implements StepEventListener {
 
         super.onDestroy();
 
-        Toast.makeText(this, "sensor service stopped", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "accelerometerSensor service stopped", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -107,11 +107,11 @@ public class StepDetectorService extends Service implements StepEventListener {
 
     private void registerSensorListeners() {
         // SENSOR_DELAY_GAME: 20,000 microsecond delay => 50 vales per second
-        mSensorManager.registerListener(mStepDetector, mSensor, SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(stepDetector, accelerometerSensor, SensorManager.SENSOR_DELAY_GAME);
     }
 
     private void unregisterSensorListeners() {
-        mSensorManager.unregisterListener(mStepDetector);
+        sensorManager.unregisterListener(stepDetector);
     }
 
     private void acquireWakeLock() {

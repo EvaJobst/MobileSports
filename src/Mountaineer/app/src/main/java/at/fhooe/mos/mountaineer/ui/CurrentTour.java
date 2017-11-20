@@ -1,7 +1,9 @@
-package at.fhooe.mos.mountaineer;
+package at.fhooe.mos.mountaineer.ui;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import at.fhooe.mos.mountaineer.R;
 
 public class CurrentTour extends AppCompatActivity {
 

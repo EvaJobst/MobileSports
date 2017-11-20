@@ -16,7 +16,7 @@ public class ChartVisualization {
     }
 
     public static LineDataSet details(LineDataSet dataSet, int idx) {
-        if(idx == 7) {
+        if(idx+3 == 7) {
             dataSet.setLineWidth(0);
             dataSet.setDrawCircles(true);
         }

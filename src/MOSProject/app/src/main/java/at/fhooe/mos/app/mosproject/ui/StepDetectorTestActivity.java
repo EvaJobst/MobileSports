@@ -1,7 +1,6 @@
 package at.fhooe.mos.app.mosproject.ui;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
@@ -186,7 +185,7 @@ public class StepDetectorTestActivity extends AppCompatActivity implements StepE
             }
 
             LineDataSet dataSet = new LineDataSet(entries, "x=" + x);
-            dataSet = ChartVisualization.chart(dataSet, x);
+            dataSet = ChartVisualization.simulationData(dataSet, x);
             dataSets.add(dataSet);
         }
 
@@ -215,7 +214,7 @@ public class StepDetectorTestActivity extends AppCompatActivity implements StepE
             }
 
             LineDataSet dataSet = new LineDataSet(entries, "x=" + x);
-            dataSet = ChartVisualization.details(dataSet, x);
+            dataSet = ChartVisualization.resultsData(dataSet, x);
             dataSets.add(dataSet);
         }
 

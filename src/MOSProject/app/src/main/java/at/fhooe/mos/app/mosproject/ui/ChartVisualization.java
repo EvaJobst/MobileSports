@@ -9,14 +9,26 @@ import com.github.mikephil.charting.data.LineDataSet;
  */
 
 public class ChartVisualization {
-    public static LineDataSet chart(LineDataSet dataSet, int idx) {
-        dataSet.setColor(getRGB(idx));
+    public static LineDataSet simulationData(LineDataSet dataSet, int idx) {
         dataSet.setDrawCircles(false);
+        int color;
+
+        switch(idx) {
+            case 0: color = Color.rgb(255, 0, 0); break;
+            case 1: color = Color.rgb(0, 255, 0); break;
+            case 2: color = Color.rgb(0, 0, 255); break;
+            default: color = Color.rgb(255, 255, 255);
+        }
+
+        dataSet.setColor(color);
+
         return dataSet;
     }
 
-    public static LineDataSet details(LineDataSet dataSet, int idx) {
-        if(idx == 7) {
+    public static LineDataSet resultsData(LineDataSet dataSet, int idx) {
+        int color;
+
+        if(idx == 4) {
             dataSet.setLineWidth(0);
             dataSet.setDrawCircles(true);
         }
@@ -24,24 +36,17 @@ public class ChartVisualization {
             dataSet.setDrawCircles(false);
         }
 
-        dataSet.setColor(getRGB(idx+3));
-        return dataSet;
-    }
-
-    public static int getRGB(int idx) {
-        int color;
         switch (idx) {
             case 0: color = Color.rgb(255, 0, 0); break;
-            case 1: color = Color.rgb(0, 255, 0); break;
-            case 2: color = Color.rgb(0, 0, 255); break;
-            case 3: color = Color.rgb(255, 0, 0); break;
-            case 4: color = Color.argb(100, 0, 255, 0); break;
-            case 5: color = Color.argb(75, 0, 0, 255); break;
-            case 6: color = Color.argb(75, 200, 100, 0); break;
-            case 7: color = Color.rgb(255, 255, 255); break;
-            default: color = Color.rgb(0, 0, 0);
+            case 1: color = Color.argb(100, 0, 255, 0); break;
+            case 2: color = Color.argb(75, 0, 0, 255); break;
+            case 3: color = Color.argb(75, 200, 100, 0); break;
+            case 4: color = Color.rgb(255, 255, 255); break;
+            default: color = Color.rgb(255, 255, 255);
         }
 
-        return color;
+        dataSet.setColor(color);
+
+        return dataSet;
     }
 }

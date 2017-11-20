@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "563541673510",
+    "firebase_url": "https://mosproject-fdce4.firebaseio.com",
+    "project_id": "mosproject-fdce4",
+    "storage_bucket": "mosproject-fdce4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:563541673510:android:a0df16dde0e23f54",
+        "android_client_info": {
+          "package_name": "at.fhooe.mos.app.mosproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "563541673510-e55612kv9onrasqnb9lbv0eci8d89ark.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIXhquxqzjDDWNOFYI13jVdYh0L3vzbw8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

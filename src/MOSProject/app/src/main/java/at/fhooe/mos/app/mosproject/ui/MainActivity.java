@@ -13,17 +13,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import at.fhooe.mos.app.mosproject.R;
 import at.fhooe.mos.app.mosproject.StepDetectorService;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements StepDetectorService.Listener {
+public class MainActivity extends AppCompatActivity {
 
-    private StepDetectorService stepDetectorService;
     private Intent stepDetectorServiceIntent;
-    private ServiceConnection stepDetectorServiceConnection;
 
     private boolean isStepDetectorServiceRunning = false;
 
@@ -47,15 +49,15 @@ public class MainActivity extends AppCompatActivity implements StepDetectorServi
         if (isStepDetectorServiceRunning) {
             isStepDetectorServiceRunning = false;
 
-            unbindStepDetectorService();
             stopService(stepDetectorServiceIntent);
+            EventBus.getDefault().unregister(this);
 
             startStopStepDetectorService.setText("Start Step Detector");
         } else {
             isStepDetectorServiceRunning = true;
 
+            EventBus.getDefault().register(this);
             startService(stepDetectorServiceIntent);
-            bindStepDetectorService();
 
             startStopStepDetectorService.setText("Stop Step Detector");
         }
@@ -69,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements StepDetectorServi
         setContentView(R.layout.activity_main);
 
         stepDetectorServiceIntent = new Intent(MainActivity.this, StepDetectorService.class);
-        stepDetectorServiceConnection = new StepDetectorServiceConnection();
 
         ButterKnife.bind(this);
     }
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements StepDetectorServi
         super.onResume();
 
         if(isStepDetectorServiceRunning){
-            bindStepDetectorService();
+            EventBus.getDefault().register(this);
         }
     }
 
@@ -88,51 +89,13 @@ public class MainActivity extends AppCompatActivity implements StepDetectorServi
         super.onPause();
 
         if(isStepDetectorServiceRunning){
-            if(stepDetectorService != null){
-                stepDetectorService.removeListener();
-            }
-
-            unbindStepDetectorService();
+            EventBus.getDefault().unregister(this);
         }
     }
 
-    @Override
-    public void onNewStepCountValue(int stepCount) {
-        stepCountTextView.setText("Steps: " + stepCount);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onStepCountEvent(StepDetectorService.StepCountEvent event) {
+        stepCountTextView.setText("Steps: " + event.stepCount);
     }
 
-    private void bindStepDetectorService() {
-        bindService(stepDetectorServiceIntent, stepDetectorServiceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    private void unbindStepDetectorService() {
-        unbindService(stepDetectorServiceConnection);
-        stepDetectorService = null;
-    }
-
-    private boolean isServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private class StepDetectorServiceConnection implements ServiceConnection {
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            StepDetectorService.LocalBinder binder = (StepDetectorService.LocalBinder) service;
-
-            stepDetectorService = binder.getServiceInstance(); //Get instance of your service!
-            stepDetectorService.registerListener(MainActivity.this); //Activity register
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    }
 }

@@ -41,9 +41,9 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
 
     private AverageFilter[] averageFilters = new AverageFilter[]
             {
-                    new AverageFilter(4), //x
-                    new AverageFilter(4), //y
-                    new AverageFilter(4)  //z
+                    new AverageFilter(7), //x
+                    new AverageFilter(7), //y
+                    new AverageFilter(7)  //z
             };
 
     @Override   //from SensorEventListener

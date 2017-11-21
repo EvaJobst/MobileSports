@@ -15,6 +15,8 @@ import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
+
 import at.fhooe.mos.app.mosproject.pedometer.StepDetector;
 import at.fhooe.mos.app.mosproject.pedometer.StepEventListener;
 import at.fhooe.mos.app.mosproject.ui.MainActivity;
@@ -36,14 +38,11 @@ public class StepDetectorService extends Service implements StepEventListener {
     private int notificationId = 1;
     private NotificationCompat.Builder notificationBuilder;
 
-    private Listener listener;
-    private Binder stepDetectorBinder = new LocalBinder();
-
     private int stepCount = 0;
 
     @Override
     public IBinder onBind(Intent intent) {
-        return stepDetectorBinder;
+        return null;
     }
 
     @Override
@@ -91,18 +90,6 @@ public class StepDetectorService extends Service implements StepEventListener {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return START_NOT_STICKY;
-    }
-
-    public void registerListener(Listener listener) {
-        this.listener = listener;
-
-        if (listener != null) {
-            listener.onNewStepCountValue(stepCount);
-        }
-    }
-
-    public void removeListener() {
-        this.listener = null;
     }
 
     private void registerSensorListeners() {
@@ -162,9 +149,7 @@ public class StepDetectorService extends Service implements StepEventListener {
             updateNotification();
         }
 
-        if (listener != null) {
-            listener.onNewStepCountValue(stepCount);
-        }
+        EventBus.getDefault().post(new StepCountEvent(stepCount));
     }
 
     private class ScreenOffBroadcastReceiver extends BroadcastReceiver {
@@ -184,13 +169,11 @@ public class StepDetectorService extends Service implements StepEventListener {
         }
     }
 
-    public class LocalBinder extends Binder {
-        public StepDetectorService getServiceInstance() {
-            return StepDetectorService.this;
-        }
-    }
+    public static class StepCountEvent {
+        public int stepCount;
 
-    public interface Listener {
-        void onNewStepCountValue(int stepCount);
+        public StepCountEvent(int stepCount){
+            this.stepCount = stepCount;
+        }
     }
 }

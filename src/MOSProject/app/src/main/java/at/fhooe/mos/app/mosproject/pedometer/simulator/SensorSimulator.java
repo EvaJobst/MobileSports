@@ -5,8 +5,6 @@ import android.os.Handler;
 import java.util.ArrayList;
 import java.util.List;
 
-import at.fhooe.mos.app.mosproject.pedometer.SensorEventData;
-
 /**
  * Created by stefan on 10.11.2017.
  */

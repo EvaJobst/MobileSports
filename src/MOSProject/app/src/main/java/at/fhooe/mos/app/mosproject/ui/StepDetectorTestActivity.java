@@ -20,11 +20,11 @@ import java.util.List;
 
 import at.fhooe.mos.app.mosproject.PersistenceManager;
 import at.fhooe.mos.app.mosproject.R;
-import at.fhooe.mos.app.mosproject.pedometer.SensorEventData;
-import at.fhooe.mos.app.mosproject.pedometer.SensorRecorder;
+import at.fhooe.mos.app.mosproject.pedometer.Pedometer;
+import at.fhooe.mos.app.mosproject.pedometer.simulator.SensorEventData;
+import at.fhooe.mos.app.mosproject.pedometer.simulator.SensorRecorder;
 import at.fhooe.mos.app.mosproject.pedometer.simulator.SensorSimulator;
 import at.fhooe.mos.app.mosproject.pedometer.simulator.SimulationFinishedEvent;
-import at.fhooe.mos.app.mosproject.pedometer.StepDetector;
 import at.fhooe.mos.app.mosproject.pedometer.StepEventListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,7 +37,7 @@ public class StepDetectorTestActivity extends AppCompatActivity implements StepE
     private SensorSimulator sensorSimulator;
     private PersistenceManager persistenceManager;
 
-    private StepDetector stepDetector;
+    private Pedometer pedometer;
     private int stepCounter = 0;
 
     int index = 0;
@@ -99,11 +99,11 @@ public class StepDetectorTestActivity extends AppCompatActivity implements StepE
             resetStepCounter();
             lineChart.clear();
 
-            stepDetector = new StepDetector();
-            stepDetector.enableChartValueGeneration();
-            stepDetector.registerListener(StepDetectorTestActivity.this);
+            pedometer = new Pedometer();
+            pedometer.enableChartValueGeneration();
+            pedometer.registerListener(StepDetectorTestActivity.this);
 
-            sensorManager.registerListener(stepDetector, sensorAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+            sensorManager.registerListener(pedometer, sensorAccelerometer, SensorManager.SENSOR_DELAY_GAME);
 
             liveStepDetection.setText("stop live");
             Toast.makeText(StepDetectorTestActivity.this, "live step detection started", Toast.LENGTH_SHORT).show();
@@ -111,7 +111,7 @@ public class StepDetectorTestActivity extends AppCompatActivity implements StepE
         else {
             liveStepDetectionActive = false;
 
-            sensorManager.unregisterListener(stepDetector);
+            sensorManager.unregisterListener(pedometer);
             drawStepDetectionDetailsChart();
 
             liveStepDetection.setText("start live");
@@ -142,11 +142,11 @@ public class StepDetectorTestActivity extends AppCompatActivity implements StepE
         sensorSimulator = new SensorSimulator();
         sensorSimulator.registerSimulationFinishedEvent(StepDetectorTestActivity.this);
 
-        stepDetector = new StepDetector();
-        stepDetector.enableChartValueGeneration();
-        stepDetector.registerListener(StepDetectorTestActivity.this);
+        pedometer = new Pedometer();
+        pedometer.enableChartValueGeneration();
+        pedometer.registerListener(StepDetectorTestActivity.this);
 
-        sensorSimulator.registerListener(stepDetector);
+        sensorSimulator.registerListener(pedometer);
 
         if(recordedSensorData != null) {
             sensorSimulator.setSensorEvents(recordedSensorData);
@@ -197,10 +197,10 @@ public class StepDetectorTestActivity extends AppCompatActivity implements StepE
     }
 
     private void drawStepDetectionDetailsChart(){
-        if(stepDetector == null)
+        if(pedometer == null)
             return;
 
-        List<float[]> data = stepDetector.getChartValues();
+        List<float[]> data = pedometer.getChartValues();
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
 
@@ -255,7 +255,7 @@ public class StepDetectorTestActivity extends AppCompatActivity implements StepE
     }
 
     @Override
-    public void onStepEvent() {
+    public void onStepDetected() {
         stepCounter++;
         updateStepCounterTextView();
     }

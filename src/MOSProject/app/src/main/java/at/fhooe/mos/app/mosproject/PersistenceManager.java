@@ -11,7 +11,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import at.fhooe.mos.app.mosproject.pedometer.SensorEventData;
+import at.fhooe.mos.app.mosproject.pedometer.simulator.SensorEventData;
 
 
 /**

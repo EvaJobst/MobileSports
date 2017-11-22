@@ -11,80 +11,80 @@
         android:layout_gravity="center">
 
         <ImageView
-            android:id="@+id/tourIcSun"
+            android:id="@+id/tourIcWalk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/ic_sun"
+            android:src="@drawable/ic_walk"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tourMinMaxTemp"
+            android:id="@+id/tourAverageSteps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="29°C/12°C"
+            android:text="Average: 1234"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            app:layout_constraintBottom_toBottomOf="@id/tourIcSun"
-            app:layout_constraintLeft_toRightOf="@id/tourIcSun" />
+            app:layout_constraintBottom_toBottomOf="@id/tourIcWalk"
+            app:layout_constraintLeft_toRightOf="@id/tourIcWalk" />
 
         <TextView
-            android:id="@+id/tourTemp"
+            android:id="@+id/tourSteps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="26"
+            android:text="1234"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="@color/colorAccent"
-            app:layout_constraintBottom_toTopOf="@id/tourMinMaxTemp"
-            app:layout_constraintLeft_toRightOf="@id/tourIcSun" />
+            app:layout_constraintBottom_toTopOf="@id/tourAverageSteps"
+            app:layout_constraintLeft_toRightOf="@id/tourIcWalk" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
-            android:text="°C"
-            app:layout_constraintBottom_toBottomOf="@id/tourTemp"
-            app:layout_constraintLeft_toRightOf="@id/tourTemp" />
+            android:text="steps"
+            app:layout_constraintBottom_toBottomOf="@id/tourSteps"
+            app:layout_constraintLeft_toRightOf="@id/tourSteps" />
 
         <View
-            android:layout_margin="8dp"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
+            android:layout_margin="8dp"
             android:background="@color/colorLightGrey"
-            app:layout_constraintTop_toBottomOf="@id/tourMinMaxTemp"
-            app:layout_constraintLeft_toLeftOf="parent"/>
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tourAverageSteps" />
 
         <TextView
-            android:id="@+id/tourRain"
+            android:id="@+id/tourSpeed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="16dp"
-            android:layout_marginLeft="8dp"
-            android:text="Rain 0 %"
+            android:text="Speed: 3km/h"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            app:layout_constraintLeft_toLeftOf="@id/tourIcSun"
-            app:layout_constraintTop_toBottomOf="@id/tourMinMaxTemp" />
+            app:layout_constraintLeft_toLeftOf="@id/tourIcWalk"
+            app:layout_constraintTop_toBottomOf="@id/tourAverageSteps" />
 
         <TextView
-            android:id="@+id/tourHumidity"
+            android:id="@+id/tourDistance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:text="Humidity 82 %"
+            android:text="Distance: 123m"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            app:layout_constraintLeft_toLeftOf="@id/tourIcSun"
-            app:layout_constraintTop_toBottomOf="@id/tourRain" />
+            app:layout_constraintLeft_toLeftOf="@id/tourIcWalk"
+            app:layout_constraintTop_toBottomOf="@id/tourSpeed" />
 
         <TextView
-            android:id="@+id/tourWind"
+            android:id="@+id/tourElevation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:text="Wind 3 km/h"
+            android:text="Elevation: 3m"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            app:layout_constraintLeft_toLeftOf="@id/tourIcSun"
-            app:layout_constraintTop_toBottomOf="@id/tourHumidity" />
+            app:layout_constraintLeft_toLeftOf="@id/tourIcWalk"
+            app:layout_constraintTop_toBottomOf="@id/tourDistance" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>

@@ -1,58 +1,129 @@
 package at.fhooe.mos.mountaineer.ui;
 
-import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.UiThread;
-import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
+import org.androidannotations.annotations.OptionsMenuItem;
 
+import at.fhooe.mos.mountaineer.PersistenceManager;
 import at.fhooe.mos.mountaineer.R;
+import at.fhooe.mos.mountaineer.TourState;
+import at.fhooe.mos.mountaineer.ui.fragment.CurrentTourFragment_;
+import at.fhooe.mos.mountaineer.ui.fragment.NewTourFragment;
+import at.fhooe.mos.mountaineer.ui.fragment.NewTourFragment_;
+import at.fhooe.mos.mountaineer.ui.fragment.NewTourImageFragment;
+import at.fhooe.mos.mountaineer.ui.fragment.NewTourTitleFragment;
 
 @EActivity(R.layout.activity_tour)
-public class TourActivity extends AppCompatActivity {
+@OptionsMenu(R.menu.tour_activity_menu)
+public class TourActivity extends AppCompatActivity implements NewTourFragment.OnAddTourClickListener {
+    PersistenceManager persistenceManager;
+    TourState currentState;
 
-    String KEY_TOUR_NAME = "keyTourName";
-    String KEY_TOUR_IMAGE_PATH = "keyTourImagePath";
-
-    @ViewById ImageView tourImage;
-    @ViewById TextView tourName;
-
-    // GENERAL
-    @ViewById TextView tourLocation;
-    @ViewById TextView tourDuration;
-    @ViewById TextView tourStartTime;
-
-    // TRACK
-    @ViewById TextView tourSteps;
-    @ViewById TextView tourAverageSteps;
-    @ViewById TextView tourSpeed;
-    @ViewById TextView tourDistance;
-    @ViewById TextView tourElevation;
-
-    // HEALTH
-    @ViewById TextView tourHeartRate;
-    @ViewById TextView tourNormalHeartRate;
-    @ViewById TextView tourRespiration;
-    @ViewById TextView tourKcal;
-
-    // WEATHER
-    @ViewById TextView tourTemp;
-    @ViewById TextView tourMinMaxTemp;
-    @ViewById TextView tourRain;
-    @ViewById TextView tourHumidity;
-    @ViewById TextView tourWind;
+    @OptionsMenuItem
+    MenuItem tourActivityButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //createUI(getIntent());
+        persistenceManager = new PersistenceManager(this);
+        currentState = persistenceManager.getCurrentState();
+        updateFragment();
     }
 
-    @UiThread
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        updateOptionsMenu();
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @OptionsItem(R.id.tourActivityButton)
+    void invokeStateTransition() {
+        TourState nextState;
+
+        switch (currentState) {
+            case newTour:
+                nextState = TourState.newTourTitle;
+                break;
+            case newTourTitle:
+                nextState = TourState.newTourImage;
+                break;
+            case newTourImage:
+                nextState = TourState.currentTour;
+                break;
+            case currentTour:
+                nextState = TourState.newTour;
+                break;
+            default:
+                nextState = TourState.newTour;
+        }
+
+        if(nextState == TourState.newTour ||
+                nextState == TourState.newTour.currentTour) {
+            persistenceManager.setCurrentState(nextState);
+        }
+
+        currentState = nextState;
+        updateOptionsMenu();
+        updateFragment();
+    }
+
+    void updateFragment() {
+        Fragment newFragment = getFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        transaction.replace(R.id.currentTourFragment, newFragment);
+        transaction.commit();
+    }
+
+    void updateOptionsMenu() {
+        switch (currentState) {
+            case newTour:
+                tourActivityButton.setVisible(false);
+                break;
+            case newTourTitle:
+                tourActivityButton.setTitle("NEXT");
+                tourActivityButton.setVisible(true);
+                break;
+            case newTourImage:
+                tourActivityButton.setTitle("START");
+                break;
+            case currentTour:
+                tourActivityButton.setTitle("STOP");
+                break;
+            default:
+                tourActivityButton.setVisible(false);
+        }
+    }
+
+    Fragment getFragment() {
+        switch (currentState) {
+            case newTour:
+                return new NewTourFragment_();
+            case newTourTitle:
+                return new NewTourTitleFragment();
+            case newTourImage:
+                return new NewTourImageFragment();
+            case currentTour:
+                return new CurrentTourFragment_();
+            default:
+                return new NewTourFragment_();
+        }
+    }
+
+    @Override
+    public void onAddTourClick() {
+        invokeStateTransition();
+    }
+
+    /*@UiThread
     void createUI(Intent intent) {
         Bundle bundle = intent.getExtras();
 
@@ -61,5 +132,5 @@ public class TourActivity extends AppCompatActivity {
 
         String imagePath = bundle.getString(KEY_TOUR_IMAGE_PATH);
         // TODO Set image by path
-    }
+    }*/
 }

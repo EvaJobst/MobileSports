@@ -7,6 +7,6 @@
     tools:context="at.fhooe.mos.mountaineer.ui.TourActivity">
 
     <include
-        layout="@layout/tour_layout" />
+        layout="@layout/fragment_current_tour" />
 
 </android.support.constraint.ConstraintLayout>

@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     tools:context="at.fhooe.mos.mountaineer.ui.TourActivity">
 
-    <include
-        layout="@layout/tour_layout" />
+    <FrameLayout
+        android:id="@+id/currentTourFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </android.support.constraint.ConstraintLayout>

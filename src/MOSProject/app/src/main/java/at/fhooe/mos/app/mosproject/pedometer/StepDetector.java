@@ -39,11 +39,13 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
 
     private boolean generateChartValues = false;
 
+    // Higher filter amount than in the original algorithm
+    // to increase the detection accuracy on our phones
     private AverageFilter[] averageFilters = new AverageFilter[]
             {
-                    new AverageFilter(7), //x
-                    new AverageFilter(7), //y
-                    new AverageFilter(7)  //z
+                    new AverageFilter(6), //x
+                    new AverageFilter(6), //y
+                    new AverageFilter(6)  //z
             };
 
     @Override   //from SensorEventListener
@@ -74,6 +76,15 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
         processNewSensorValues(sensorEventData.getValues());
     }
 
+    /**
+     * Implementation of the algorithm to detect steps from
+     * http://www.analog.com/en/analog-dialogue/articles/pedometer-design-3-axis-digital-acceler.html.
+     * For additional comments on the algorithmn see
+     * http://groups.inf.ed.ac.uk/teaching/slipa11-12/reports/Marat.htm
+     *
+     *
+     * @param values
+     */
     private void processNewSensorValues(float[] values) {
         // DIGITAL FILTER
         float[] result = new float[values.length];

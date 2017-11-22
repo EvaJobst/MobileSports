@@ -5,5 +5,5 @@ package at.fhooe.mos.app.mosproject.pedometer;
  */
 
 public interface StepEventListener {
-    void onStepEvent();
+    void onStepDetected();
 }

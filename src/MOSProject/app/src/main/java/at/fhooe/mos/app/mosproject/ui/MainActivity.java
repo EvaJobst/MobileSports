@@ -13,24 +13,34 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.InstanceState;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import at.fhooe.mos.app.mosproject.R;
 import at.fhooe.mos.app.mosproject.StepDetectorService;
+import at.fhooe.mos.app.mosproject.stopwatch.Stopwatch;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+@EActivity
 public class MainActivity extends AppCompatActivity {
 
     private Intent stepDetectorServiceIntent;
 
-    private boolean isStepDetectorServiceRunning = false;
+    @InstanceState
+    public boolean isStepDetectorServiceRunning = false;
+
+    private Stopwatch stopwatch = new Stopwatch();
 
     @BindView(R.id.stepCount)
     TextView stepCountTextView;
+
+    @BindView(R.id.stopwatch)
+    TextView stopwatchTextView;
 
     @BindView(R.id.launchStepDetectorTestActivityButton)
     Button launchStepDetectorTestActivityButton;
@@ -52,17 +62,18 @@ public class MainActivity extends AppCompatActivity {
             stopService(stepDetectorServiceIntent);
             EventBus.getDefault().unregister(this);
 
-            startStopStepDetectorService.setText("Start Step Detector");
+            stopwatch.start();
         } else {
             isStepDetectorServiceRunning = true;
 
             EventBus.getDefault().register(this);
             startService(stepDetectorServiceIntent);
 
-            startStopStepDetectorService.setText("Stop Step Detector");
+            stopwatch.stop();
         }
-    }
 
+        updateStartStopStepDetectorServiceText();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
         stepDetectorServiceIntent = new Intent(MainActivity.this, StepDetectorService.class);
 
         ButterKnife.bind(this);
+
+        updateStartStopStepDetectorServiceText();
     }
 
     @Override
@@ -86,11 +99,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        super.onPause();
-
         if(isStepDetectorServiceRunning){
             EventBus.getDefault().unregister(this);
         }
+
+        super.onPause();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -98,4 +111,11 @@ public class MainActivity extends AppCompatActivity {
         stepCountTextView.setText("Steps: " + event.stepCount);
     }
 
+    private void updateStartStopStepDetectorServiceText(){
+        if (isStepDetectorServiceRunning) {
+            startStopStepDetectorService.setText("Stop Step Detector");
+        } else {
+            startStopStepDetectorService.setText("Start Step Detector");
+        }
+    }
 }

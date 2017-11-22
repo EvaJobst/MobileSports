@@ -6,38 +6,37 @@ import android.hardware.SensorEventListener;
 
 import java.util.ArrayList;
 
+import at.fhooe.mos.app.mosproject.pedometer.simulator.SensorEventData;
 import at.fhooe.mos.app.mosproject.pedometer.simulator.SimulatedSensorEventListener;
 
 /**
  * Created by stefan on 10.11.2017.
  */
 
-public class StepDetector implements SensorEventListener, SimulatedSensorEventListener {
+public class Pedometer implements SensorEventListener, SimulatedSensorEventListener {
     public static final float PRECISION = 0.20f;
     public static final float MIN_DYNAMIC_PRECISION = 0.5f;
     public static final int MIN_TIME_BETWEEN_STEPS_MS = 200;
-    private ArrayList<float[]> chartValues = new ArrayList<>();
+    public static final int MAX_TIME_BETWEEN_STEPS_MS = 2000;
 
-    private float[] min = minInstance();
-    private float[] max = maxInstance();
+    private ArrayList<StepEventListener> stepEventListeners = new ArrayList<>();
 
-    private float[] lastMin = new float[]{0, 0, 0};
-    private float[] lastMax = new float[]{0, 0, 0};
-
+    private float[] minAcceleration = minInstance();
+    private float[] maxAcceleration = maxInstance();
     private float[] dynamicThreshold = new float[]{0, 0, 0};
     private float[] dynamicPrecision = new float[]{0, 0, 0};
     private float[] oldSample = new float[]{0, 0, 0};
     private float[] newSample = new float[]{0, 0, 0};
 
     private int largestAxesIdx = -1;
-
-    private ArrayList<StepEventListener> stepEventListeners = new ArrayList<>();
-
     private int samplingCounter = 0;
-
     private long lastDetectedStepTimeMs = 0;
 
+    //for chart generation (debugging)
     private boolean generateChartValues = false;
+    private ArrayList<float[]> chartValues = new ArrayList<>();
+    private float[] lastMinAcceleration = new float[]{0, 0, 0};
+    private float[] lastMaxAcceleration = new float[]{0, 0, 0};
 
     // Higher filter amount than in the original algorithm
     // to increase the detection accuracy on our phones
@@ -50,10 +49,10 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
 
     @Override   //from SensorEventListener
     public void onSensorChanged(SensorEvent sensorEvent) {
-
         if (sensorEvent.sensor.getType() != Sensor.TYPE_ACCELEROMETER)
             return;
 
+        //three acceleration values for each axis
         if (sensorEvent.values.length != 3)
             return;
 
@@ -70,6 +69,7 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
         if (sensorEventData.getType() != Sensor.TYPE_ACCELEROMETER)
             return;
 
+        //three acceleration values for each axis
         if (sensorEventData.getValues().length != 3)
             return;
 
@@ -81,7 +81,6 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
      * http://www.analog.com/en/analog-dialogue/articles/pedometer-design-3-axis-digital-acceler.html.
      * For additional comments on the algorithmn see
      * http://groups.inf.ed.ac.uk/teaching/slipa11-12/reports/Marat.htm
-     *
      *
      * @param values
      */
@@ -95,8 +94,8 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
 
         // STEP DETECTION
         for (int i = 0; i < result.length; i++) {
-            max[i] = Math.max(max[i], result[i]);
-            min[i] = Math.min(min[i], result[i]);
+            maxAcceleration[i] = Math.max(maxAcceleration[i], result[i]);
+            minAcceleration[i] = Math.min(minAcceleration[i], result[i]);
         }
 
         samplingCounter++;
@@ -106,16 +105,16 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
 
             float[] maxAbsolute = new float[3];
 
-            for (int i = 0; i < max.length; i++) {
-                lastMin[i] = min[i];
-                lastMax[i] = max[i];
+            for (int i = 0; i < maxAcceleration.length; i++) {
+                lastMinAcceleration[i] = minAcceleration[i];
+                lastMaxAcceleration[i] = maxAcceleration[i];
 
-                dynamicThreshold[i] = (max[i] + min[i]) / 2;
+                dynamicThreshold[i] = (maxAcceleration[i] + minAcceleration[i]) / 2;
 
-                dynamicPrecision[i] = PRECISION * Math.abs(max[i] - min[i]);
+                dynamicPrecision[i] = PRECISION * Math.abs(maxAcceleration[i] - minAcceleration[i]);
                 dynamicPrecision[i] = Math.max(dynamicPrecision[i], MIN_DYNAMIC_PRECISION);
 
-                maxAbsolute[i] = Math.max(Math.abs(max[i]), Math.abs(min[i]));
+                maxAbsolute[i] = Math.max(Math.abs(maxAcceleration[i]), Math.abs(minAcceleration[i]));
             }
 
             if (maxAbsolute[0] > maxAbsolute[1] && maxAbsolute[0] > maxAbsolute[2]) {
@@ -126,8 +125,8 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
                 largestAxesIdx = 2;
             }
 
-            min = minInstance();
-            max = maxInstance();
+            minAcceleration = minInstance();
+            maxAcceleration = maxInstance();
         }
 
         for (int i = 0; i < newSample.length; i++) {
@@ -140,8 +139,9 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
 
         if (largestAxesIdx != -1) {
             if (oldSample[largestAxesIdx] > dynamicThreshold[largestAxesIdx] &&
-                    dynamicThreshold[largestAxesIdx] > newSample[largestAxesIdx]) {
-                if((System.currentTimeMillis() - lastDetectedStepTimeMs) > MIN_TIME_BETWEEN_STEPS_MS){
+                    newSample[largestAxesIdx] < dynamicThreshold[largestAxesIdx]) {
+                if ((System.currentTimeMillis() - lastDetectedStepTimeMs) > MIN_TIME_BETWEEN_STEPS_MS &&
+                        (System.currentTimeMillis() - lastDetectedStepTimeMs) < MAX_TIME_BETWEEN_STEPS_MS) {
                     notifyListeners(); // if a step has been detected
 
                     chartValue[4] = result[largestAxesIdx];
@@ -152,22 +152,22 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
 
             chartValue[0] = result[largestAxesIdx];
             chartValue[1] = dynamicThreshold[largestAxesIdx];
-            chartValue[2] = lastMin[largestAxesIdx];
-            chartValue[3] = lastMax[largestAxesIdx];
+            chartValue[2] = lastMinAcceleration[largestAxesIdx];
+            chartValue[3] = lastMaxAcceleration[largestAxesIdx];
         }
 
         for (int i = 0; i < oldSample.length; i++) {
             oldSample[i] = newSample[i];
         }
 
-        if(generateChartValues){
+        if (generateChartValues) {
             chartValues.add(chartValue);
         }
     }
 
     private void notifyListeners() {
         for (StepEventListener listener : stepEventListeners) {
-            listener.onStepEvent();
+            listener.onStepDetected();
         }
     }
 
@@ -191,7 +191,13 @@ public class StepDetector implements SensorEventListener, SimulatedSensorEventLi
         stepEventListeners.add(listener);
     }
 
-    public void enableChartValueGeneration(){
+    public void removeListener(StepEventListener listener) {
+        if (stepEventListeners.contains(listener)) {
+            stepEventListeners.remove(listener);
+        }
+    }
+
+    public void enableChartValueGeneration() {
         generateChartValues = true;
     }
 

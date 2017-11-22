@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
@@ -17,7 +16,7 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 
-import at.fhooe.mos.app.mosproject.pedometer.StepDetector;
+import at.fhooe.mos.app.mosproject.pedometer.Pedometer;
 import at.fhooe.mos.app.mosproject.pedometer.StepEventListener;
 import at.fhooe.mos.app.mosproject.ui.MainActivity;
 
@@ -29,7 +28,7 @@ public class StepDetectorService extends Service implements StepEventListener {
 
     private SensorManager sensorManager;
     private Sensor accelerometerSensor;
-    private StepDetector stepDetector;
+    private Pedometer pedometer;
     private ScreenOffBroadcastReceiver screenOffBroadcastReceiver;
     private PowerManager.WakeLock wakeLock;
     private boolean aggressiveWakeLock = true;
@@ -51,8 +50,8 @@ public class StepDetectorService extends Service implements StepEventListener {
 
         acquireWakeLock();
 
-        stepDetector = new StepDetector();
-        stepDetector.registerListener(this);
+        pedometer = new Pedometer();
+        pedometer.registerListener(this);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -94,11 +93,11 @@ public class StepDetectorService extends Service implements StepEventListener {
 
     private void registerSensorListeners() {
         // SENSOR_DELAY_GAME: 20,000 microsecond delay => 50 vales per second
-        sensorManager.registerListener(stepDetector, accelerometerSensor, SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(pedometer, accelerometerSensor, SensorManager.SENSOR_DELAY_GAME);
     }
 
     private void unregisterSensorListeners() {
-        sensorManager.unregisterListener(stepDetector);
+        sensorManager.unregisterListener(pedometer);
     }
 
     private void acquireWakeLock() {
@@ -131,8 +130,8 @@ public class StepDetectorService extends Service implements StepEventListener {
                 );
 
         notificationBuilder
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("StepDetector")
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentTitle("Pedometer")
                 .setContentIntent(resultPendingIntent);
     }
 
@@ -142,7 +141,7 @@ public class StepDetectorService extends Service implements StepEventListener {
     }
 
     @Override
-    public void onStepEvent() {
+    public void onStepDetected() {
         stepCount++;
 
         if(stepCount % 5 == 0){

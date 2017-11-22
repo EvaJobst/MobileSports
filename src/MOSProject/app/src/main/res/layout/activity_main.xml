@@ -25,4 +25,10 @@
         android:id="@+id/stepCount"
         app:layout_constraintTop_toBottomOf="@id/startStopStepDetectorService" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/stopwatch"
+        app:layout_constraintTop_toBottomOf="@id/stepCount" />
+
 </android.support.constraint.ConstraintLayout>

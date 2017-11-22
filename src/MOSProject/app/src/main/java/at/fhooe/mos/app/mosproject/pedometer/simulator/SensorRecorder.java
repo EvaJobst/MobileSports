@@ -1,4 +1,4 @@
-package at.fhooe.mos.app.mosproject.pedometer;
+package at.fhooe.mos.app.mosproject.pedometer.simulator;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;

@@ -16,7 +16,7 @@ import org.androidannotations.annotations.ViewById;
 
 import at.fhooe.mos.mountaineer.R;
 
-@EFragment
+@EFragment(R.layout.fragment_new_tour)
 public class NewTourFragment extends Fragment {
     OnAddTourClickListener onAddTourClickListener;
 
@@ -35,13 +35,6 @@ public class NewTourFragment extends Fragment {
 
     public NewTourFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_new_tour, container, false);
     }
 
     @Override

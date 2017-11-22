@@ -18,8 +18,7 @@ import at.fhooe.mos.mountaineer.TourState;
 import at.fhooe.mos.mountaineer.ui.fragment.CurrentTourFragment_;
 import at.fhooe.mos.mountaineer.ui.fragment.NewTourFragment;
 import at.fhooe.mos.mountaineer.ui.fragment.NewTourFragment_;
-import at.fhooe.mos.mountaineer.ui.fragment.NewTourImageFragment;
-import at.fhooe.mos.mountaineer.ui.fragment.NewTourTitleFragment;
+import at.fhooe.mos.mountaineer.ui.fragment.NewTourTitleFragment_;
 
 @EActivity(R.layout.activity_tour)
 @OptionsMenu(R.menu.tour_activity_menu)
@@ -53,9 +52,6 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
                 nextState = TourState.newTourTitle;
                 break;
             case newTourTitle:
-                nextState = TourState.newTourImage;
-                break;
-            case newTourImage:
                 nextState = TourState.currentTour;
                 break;
             case currentTour:
@@ -89,11 +85,8 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
                 tourActivityButton.setVisible(false);
                 break;
             case newTourTitle:
-                tourActivityButton.setTitle("NEXT");
-                tourActivityButton.setVisible(true);
-                break;
-            case newTourImage:
                 tourActivityButton.setTitle("START");
+                tourActivityButton.setVisible(true);
                 break;
             case currentTour:
                 tourActivityButton.setTitle("STOP");
@@ -108,9 +101,7 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
             case newTour:
                 return new NewTourFragment_();
             case newTourTitle:
-                return new NewTourTitleFragment();
-            case newTourImage:
-                return new NewTourImageFragment();
+                return new NewTourTitleFragment_();
             case currentTour:
                 return new CurrentTourFragment_();
             default:

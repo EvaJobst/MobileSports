@@ -1,14 +1,9 @@
 package at.fhooe.mos.mountaineer.ui.fragment;
 
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;

@@ -10,42 +10,40 @@ import at.fhooe.mos.mountaineer.EventSource;
  */
 
 public class Stopwatch extends EventSource<StopwatchEventListener> {
-    public static final int PERIODIC_EVENT_TIME_MILLIS = 1000;
+    public static final int PERIODIC_EVENT_TIME_MS = 1000;
 
     private long startTime = 0;
     private long stopTime = 0;
     private boolean running = false;
 
     private Handler handler;
-    private PeriodicUpdater periodicUpdater;
+    private PeriodicEventSender periodicEventSender;
 
-    public Stopwatch(){
+    public Stopwatch() {
         handler = new Handler();
-        periodicUpdater = new PeriodicUpdater();
+        periodicEventSender = new PeriodicEventSender();
     }
 
     public void start() {
         startTime = System.currentTimeMillis();
         running = true;
 
-        for(StopwatchEventListener listener : eventListeners){
+        for (StopwatchEventListener listener : eventListeners) {
             listener.onStartEvent(startTime);
         }
 
-        handler.post(periodicUpdater);
+        startPeriodicUpdates();
     }
 
     public void stop() {
-        handler.removeCallbacks(periodicUpdater);
+        stopPeriodicUpdates();
 
         stopTime = System.currentTimeMillis();
         running = false;
 
-        for(StopwatchEventListener listener : eventListeners){
+        for (StopwatchEventListener listener : eventListeners) {
             listener.onStartEvent(stopTime);
         }
-
-
     }
 
     public int getElapsedSeconds() {
@@ -59,16 +57,24 @@ public class Stopwatch extends EventSource<StopwatchEventListener> {
         return stopTime - startTime;
     }
 
-    private class PeriodicUpdater implements Runnable {
+    private void startPeriodicUpdates() {
+        handler.postDelayed(periodicEventSender, PERIODIC_EVENT_TIME_MS);
+    }
+
+    private void stopPeriodicUpdates() {
+        handler.removeCallbacks(periodicEventSender);
+    }
+
+    private class PeriodicEventSender implements Runnable {
         @Override
         public void run() {
 
-            if(running){
-                for(StopwatchEventListener listener : eventListeners){
+            if (running) {
+                for (StopwatchEventListener listener : eventListeners) {
                     listener.onElapsedSecondsEvent(getElapsedSeconds());
                 }
 
-                handler.postDelayed(this, PERIODIC_EVENT_TIME_MILLIS);
+                handler.postDelayed(this, PERIODIC_EVENT_TIME_MS);
             }
         }
     }

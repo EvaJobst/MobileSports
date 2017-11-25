@@ -24,7 +24,7 @@ public class PersistenceManager {
     public TourState getCurrentState() {
         String state = preferences.getString(CURRENT_STATE_KEY, "");
 
-        if(state.isEmpty()) {
+        if (state.isEmpty()) {
             return TourState.newTour;
         }
 

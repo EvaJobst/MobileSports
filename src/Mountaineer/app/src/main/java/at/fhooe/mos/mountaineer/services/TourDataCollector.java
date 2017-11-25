@@ -1,6 +1,7 @@
 package at.fhooe.mos.mountaineer.services;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import at.fhooe.mos.mountaineer.model.Tour;
 import at.fhooe.mos.mountaineer.sensors.pedometer.PedometerEventListener;
@@ -11,11 +12,19 @@ import at.fhooe.mos.mountaineer.sensors.stopwatch.StopwatchEventListener;
  */
 
 public class TourDataCollector implements PedometerEventListener, StopwatchEventListener {
+    private boolean publishTourDataUpdates;
+
     private Tour tour = new Tour();
+
+    public TourDataCollector(){
+        publishTourDataUpdates = true;
+
+        EventBus.getDefault().register(this);
+    }
 
     @Override
     public void onStepDetectedEvent() {
-        tour.setTotalSteps(tour.getTotalSteps()+1);
+        tour.setTotalSteps(tour.getTotalSteps() + 1);
         publishData();
     }
 
@@ -39,8 +48,15 @@ public class TourDataCollector implements PedometerEventListener, StopwatchEvent
         return tour;
     }
 
+    @Subscribe
+    public void onMessageEvent(ControlEvent event) {
+        publishTourDataUpdates = event.publishTourDataUpdates;
+    }
+
     private void publishData() {
-        EventBus.getDefault().post(new TourDetailsEvent(tour));
+        if(publishTourDataUpdates){
+            EventBus.getDefault().post(new TourDetailsEvent(tour));
+        }
     }
 
     public static class TourDetailsEvent {
@@ -52,6 +68,18 @@ public class TourDataCollector implements PedometerEventListener, StopwatchEvent
 
         public Tour getTour() {
             return tour;
+        }
+    }
+    
+    public static class ControlEvent{
+        private boolean publishTourDataUpdates;
+        
+        public ControlEvent(Boolean publishTourDataUpdates){
+            this.publishTourDataUpdates = publishTourDataUpdates;
+        }
+
+        public boolean getPublishTourDataUpdates(){
+            return publishTourDataUpdates;
         }
     }
 }

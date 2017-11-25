@@ -6,6 +6,8 @@ package at.fhooe.mos.mountaineer.sensors.stopwatch;
 
 public interface StopwatchEventListener {
     void onElapsedSecondsEvent(int elapsedSeconds);
+
     void onStartEvent(long timestamp);
+
     void onStopEvent(long timestamp);
 }

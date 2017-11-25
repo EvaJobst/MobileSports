@@ -1,6 +1,5 @@
 package at.fhooe.mos.mountaineer.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
@@ -17,33 +16,52 @@ import at.fhooe.mos.mountaineer.model.Tour;
 
 public class TourDetailsActivity extends AppCompatActivity {
 
-    @ViewById ImageView tourImage;
-    @ViewById TextView tourName;
+    @ViewById
+    ImageView tourImage;
+    @ViewById
+    TextView tourName;
 
     // GENERAL
-    @ViewById TextView tourLocation;
-    @ViewById TextView tourDuration;
-    @ViewById TextView tourStartTime;
+    @ViewById
+    TextView tourLocation;
+    @ViewById
+    TextView tourDuration;
+    @ViewById
+    TextView tourStartTime;
 
     // TRACK
-    @ViewById TextView tourSteps;
-    @ViewById TextView tourAverageSteps;
-    @ViewById TextView tourSpeed;
-    @ViewById TextView tourDistance;
-    @ViewById TextView tourElevation;
+    @ViewById
+    TextView tourSteps;
+    @ViewById
+    TextView tourAverageSteps;
+    @ViewById
+    TextView tourSpeed;
+    @ViewById
+    TextView tourDistance;
+    @ViewById
+    TextView tourElevation;
 
     // HEALTH
-    @ViewById TextView tourHeartRate;
-    @ViewById TextView tourNormalHeartRate;
-    @ViewById TextView tourRespiration;
-    @ViewById TextView tourKcal;
+    @ViewById
+    TextView tourHeartRate;
+    @ViewById
+    TextView tourNormalHeartRate;
+    @ViewById
+    TextView tourRespiration;
+    @ViewById
+    TextView tourKcal;
 
     // WEATHER
-    @ViewById TextView tourTemp;
-    @ViewById TextView tourMinMaxTemp;
-    @ViewById TextView tourRain;
-    @ViewById TextView tourHumidity;
-    @ViewById TextView tourWind;
+    @ViewById
+    TextView tourTemp;
+    @ViewById
+    TextView tourMinMaxTemp;
+    @ViewById
+    TextView tourRain;
+    @ViewById
+    TextView tourHumidity;
+    @ViewById
+    TextView tourWind;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +86,12 @@ public class TourDetailsActivity extends AppCompatActivity {
         tourElevation.setText(tour.getElevation());
 
         // HEALTH
-       tourHeartRate.setText(tour.getAverageHeartRate());
-       tourNormalHeartRate.setText(tour.getNormalHeartRate());
-       tourRespiration.setText(tour.getAverageRespiration());
-       tourKcal.setText(tour.getBurnedKcal());
+        tourHeartRate.setText(tour.getAverageHeartRate());
+        tourNormalHeartRate.setText(tour.getNormalHeartRate());
+        tourRespiration.setText(tour.getAverageRespiration());
+        tourKcal.setText(tour.getBurnedKcal());
 
-       // WEATHER
+        // WEATHER
         // TODO tourTemp.setText();
         tourMinMaxTemp.setText(tour.getMaxTemp() + "/" + tour.getMinTemp());
         tourRain.setText(tour.getRain());

@@ -22,6 +22,8 @@ import at.fhooe.mos.mountaineer.ui.MainNotificationManager;
 public class TourRecorderService extends Service {
     public static final String TAG = TourRecorderService.class.getSimpleName();
 
+    private static final int NOTIFICATION_PERIODIC_UPDATE_TIME_MS = 1000;
+
     private PowerManager.WakeLock wakeLock;
     private Handler handler;
     private PeriodicNotificationUpdater periodicNotificationUpdater;
@@ -96,7 +98,7 @@ public class TourRecorderService extends Service {
     }
 
     private void startNotificationUpdates() {
-        handler.postDelayed(periodicNotificationUpdater, 500);
+        handler.postDelayed(periodicNotificationUpdater, NOTIFICATION_PERIODIC_UPDATE_TIME_MS);
     }
 
     private void stopNotificationUpdates() {
@@ -108,7 +110,7 @@ public class TourRecorderService extends Service {
         public void run() {
             mainNotificationManager.showNotification(tourDataCollector.getTour());
 
-            handler.postDelayed(this, 1000);
+            handler.postDelayed(this, NOTIFICATION_PERIODIC_UPDATE_TIME_MS);
         }
     }
 }

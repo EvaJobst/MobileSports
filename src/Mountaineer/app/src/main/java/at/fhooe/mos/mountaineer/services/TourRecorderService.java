@@ -1,6 +1,5 @@
 package at.fhooe.mos.mountaineer.services;
 
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -10,10 +9,10 @@ import android.os.PowerManager;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.EService;
-import org.androidannotations.annotations.SystemService;
 
-import at.fhooe.mos.mountaineer.sensors.pedometer.PedometerSensor;
-import at.fhooe.mos.mountaineer.ui.Notifications;
+import at.fhooe.mos.mountaineer.sensors.pedometer.PedometerManager;
+import at.fhooe.mos.mountaineer.sensors.stopwatch.Stopwatch;
+import at.fhooe.mos.mountaineer.ui.MainNotificationManager;
 
 /**
  * Created by stefan on 25.11.2017.
@@ -27,10 +26,12 @@ public class TourRecorderService extends Service {
     private Handler handler;
     private PeriodicNotificationUpdater periodicNotificationUpdater;
 
-    private PedometerSensor pedometerSensor;
+    private TourDataCollector tourDataCollector;
 
-    @SystemService
-    public NotificationManager notificationManager;
+    private MainNotificationManager mainNotificationManager;
+
+    private PedometerManager pedometerManager;
+    private Stopwatch stopwatch;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -41,15 +42,22 @@ public class TourRecorderService extends Service {
     public void onCreate() {
         super.onCreate();
 
+        mainNotificationManager = new MainNotificationManager(this);
+
         handler = new Handler();
         periodicNotificationUpdater = new PeriodicNotificationUpdater();
 
-        pedometerSensor = new PedometerSensor(this);
+        tourDataCollector = new TourDataCollector();
+
+        pedometerManager = new PedometerManager(this);
+        stopwatch = new Stopwatch();
+        stopwatch.registerListener(tourDataCollector);
 
         acquireWakeLock();
-        startForeground(Notifications.getNotificationId(), Notifications.getNotification(this));
+        startForeground(mainNotificationManager.getNotificationId(), mainNotificationManager.getNotification());
 
-        pedometerSensor.setup();
+        pedometerManager.setup(tourDataCollector);
+        stopwatch.start();
 
         startNotificationUpdates();
         Toast.makeText(this, "accelerometerSensor service started", Toast.LENGTH_SHORT).show();
@@ -61,7 +69,8 @@ public class TourRecorderService extends Service {
 
         stopForeground(true);
 
-        pedometerSensor.destroy();
+        pedometerManager.destroy();
+        stopwatch.stop();
 
         releaseWakeLock();
 
@@ -87,7 +96,7 @@ public class TourRecorderService extends Service {
     }
 
     private void startNotificationUpdates() {
-        handler.post(periodicNotificationUpdater);
+        handler.postDelayed(periodicNotificationUpdater, 500);
     }
 
     private void stopNotificationUpdates() {
@@ -97,11 +106,7 @@ public class TourRecorderService extends Service {
     private class PeriodicNotificationUpdater implements Runnable {
         @Override
         public void run() {
-            int steps = pedometerSensor.getTotalStepCount();
-
-            String text = "steps: " + steps;
-
-            notificationManager.notify(Notifications.getNotificationId(), Notifications.getNotification(TourRecorderService.this, text));
+            mainNotificationManager.showNotification(tourDataCollector.getTour());
 
             handler.postDelayed(this, 1000);
         }

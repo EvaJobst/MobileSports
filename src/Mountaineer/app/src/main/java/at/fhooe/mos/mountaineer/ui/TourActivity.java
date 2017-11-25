@@ -151,10 +151,10 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
     }
 
     public void startTourRecording(){
-        TourRecorderService_.intent(getApplication()).start();
+        TourRecorderService_.intent(this).start();
     }
 
     public void stopTourRecording(){
-        TourRecorderService_.intent(getApplication()).stop();
+        TourRecorderService_.intent(this).stop();
     }
 }

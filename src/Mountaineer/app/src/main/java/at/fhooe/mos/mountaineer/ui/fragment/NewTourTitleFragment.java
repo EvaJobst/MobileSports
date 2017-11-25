@@ -40,7 +40,7 @@ public class NewTourTitleFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == requestCodeGallery) {
+        if (requestCode == requestCodeGallery && data != null) {
             Uri selectedImageUri = data.getData();
             selectedImagePath = getPath(selectedImageUri);
             Toast.makeText(getContext(), "Image selected!", Toast.LENGTH_SHORT).show();

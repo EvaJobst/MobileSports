@@ -11,6 +11,7 @@ import android.support.v4.app.NotificationCompat;
 
 import at.fhooe.mos.mountaineer.R;
 import at.fhooe.mos.mountaineer.model.Tour;
+import at.fhooe.mos.mountaineer.model.TourDataFormatter;
 
 /**
  * Created by stefan on 25.11.2017.
@@ -45,7 +46,7 @@ public class MainNotificationManager {
     }
 
     public Notification getNotification(Tour tour) {
-        String text = "steps: " + tourDataFormatter.getTotalStepsString(tour) + " - duration: " + tourDataFormatter.getDurationString(tour);
+        String text = "steps: " + tourDataFormatter.getTotalSteps(tour) + " - duration: " + tourDataFormatter.getDuration(tour);
 
         return getNotification(text);
     }
@@ -72,8 +73,7 @@ public class MainNotificationManager {
 
     private void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "notifications for mountaineer", NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setSound(null, null);
+            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "notifications for mountaineer", NotificationManager.IMPORTANCE_LOW);
             getNotificationManager(context).createNotificationChannel(channel);
         }
     }

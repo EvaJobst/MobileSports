@@ -10,18 +10,18 @@ import at.fhooe.mos.mountaineer.EventSource;
  */
 
 public class Stopwatch extends EventSource<StopwatchEventListener> {
-    public static final int PERIODIC_EVENT_TIME_MILLIS = 1000;
+    public static final int PERIODIC_EVENT_TIME_MS = 1000;
 
     private long startTime = 0;
     private long stopTime = 0;
     private boolean running = false;
 
     private Handler handler;
-    private PeriodicUpdater periodicUpdater;
+    private PeriodicEventSender periodicEventSender;
 
     public Stopwatch() {
         handler = new Handler();
-        periodicUpdater = new PeriodicUpdater();
+        periodicEventSender = new PeriodicEventSender();
     }
 
     public void start() {
@@ -58,14 +58,14 @@ public class Stopwatch extends EventSource<StopwatchEventListener> {
     }
 
     private void startPeriodicUpdates() {
-        handler.postDelayed(periodicUpdater, PERIODIC_EVENT_TIME_MILLIS);
+        handler.postDelayed(periodicEventSender, PERIODIC_EVENT_TIME_MS);
     }
 
     private void stopPeriodicUpdates() {
-        handler.removeCallbacks(periodicUpdater);
+        handler.removeCallbacks(periodicEventSender);
     }
 
-    private class PeriodicUpdater implements Runnable {
+    private class PeriodicEventSender implements Runnable {
         @Override
         public void run() {
 
@@ -74,7 +74,7 @@ public class Stopwatch extends EventSource<StopwatchEventListener> {
                     listener.onElapsedSecondsEvent(getElapsedSeconds());
                 }
 
-                handler.postDelayed(this, PERIODIC_EVENT_TIME_MILLIS);
+                handler.postDelayed(this, PERIODIC_EVENT_TIME_MS);
             }
         }
     }

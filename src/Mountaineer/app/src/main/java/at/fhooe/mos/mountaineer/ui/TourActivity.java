@@ -1,10 +1,9 @@
 package at.fhooe.mos.mountaineer.ui;
 
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -69,7 +68,7 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
                 nextState = TourState.newTour;
         }
 
-        if(nextState == TourState.newTour ||
+        if (nextState == TourState.newTour ||
                 nextState == TourState.currentTour) {
             persistenceManager.setCurrentState(nextState);
         }
@@ -134,11 +133,11 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
         // TODO Set image by path
     }*/
 
-    public void updateTourRecordingStatus(){
+    public void updateTourRecordingStatus() {
         switch (currentState) {
             case newTour:
             case newTourTitle:
-            break;
+                break;
             case currentTour:
                 startTourRecording();
                 break;
@@ -150,11 +149,11 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
         }
     }
 
-    public void startTourRecording(){
+    public void startTourRecording() {
         TourRecorderService_.intent(this).start();
     }
 
-    public void stopTourRecording(){
+    public void stopTourRecording() {
         TourRecorderService_.intent(this).stop();
     }
 }

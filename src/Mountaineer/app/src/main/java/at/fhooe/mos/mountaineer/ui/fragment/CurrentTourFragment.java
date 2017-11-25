@@ -15,8 +15,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.Locale;
-
 import at.fhooe.mos.mountaineer.R;
 import at.fhooe.mos.mountaineer.model.Tour;
 import at.fhooe.mos.mountaineer.services.TourDataCollector;
@@ -25,35 +23,54 @@ import at.fhooe.mos.mountaineer.ui.TourDataFormatter;
 @EFragment
 public class CurrentTourFragment extends Fragment {
 
-    @ViewById ImageView tourImage;
-    @ViewById TextView tourName;
+    @ViewById
+    protected ImageView tourImage;
+    @ViewById
+    protected TextView tourName;
 
     // GENERAL
-    @ViewById TextView tourLocation;
-    @ViewById TextView tourDuration;
-    @ViewById TextView tourStartTime;
+    @ViewById
+    protected TextView tourLocation;
+    @ViewById
+    protected TextView tourDuration;
+    @ViewById
+    protected TextView tourStartTime;
 
     // TRACK
-    @ViewById TextView tourSteps;
-    @ViewById TextView tourAverageSteps;
-    @ViewById TextView tourSpeed;
-    @ViewById TextView tourDistance;
-    @ViewById TextView tourElevation;
+    @ViewById
+    protected TextView tourSteps;
+    @ViewById
+    protected TextView tourAverageSteps;
+    @ViewById
+    protected TextView tourSpeed;
+    @ViewById
+    protected TextView tourDistance;
+    @ViewById
+    protected TextView tourElevation;
 
     // HEALTH
-    @ViewById TextView tourHeartRate;
-    @ViewById TextView tourNormalHeartRate;
-    @ViewById TextView tourRespiration;
-    @ViewById TextView tourKcal;
+    @ViewById
+    protected TextView tourHeartRate;
+    @ViewById
+    protected TextView tourNormalHeartRate;
+    @ViewById
+    protected TextView tourRespiration;
+    @ViewById
+    protected TextView tourKcal;
 
     // WEATHER
-    @ViewById TextView tourTemp;
-    @ViewById TextView tourMinMaxTemp;
-    @ViewById TextView tourRain;
-    @ViewById TextView tourHumidity;
-    @ViewById TextView tourWind;
+    @ViewById
+    protected TextView tourTemp;
+    @ViewById
+    protected TextView tourMinMaxTemp;
+    @ViewById
+    protected TextView tourRain;
+    @ViewById
+    protected TextView tourHumidity;
+    @ViewById
+    protected TextView tourWind;
 
-    TourDataFormatter tourDataFormatter = new TourDataFormatter();
+    private static TourDataFormatter tourDataFormatter = TourDataFormatter.getInstance();
 
     public CurrentTourFragment() {
         // Required empty public constructor

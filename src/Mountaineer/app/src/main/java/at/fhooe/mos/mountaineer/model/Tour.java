@@ -6,32 +6,32 @@ package at.fhooe.mos.mountaineer.model;
 
 public class Tour {
     // General
-    String name;
-    String location;
-    String day;
-    long startTimestamp;
-    long stopTimestamp;
-    int duration;
+    private String name;
+    private String location;
+    private String day;
+    private long startTimestamp;
+    private long stopTimestamp;
+    private int duration;
 
     // Distance
-    int totalSteps;
-    int averageSteps;
-    int distance;
-    int elevation;
+    private int totalSteps;
+    private int averageSteps;
+    private int distance;
+    private int elevation;
 
     // Health
-    int averageSpeed;
-    int averageHeartRate;
-    String normalHeartRate;
-    int averageRespiration;
-    int burnedKcal;
+    private int averageSpeed;
+    private int averageHeartRate;
+    private String normalHeartRate;
+    private int averageRespiration;
+    private int burnedKcal;
 
     // Weather
-    int maxTemp;
-    int minTemp;
-    int rain;
-    int humidity;
-    int wind;
+    private int maxTemp;
+    private int minTemp;
+    private int rain;
+    private int humidity;
+    private int wind;
 
     public String getName() {
         return name;

@@ -51,7 +51,7 @@ public class FirebaseManager {
     }
 
     public void notifyListener(Tour tour) {
-        for(FetchEventListener listener : listenerList) {
+        for (FetchEventListener listener : listenerList) {
             listener.onFetchEvent(tour);
         }
     }

@@ -15,7 +15,7 @@ public class TourDataCollector implements PedometerEventListener, StopwatchEvent
 
     @Override
     public void onStepDetectedEvent() {
-        tour.setTotalSteps(tour.getTotalSteps()+1);
+        tour.setTotalSteps(tour.getTotalSteps() + 1);
         publishData();
     }
 

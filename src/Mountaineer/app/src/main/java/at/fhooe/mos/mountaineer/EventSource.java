@@ -10,7 +10,7 @@ public abstract class EventSource<T> {
     protected ArrayList<T> eventListeners = new ArrayList<>();
 
     public void registerListener(T listener) {
-        if(!eventListeners.contains(listener)){
+        if (!eventListeners.contains(listener)) {
             eventListeners.add(listener);
         }
     }

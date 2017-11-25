@@ -19,7 +19,7 @@ public class Stopwatch extends EventSource<StopwatchEventListener> {
     private Handler handler;
     private PeriodicUpdater periodicUpdater;
 
-    public Stopwatch(){
+    public Stopwatch() {
         handler = new Handler();
         periodicUpdater = new PeriodicUpdater();
     }
@@ -28,24 +28,22 @@ public class Stopwatch extends EventSource<StopwatchEventListener> {
         startTime = System.currentTimeMillis();
         running = true;
 
-        for(StopwatchEventListener listener : eventListeners){
+        for (StopwatchEventListener listener : eventListeners) {
             listener.onStartEvent(startTime);
         }
 
-        handler.post(periodicUpdater);
+        startPeriodicUpdates();
     }
 
     public void stop() {
-        handler.removeCallbacks(periodicUpdater);
+        stopPeriodicUpdates();
 
         stopTime = System.currentTimeMillis();
         running = false;
 
-        for(StopwatchEventListener listener : eventListeners){
+        for (StopwatchEventListener listener : eventListeners) {
             listener.onStartEvent(stopTime);
         }
-
-
     }
 
     public int getElapsedSeconds() {
@@ -59,12 +57,20 @@ public class Stopwatch extends EventSource<StopwatchEventListener> {
         return stopTime - startTime;
     }
 
+    private void startPeriodicUpdates() {
+        handler.postDelayed(periodicUpdater, PERIODIC_EVENT_TIME_MILLIS);
+    }
+
+    private void stopPeriodicUpdates() {
+        handler.removeCallbacks(periodicUpdater);
+    }
+
     private class PeriodicUpdater implements Runnable {
         @Override
         public void run() {
 
-            if(running){
-                for(StopwatchEventListener listener : eventListeners){
+            if (running) {
+                for (StopwatchEventListener listener : eventListeners) {
                     listener.onElapsedSecondsEvent(getElapsedSeconds());
                 }
 

@@ -23,14 +23,14 @@ public class MainNotificationManager {
     private NotificationManager notificationManager = null;
     private NotificationCompat.Builder notificationBuilder = null;
 
-    private TourDataFormatter tourDataFormatter = new TourDataFormatter();
+    private static TourDataFormatter tourDataFormatter = TourDataFormatter.getInstance();
 
     public MainNotificationManager(Context context) {
         notificationManager = getNotificationManager(context);
         notificationBuilder = getNotificationBuilder(context);
     }
 
-    public int getNotificationId(){
+    public int getNotificationId() {
         return NOTIFICATION_ID;
     }
 

@@ -40,7 +40,7 @@ public class NewTourTitleFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == requestCodeGallery) {
+        if (requestCode == requestCodeGallery) {
             Uri selectedImageUri = data.getData();
             selectedImagePath = getPath(selectedImageUri);
             Toast.makeText(getContext(), "Image selected!", Toast.LENGTH_SHORT).show();
@@ -49,15 +49,15 @@ public class NewTourTitleFragment extends Fragment {
 
     public String getPath(Uri uri) {
         // just some safety built in
-        if( uri == null ) {
+        if (uri == null) {
             // TODO perform some logging or show user feedback
             return null;
         }
         // try to retrieve the image from the media store first
         // this will only work for images selected from gallery
-        String[] projection = { MediaStore.Images.Media.DATA };
+        String[] projection = {MediaStore.Images.Media.DATA};
         Cursor cursor = getActivity().managedQuery(uri, projection, null, null, null);
-        if( cursor != null ){
+        if (cursor != null) {
             int column_index = cursor
                     .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();

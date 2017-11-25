@@ -9,7 +9,9 @@ public class Tour {
     String name;
     String location;
     String day;
-    String duration;
+    long startTimestamp;
+    long stopTimestamp;
+    int duration;
 
     // Distance
     int totalSteps;
@@ -55,12 +57,28 @@ public class Tour {
         this.day = day;
     }
 
-    public String getDuration() {
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    public long getStartTimestamp() {
+        return startTimestamp;
+    }
+
+    public void setStartTimestamp(long startTimestamp) {
+        this.startTimestamp = startTimestamp;
+    }
+
+    public long getStopTimestamp() {
+        return stopTimestamp;
+    }
+
+    public void setStopTimestamp(long stopTimestamp) {
+        this.stopTimestamp = stopTimestamp;
     }
 
     public int getTotalSteps() {

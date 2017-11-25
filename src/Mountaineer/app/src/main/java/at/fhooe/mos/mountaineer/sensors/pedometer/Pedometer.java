@@ -4,19 +4,17 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 
-import java.util.ArrayList;
+import at.fhooe.mos.mountaineer.EventSource;
 
 /**
  * Created by stefan on 10.11.2017.
  */
 
-public class Pedometer implements SensorEventListener {
+public class Pedometer extends EventSource<PedometerEventListener> implements SensorEventListener {
     public static final float PRECISION = 0.20f;
     public static final float MIN_DYNAMIC_PRECISION = 0.5f;
     public static final int MIN_TIME_BETWEEN_STEPS_MS = 200;
     public static final int MAX_TIME_BETWEEN_STEPS_MS = 2000;
-
-    private ArrayList<PedometerEventListener> pedometerEventListeners = new ArrayList<>();
 
     private float[] minAcceleration = minInstance();
     private float[] maxAcceleration = maxInstance();
@@ -129,9 +127,9 @@ public class Pedometer implements SensorEventListener {
         }
     }
 
-    private void notifyListeners() {
-        for (PedometerEventListener listener : pedometerEventListeners) {
-            listener.onStepDetected();
+    protected void notifyListeners() {
+        for(PedometerEventListener listener : eventListeners){
+            listener.onStepDetectedEvent();
         }
     }
 
@@ -151,17 +149,4 @@ public class Pedometer implements SensorEventListener {
         };
     }
 
-    public void registerListener(PedometerEventListener listener) {
-        pedometerEventListeners.add(listener);
-    }
-
-    public void removeListener(PedometerEventListener listener) {
-        if (pedometerEventListeners.contains(listener)) {
-            pedometerEventListeners.remove(listener);
-        }
-    }
-
-    public interface PedometerEventListener {
-        void onStepDetected();
-    }
 }

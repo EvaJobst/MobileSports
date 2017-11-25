@@ -11,29 +11,27 @@ import android.hardware.SensorManager;
  * Created by stefan on 25.11.2017.
  */
 
-public class PedometerSensor implements Pedometer.PedometerEventListener {
+public class PedometerManager {
     private Context context;
     private SensorManager sensorManager;
     private Sensor accelerometerSensor;
     private Pedometer pedometer;
-    private PedometerSensor.ScreenOffBroadcastReceiver screenOffBroadcastReceiver;
+    private PedometerManager.ScreenOffBroadcastReceiver screenOffBroadcastReceiver;
 
-    private int totalStepCount;
-
-    public PedometerSensor(Context context) {
+    public PedometerManager(Context context) {
         this.context = context;
     }
 
-    public void setup() {
+    public void setup(PedometerEventListener pedometerEventListener) {
         pedometer = new Pedometer();
-        pedometer.registerListener(this);
+        pedometer.registerListener(pedometerEventListener);
 
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         registerSensorListeners();
 
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
-        screenOffBroadcastReceiver = new PedometerSensor.ScreenOffBroadcastReceiver();
+        screenOffBroadcastReceiver = new PedometerManager.ScreenOffBroadcastReceiver();
         context.registerReceiver(screenOffBroadcastReceiver, filter);
     }
 
@@ -41,10 +39,6 @@ public class PedometerSensor implements Pedometer.PedometerEventListener {
         context.unregisterReceiver(screenOffBroadcastReceiver);
 
         unregisterSensorListeners();
-    }
-
-    public int getTotalStepCount(){
-        return totalStepCount;
     }
 
     private void registerSensorListeners() {
@@ -56,18 +50,13 @@ public class PedometerSensor implements Pedometer.PedometerEventListener {
         sensorManager.unregisterListener(pedometer);
     }
 
-    @Override
-    public void onStepDetected() {
-        totalStepCount++;
-    }
-
     private class ScreenOffBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 // Unregisters the listener and registers it again.
-                PedometerSensor.this.unregisterSensorListeners();
-                PedometerSensor.this.registerSensorListeners();
+                PedometerManager.this.unregisterSensorListeners();
+                PedometerManager.this.registerSensorListeners();
             }
         }
     }

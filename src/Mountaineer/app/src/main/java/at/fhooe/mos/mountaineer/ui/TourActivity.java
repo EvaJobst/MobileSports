@@ -1,9 +1,11 @@
 package at.fhooe.mos.mountaineer.ui;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -15,6 +17,7 @@ import org.androidannotations.annotations.OptionsMenuItem;
 import at.fhooe.mos.mountaineer.PersistenceManager;
 import at.fhooe.mos.mountaineer.R;
 import at.fhooe.mos.mountaineer.TourState;
+import at.fhooe.mos.mountaineer.services.TourRecorderService_;
 import at.fhooe.mos.mountaineer.ui.fragment.CurrentTourFragment_;
 import at.fhooe.mos.mountaineer.ui.fragment.NewTourFragment;
 import at.fhooe.mos.mountaineer.ui.fragment.NewTourFragment_;
@@ -23,6 +26,8 @@ import at.fhooe.mos.mountaineer.ui.fragment.NewTourTitleFragment_;
 @EActivity(R.layout.activity_tour)
 @OptionsMenu(R.menu.tour_activity_menu)
 public class TourActivity extends AppCompatActivity implements NewTourFragment.OnAddTourClickListener {
+    private final static String TAG = TourActivity.class.getSimpleName();
+
     PersistenceManager persistenceManager;
     TourState currentState;
 
@@ -55,6 +60,9 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
                 nextState = TourState.currentTour;
                 break;
             case currentTour:
+                nextState = TourState.finishTour;
+                break;
+            case finishTour:
                 nextState = TourState.newTour;
                 break;
             default:
@@ -62,13 +70,14 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
         }
 
         if(nextState == TourState.newTour ||
-                nextState == TourState.newTour.currentTour) {
+                nextState == TourState.currentTour) {
             persistenceManager.setCurrentState(nextState);
         }
 
         currentState = nextState;
         updateOptionsMenu();
         updateFragment();
+        updateTourRecordingStatus();
     }
 
     void updateFragment() {
@@ -124,4 +133,28 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
         String imagePath = bundle.getString(KEY_TOUR_IMAGE_PATH);
         // TODO Set image by path
     }*/
+
+    public void updateTourRecordingStatus(){
+        switch (currentState) {
+            case newTour:
+            case newTourTitle:
+            break;
+            case currentTour:
+                startTourRecording();
+                break;
+            case finishTour:
+                stopTourRecording();
+                break;
+            default:
+                Log.e(TAG, "undefined state!");
+        }
+    }
+
+    public void startTourRecording(){
+        TourRecorderService_.intent(getApplication()).start();
+    }
+
+    public void stopTourRecording(){
+        TourRecorderService_.intent(getApplication()).stop();
+    }
 }

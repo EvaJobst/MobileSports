@@ -185,7 +185,7 @@ public class StepDetectorTestActivity extends AppCompatActivity implements StepE
             }
 
             LineDataSet dataSet = new LineDataSet(entries, "x=" + x);
-            dataSet = ChartVisualization.simulationData(dataSet, x);
+            dataSet = ChartVisualization.pedometerSimulationData(dataSet, x);
             dataSets.add(dataSet);
         }
 
@@ -214,7 +214,7 @@ public class StepDetectorTestActivity extends AppCompatActivity implements StepE
             }
 
             LineDataSet dataSet = new LineDataSet(entries, "x=" + x);
-            dataSet = ChartVisualization.resultsData(dataSet, x);
+            dataSet = ChartVisualization.pedometerResultsData(dataSet, x);
             dataSets.add(dataSet);
         }
 

@@ -48,6 +48,15 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.startStopStepDetectorService)
     Button startStopStepDetectorService;
 
+    @BindView(R.id.openHeartRateSimulation)
+    Button openHeartRateSimulation;
+
+    @OnClick(R.id.openHeartRateSimulation)
+    public void onOpenHeartRateSimulationClick() {
+        Intent intent = new Intent(MainActivity.this, HeartRateSimulationActivity.class);
+        startActivity(intent);
+    }
+
     @OnClick(R.id.launchStepDetectorTestActivityButton)
     public void onStepDetectorTestClick() {
         Intent intent = new Intent(MainActivity.this, StepDetectorTestActivity.class);

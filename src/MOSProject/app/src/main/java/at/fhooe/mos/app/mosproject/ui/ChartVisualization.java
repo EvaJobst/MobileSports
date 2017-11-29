@@ -9,7 +9,22 @@ import com.github.mikephil.charting.data.LineDataSet;
  */
 
 public class ChartVisualization {
-    public static LineDataSet simulationData(LineDataSet dataSet, int idx) {
+    public static LineDataSet trimpSimulationData(LineDataSet dataSet, String content) {
+        dataSet.setDrawCircles(false);
+        int color;
+
+        switch(content) {
+            case "fitness": color = Color.rgb(255, 0, 0); break;
+            case "fatigue": color = Color.rgb(0, 255, 0); break;
+            case "performance": color = Color.rgb(0, 0, 255); break;
+            default: color = Color.rgb(255, 255, 255);
+        }
+
+        dataSet.setColor(color);
+        return dataSet;
+    }
+
+    public static LineDataSet pedometerSimulationData(LineDataSet dataSet, int idx) {
         dataSet.setDrawCircles(false);
         int color;
 
@@ -25,7 +40,7 @@ public class ChartVisualization {
         return dataSet;
     }
 
-    public static LineDataSet resultsData(LineDataSet dataSet, int idx) {
+    public static LineDataSet pedometerResultsData(LineDataSet dataSet, int idx) {
         int color;
 
         if(idx == 4) {

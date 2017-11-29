@@ -31,4 +31,11 @@
         android:id="@+id/stopwatch"
         app:layout_constraintTop_toBottomOf="@id/stepCount" />
 
+    <Button
+        android:id="@+id/openHeartRateSimulation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Heart Rate Simulation"
+        app:layout_constraintTop_toBottomOf="@id/stopwatch"/>
+
 </android.support.constraint.ConstraintLayout>

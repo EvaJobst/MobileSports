@@ -6,7 +6,6 @@ package at.fhooe.mos.mountaineer;
 
 public enum TourState {
     newTour,
-    newTourTitle,
+    saveTour,
     currentTour,
-    finishTour
 }

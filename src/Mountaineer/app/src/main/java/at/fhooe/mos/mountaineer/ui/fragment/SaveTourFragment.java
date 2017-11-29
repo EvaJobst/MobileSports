@@ -4,14 +4,10 @@ package at.fhooe.mos.mountaineer.ui.fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.Click;
@@ -20,8 +16,8 @@ import org.androidannotations.annotations.ViewById;
 
 import at.fhooe.mos.mountaineer.R;
 
-@EFragment(R.layout.fragment_new_tour_title)
-public class NewTourTitleFragment extends Fragment {
+@EFragment(R.layout.fragment_save_tour)
+public class SaveTourFragment extends Fragment {
 
     int requestCodeGallery = 123;
     String selectedImagePath;
@@ -69,7 +65,7 @@ public class NewTourTitleFragment extends Fragment {
         return uri.getPath();
     }
 
-    public NewTourTitleFragment() {
+    public SaveTourFragment() {
         // Required empty public constructor
     }
 }

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import at.fhooe.mos.mountaineer.model.Gender;
+
 
 /**
  * Created by Eva on 17.11.2017.
@@ -33,12 +35,14 @@ public class PersistenceManager {
         return TourState.valueOf(state);
     }
 
-    public String getGender(){
+    public Gender getGender(){
         String preferenceGenderKey = context.getString(R.string.preference_gender_key);
         String preferenceGenderDefault = context.getString(R.string.preference_gender_default);
 
         String preferenceGenderValue = preferences.getString(preferenceGenderKey, preferenceGenderDefault);
-        return preferenceGenderValue;
+
+        Gender gender = Gender.fromShortGenderString(preferenceGenderValue);
+        return gender;
     }
 
     public int getAge(){

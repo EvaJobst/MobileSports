@@ -1,6 +1,15 @@
 <resources>
     <string name="app_name">Mountaineer</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tour_activity_menu_settings">Settings</string>
+    <string name="tour_activity_menu_start">Start</string>
+    <string name="tour_activity_menu_stop">Stop</string>
+
+    <string name="preference_gender_title">Gender</string>
+    <string name="preference_gender_key">preferenceGender</string>
+    <string name="preference_gender_default">x</string>
+
+    <string name="preference_age_title">Age</string>
+    <string name="preference_age_key">preferenceAge</string>
+    <string name="preference_age_default">N/A</string>
 </resources>

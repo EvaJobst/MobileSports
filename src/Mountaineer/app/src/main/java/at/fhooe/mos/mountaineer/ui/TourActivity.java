@@ -1,5 +1,6 @@
 package at.fhooe.mos.mountaineer.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -31,7 +32,7 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
     TourState currentState;
 
     @OptionsMenuItem
-    MenuItem tourActivityButton;
+    MenuItem tourActivityMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,21 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public void onAddTourClick() {
+        invokeStateTransition();
+    }
+
     @OptionsItem(R.id.tourActivityButton)
+    void onOptionsItemClicked() {
+        if (tourActivityMenuItem.getTitle().toString().toLowerCase().equals(getString(R.string.tour_activity_menu_settings).toLowerCase())) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+        } else {
+            invokeStateTransition();
+        }
+    }
+
     void invokeStateTransition() {
         TourState nextState;
 
@@ -80,7 +95,7 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
     }
 
     void updateFragment() {
-        Fragment newFragment = getFragment();
+        Fragment newFragment = getFragmentForCurrentState();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         transaction.replace(R.id.currentTourFragment, newFragment);
@@ -90,21 +105,22 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
     void updateOptionsMenu() {
         switch (currentState) {
             case newTour:
-                tourActivityButton.setVisible(false);
+                tourActivityMenuItem.setTitle(getString(R.string.tour_activity_menu_settings));
+                tourActivityMenuItem.setVisible(true);
                 break;
             case newTourTitle:
-                tourActivityButton.setTitle("START");
-                tourActivityButton.setVisible(true);
+                tourActivityMenuItem.setTitle(getString(R.string.tour_activity_menu_start));
+                tourActivityMenuItem.setVisible(true);
                 break;
             case currentTour:
-                tourActivityButton.setTitle("STOP");
+                tourActivityMenuItem.setTitle(getString(R.string.tour_activity_menu_stop));
                 break;
             default:
-                tourActivityButton.setVisible(false);
+                tourActivityMenuItem.setVisible(false);
         }
     }
 
-    Fragment getFragment() {
+    private Fragment getFragmentForCurrentState() {
         switch (currentState) {
             case newTour:
                 return new NewTourFragment_();
@@ -116,22 +132,6 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
                 return new NewTourFragment_();
         }
     }
-
-    @Override
-    public void onAddTourClick() {
-        invokeStateTransition();
-    }
-
-    /*@UiThread
-    void createUI(Intent intent) {
-        Bundle bundle = intent.getExtras();
-
-        String name = bundle.getString(KEY_TOUR_NAME);
-        tourName.setText(name);
-
-        String imagePath = bundle.getString(KEY_TOUR_IMAGE_PATH);
-        // TODO Set image by path
-    }*/
 
     public void updateTourRecordingStatus() {
         switch (currentState) {

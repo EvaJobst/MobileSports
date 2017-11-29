@@ -11,9 +11,11 @@ import android.preference.PreferenceManager;
 
 public class PersistenceManager {
     private String CURRENT_STATE_KEY = "current_state";
+    private Context context;
     private SharedPreferences preferences;
 
     public PersistenceManager(Context context) {
+        this.context = context;
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
@@ -29,5 +31,24 @@ public class PersistenceManager {
         }
 
         return TourState.valueOf(state);
+    }
+
+    public String getGender(){
+        String preferenceGenderKey = context.getString(R.string.preference_gender_key);
+        String preferenceGenderDefault = context.getString(R.string.preference_gender_default);
+
+        String preferenceGenderValue = preferences.getString(preferenceGenderKey, preferenceGenderDefault);
+        return preferenceGenderValue;
+    }
+
+    public int getAge(){
+        String preferenceAgeKey = context.getString(R.string.preference_age_key);
+        String preferenceAgeDefault = context.getString(R.string.preference_age_default);
+
+        String preferenceAgeValue = preferences.getString(preferenceAgeKey, preferenceAgeDefault);
+
+        int age = Integer.parseInt(preferenceAgeValue);
+
+        return age;
     }
 }

@@ -62,7 +62,6 @@ public class TourRecorderService extends Service {
         stopwatch.start();
 
         startNotificationUpdates();
-        Toast.makeText(this, "accelerometerSensor service started", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -77,8 +76,6 @@ public class TourRecorderService extends Service {
         releaseWakeLock();
 
         super.onDestroy();
-
-        Toast.makeText(this, "accelerometerSensor service stopped", Toast.LENGTH_SHORT).show();
     }
 
     @Override

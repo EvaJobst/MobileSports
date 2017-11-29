@@ -13,6 +13,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.OptionsMenuItem;
+import org.androidannotations.annotations.res.StringRes;
 
 import at.fhooe.mos.mountaineer.PersistenceManager;
 import at.fhooe.mos.mountaineer.R;
@@ -28,11 +29,20 @@ import at.fhooe.mos.mountaineer.ui.fragment.SaveTourFragment_;
 public class TourActivity extends AppCompatActivity implements NewTourFragment.OnAddTourClickListener {
     private final static String TAG = TourActivity.class.getSimpleName();
 
-    PersistenceManager persistenceManager;
-    TourState currentState;
+    private PersistenceManager persistenceManager;
+    private TourState currentState;
+
+    @StringRes
+    protected String tourActivityMenuSettings;
+
+    @StringRes
+    protected String tourActivityMenuStop;
+
+    @StringRes
+    protected String tourActivityMenuSave;
 
     @OptionsMenuItem
-    MenuItem tourActivityMenuItem;
+    protected MenuItem tourActivityMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +65,7 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
 
     @OptionsItem(R.id.tourActivityMenuItem)
     void onOptionsItemClicked() {
-        if (tourActivityMenuItem.getTitle().toString().toLowerCase().equals(getString(R.string.tour_activity_menu_settings).toLowerCase())) {
+        if (tourActivityMenuItem.getTitle().toString().equals(tourActivityMenuSettings)) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         } else {
@@ -99,15 +109,15 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
     void updateOptionsMenu() {
         switch (currentState) {
             case newTour:
-                tourActivityMenuItem.setTitle(getString(R.string.tour_activity_menu_settings));
+                tourActivityMenuItem.setTitle(tourActivityMenuSettings);
                 tourActivityMenuItem.setVisible(true);
                 break;
             case currentTour:
-                tourActivityMenuItem.setTitle(getString(R.string.tour_activity_menu_stop));
+                tourActivityMenuItem.setTitle(tourActivityMenuStop);
                 tourActivityMenuItem.setVisible(true);
                 break;
             case saveTour:
-                tourActivityMenuItem.setTitle(getString(R.string.tour_activity_menu_save));
+                tourActivityMenuItem.setTitle(tourActivityMenuSave);
                 tourActivityMenuItem.setVisible(true);
                 break;
             default:

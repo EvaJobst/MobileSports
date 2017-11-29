@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">Mountaineer</string>
 
-    <string name="tour_activity_menu_settings">Settings</string>
-    <string name="tour_activity_menu_save">Save</string>
-    <string name="tour_activity_menu_stop">Stop</string>
+    <string name="tourActivityMenuSettings">Settings</string>
+    <string name="tourActivityMenuSave">Save</string>
+    <string name="tourActivityMenuStop">Stop</string>
 
     <string name="preference_gender_title">Gender</string>
     <string name="preference_gender_key">preferenceGender</string>

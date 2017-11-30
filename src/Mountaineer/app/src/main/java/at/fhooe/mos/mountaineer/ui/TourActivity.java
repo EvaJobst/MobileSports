@@ -18,6 +18,7 @@ import org.androidannotations.annotations.res.StringRes;
 import at.fhooe.mos.mountaineer.PersistenceManager;
 import at.fhooe.mos.mountaineer.R;
 import at.fhooe.mos.mountaineer.TourState;
+import at.fhooe.mos.mountaineer.model.Tour;
 import at.fhooe.mos.mountaineer.services.TourRecorderService_;
 import at.fhooe.mos.mountaineer.ui.fragment.CurrentTourFragment_;
 import at.fhooe.mos.mountaineer.ui.fragment.NewTourFragment;
@@ -91,6 +92,9 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
 
         if (currentState == TourState.newTour || currentState == TourState.currentTour) {
             persistenceManager.setCurrentState(currentState);
+        }
+        else if(currentState == TourState.saveTour){
+            persistenceManager.setCurrentState(TourState.newTour);
         }
 
         updateOptionsMenu();

@@ -13,23 +13,44 @@ import android.widget.Toast;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
+import at.fhooe.mos.mountaineer.FirebaseManager;
+import at.fhooe.mos.mountaineer.PersistenceManager;
 import at.fhooe.mos.mountaineer.R;
+import at.fhooe.mos.mountaineer.services.TourDataCollector;
 
 @EFragment(R.layout.fragment_save_tour)
 public class SaveTourFragment extends Fragment {
+    private int requestCodeGallery = 123;
+    private String selectedImagePath;
 
-    int requestCodeGallery = 123;
-    String selectedImagePath;
-
-    @ViewById
-    TextInputEditText addTitleToTour;
+    private PersistenceManager persistenceManager;
 
     @ViewById
-    FloatingActionButton addGalleryImageButton;
+    protected TextInputEditText addTitleToTour;
+
+    @ViewById
+    protected FloatingActionButton addGalleryImageButton;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        persistenceManager = new PersistenceManager(getContext());
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+
+        super.onStop();
+    }
 
     @Click
-    void addGalleryImageButtonClicked() {
+    protected void addGalleryImageButtonClicked() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, requestCodeGallery);
     }
@@ -43,7 +64,16 @@ public class SaveTourFragment extends Fragment {
         }
     }
 
-    public String getPath(Uri uri) {
+    @Subscribe
+    public void onMessageEvent(TourDataCollector.FinalTourDataEvent event) {
+        String userId = persistenceManager.getUserId();
+        FirebaseManager firebaseManager = new FirebaseManager(userId);
+        firebaseManager.addTour(event.getTour());
+
+        Toast.makeText(getContext(), "tour saved!", Toast.LENGTH_SHORT).show();
+    }
+
+    private String getPath(Uri uri) {
         // just some safety built in
         if (uri == null) {
             // TODO perform some logging or show user feedback

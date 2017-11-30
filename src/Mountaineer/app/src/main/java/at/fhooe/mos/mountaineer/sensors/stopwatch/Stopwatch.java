@@ -42,7 +42,7 @@ public class Stopwatch extends EventSource<StopwatchEventListener> {
         running = false;
 
         for (StopwatchEventListener listener : eventListeners) {
-            listener.onStartEvent(stopTime);
+            listener.onStopEvent(stopTime);
         }
     }
 

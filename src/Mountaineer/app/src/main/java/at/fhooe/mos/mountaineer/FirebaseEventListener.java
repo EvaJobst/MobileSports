@@ -7,6 +7,6 @@ import at.fhooe.mos.mountaineer.model.Tour;
  * Created by Eva on 17.11.2017.
  */
 
-public interface FetchEventListener {
-    public void onFetchEvent(Tour tour);
+public interface FirebaseEventListener {
+    void onFetchEvent(Tour tour);
 }

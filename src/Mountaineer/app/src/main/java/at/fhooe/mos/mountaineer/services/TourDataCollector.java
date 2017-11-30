@@ -16,7 +16,7 @@ public class TourDataCollector implements PedometerEventListener, StopwatchEvent
 
     private Tour tour = new Tour();
 
-    public TourDataCollector(){
+    public TourDataCollector() {
         publishTourDataUpdates = true;
 
         EventBus.getDefault().register(this);
@@ -53,16 +53,22 @@ public class TourDataCollector implements PedometerEventListener, StopwatchEvent
         publishTourDataUpdates = event.publishTourDataUpdates;
     }
 
+    public void publishFinalTourData() {
+        EventBus.getDefault().removeStickyEvent(FinalTourDataEvent.class);
+
+        EventBus.getDefault().postSticky(new FinalTourDataEvent(tour));
+    }
+
     private void publishData() {
-        if(publishTourDataUpdates){
-            EventBus.getDefault().post(new TourDetailsEvent(tour));
+        if (publishTourDataUpdates) {
+            EventBus.getDefault().post(new TourDataUpdateEvent(tour));
         }
     }
 
-    public static class TourDetailsEvent {
+    public static class TourDataUpdateEvent {
         private Tour tour;
 
-        protected TourDetailsEvent(Tour tour) {
+        protected TourDataUpdateEvent(Tour tour) {
             this.tour = tour;
         }
 
@@ -70,15 +76,27 @@ public class TourDataCollector implements PedometerEventListener, StopwatchEvent
             return tour;
         }
     }
-    
-    public static class ControlEvent{
+
+    public static class FinalTourDataEvent {
+        private Tour tour;
+
+        protected FinalTourDataEvent(Tour tour) {
+            this.tour = tour;
+        }
+
+        public Tour getTour() {
+            return tour;
+        }
+    }
+
+    public static class ControlEvent {
         private boolean publishTourDataUpdates;
-        
-        public ControlEvent(Boolean publishTourDataUpdates){
+
+        public ControlEvent(Boolean publishTourDataUpdates) {
             this.publishTourDataUpdates = publishTourDataUpdates;
         }
 
-        public boolean getPublishTourDataUpdates(){
+        public boolean getPublishTourDataUpdates() {
             return publishTourDataUpdates;
         }
     }

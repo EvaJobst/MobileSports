@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import org.androidannotations.annotations.EService;
 
+import at.fhooe.mos.mountaineer.FirebaseManager;
+import at.fhooe.mos.mountaineer.PersistenceManager;
 import at.fhooe.mos.mountaineer.sensors.pedometer.PedometerManager;
 import at.fhooe.mos.mountaineer.sensors.stopwatch.Stopwatch;
 import at.fhooe.mos.mountaineer.ui.MainNotificationManager;
@@ -72,6 +74,8 @@ public class TourRecorderService extends Service {
 
         pedometerManager.destroy();
         stopwatch.stop();
+
+        tourDataCollector.publishFinalTourData();
 
         releaseWakeLock();
 

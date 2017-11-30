@@ -100,7 +100,7 @@ public class CurrentTourFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(TourDataCollector.TourDetailsEvent event) {
+    public void onMessageEvent(TourDataCollector.TourDataUpdateEvent event) {
         Tour tour = event.getTour();
         tourSteps.setText(tourDataFormatter.getTotalSteps(tour));
         tourDuration.setText(tourDataFormatter.getDuration(tour));

@@ -18,21 +18,30 @@ import at.fhooe.mos.mountaineer.model.Tour;
  */
 
 public class FirebaseManager {
-    ArrayList<FetchEventListener> listenerList = new ArrayList<>();
-    private DatabaseReference dataReference = FirebaseDatabase.getInstance().getReference("data");
+    private static final String TOURS_REFERENCE = "tours";
+
+    private ArrayList<FirebaseEventListener> firebaseEventListeners = new ArrayList<>();
+    private DatabaseReference userToursDb;
+
+    public FirebaseManager(String userId) {
+        userToursDb = FirebaseDatabase.getInstance().getReference(TOURS_REFERENCE + "/" + userId);
+    }
 
     public String addTour(Tour tour) {
-        String key = dataReference.push().getKey();
-        dataReference.child(key).setValue(tour);
+        String key = userToursDb.push().getKey();
+        userToursDb.child(key).setValue(tour);
         return key;
     }
 
     public void fetchTour(String id) {
-        dataReference.child(id).addValueEventListener(new ValueEventListener() {
+        userToursDb.child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Tour tour = dataSnapshot.getValue(Tour.class);
-                notifyListener(tour);
+
+                for (FirebaseEventListener listener : firebaseEventListeners) {
+                    listener.onFetchEvent(tour);
+                }
             }
 
             @Override
@@ -42,17 +51,11 @@ public class FirebaseManager {
         });
     }
 
-    public void addListener(FetchEventListener listener) {
-        listenerList.add(listener);
+    public void addListener(FirebaseEventListener listener) {
+        firebaseEventListeners.add(listener);
     }
 
-    public void removeListener(FetchEventListener listener) {
-        listenerList.remove(listener);
-    }
-
-    public void notifyListener(Tour tour) {
-        for (FetchEventListener listener : listenerList) {
-            listener.onFetchEvent(tour);
-        }
+    public void removeListener(FirebaseEventListener listener) {
+        firebaseEventListeners.remove(listener);
     }
 }

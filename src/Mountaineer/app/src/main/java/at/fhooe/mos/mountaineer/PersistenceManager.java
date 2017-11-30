@@ -35,6 +35,10 @@ public class PersistenceManager {
         return TourState.valueOf(state);
     }
 
+    public String getUserId(){
+        return "user1";
+    }
+
     public Gender getGender(){
         String preferenceGenderKey = context.getString(R.string.preference_gender_key);
         String preferenceGenderDefault = context.getString(R.string.preference_gender_default);

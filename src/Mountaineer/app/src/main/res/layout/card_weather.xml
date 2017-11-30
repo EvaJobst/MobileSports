@@ -34,6 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="26"
+            android:textAlignment="textEnd"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="@color/colorAccent"
             app:layout_constraintBottom_toTopOf="@id/tourMinMaxTemp"
@@ -61,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginLeft="8dp"
-            android:text="Rain 0 %"
+            android:text="Rain: 0%"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             app:layout_constraintLeft_toLeftOf="@id/tourIcSun"
             app:layout_constraintTop_toBottomOf="@id/tourMinMaxTemp" />
@@ -71,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:text="Humidity 82 %"
+            android:text="Humidity: 82%"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             app:layout_constraintLeft_toLeftOf="@id/tourIcSun"
             app:layout_constraintTop_toBottomOf="@id/tourRain" />
@@ -81,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:text="Wind 3 km/h"
+            android:text="Wind: 3km/h"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             app:layout_constraintLeft_toLeftOf="@id/tourIcSun"
             app:layout_constraintTop_toBottomOf="@id/tourHumidity" />

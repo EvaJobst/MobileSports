@@ -12,6 +12,7 @@ import org.androidannotations.annotations.EService;
 
 import at.fhooe.mos.mountaineer.FirebaseManager;
 import at.fhooe.mos.mountaineer.PersistenceManager;
+import at.fhooe.mos.mountaineer.sensors.location.Location;
 import at.fhooe.mos.mountaineer.sensors.pedometer.PedometerManager;
 import at.fhooe.mos.mountaineer.sensors.stopwatch.Stopwatch;
 import at.fhooe.mos.mountaineer.ui.MainNotificationManager;
@@ -36,6 +37,7 @@ public class TourRecorderService extends Service {
 
     private PedometerManager pedometerManager;
     private Stopwatch stopwatch;
+    private Location location;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -56,6 +58,9 @@ public class TourRecorderService extends Service {
         pedometerManager = new PedometerManager(this);
         stopwatch = new Stopwatch();
         stopwatch.registerListener(tourDataCollector);
+
+        location = new Location(this);
+        location.registerListener(tourDataCollector);
 
         acquireWakeLock();
         startForeground(mainNotificationManager.getNotificationId(), mainNotificationManager.getNotification());

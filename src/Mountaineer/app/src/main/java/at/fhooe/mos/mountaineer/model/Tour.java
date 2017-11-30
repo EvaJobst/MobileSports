@@ -27,11 +27,12 @@ public class Tour {
     private int burnedKcal;
 
     // Weather
-    private int maxTemp;
+    Weather weather;
+    /*private int maxTemp;
     private int minTemp;
     private int rain;
     private int humidity;
-    private int wind;
+    private int wind;*/
 
     public String getName() {
         return name;
@@ -153,7 +154,37 @@ public class Tour {
         this.burnedKcal = burnedKcal;
     }
 
-    public int getMaxTemp() {
+    public Weather getWeather() {
+        return weather;
+    }
+
+    public void setWeather(Weather weather) {
+        this.weather = weather;
+    }
+
+    @Override
+    public String toString() {
+        return "Tour{" +
+                "name='" + name + '\'' +
+                ", location='" + location + '\'' +
+                ", day='" + day + '\'' +
+                ", startTimestamp=" + startTimestamp +
+                ", stopTimestamp=" + stopTimestamp +
+                ", duration=" + duration +
+                ", totalSteps=" + totalSteps +
+                ", averageSteps=" + averageSteps +
+                ", distance=" + distance +
+                ", elevation=" + elevation +
+                ", averageSpeed=" + averageSpeed +
+                ", averageHeartRate=" + averageHeartRate +
+                ", normalHeartRate='" + normalHeartRate + '\'' +
+                ", averageRespiration=" + averageRespiration +
+                ", burnedKcal=" + burnedKcal +
+                ", weather=" + weather +
+                '}';
+    }
+
+    /*public int getMaxTemp() {
         return maxTemp;
     }
 
@@ -191,29 +222,7 @@ public class Tour {
 
     public void setWind(int wind) {
         this.wind = wind;
-    }
+    }*/
 
-    @Override
-    public String toString() {
-        return "Tour{" +
-                "name='" + name + '\'' +
-                ", location='" + location + '\'' +
-                ", day='" + day + '\'' +
-                ", duration='" + duration + '\'' +
-                ", totalSteps=" + totalSteps +
-                ", averageSteps=" + averageSteps +
-                ", distance=" + distance +
-                ", elevation=" + elevation +
-                ", averageSpeed=" + averageSpeed +
-                ", averageHeartRate=" + averageHeartRate +
-                ", normalHeartRate='" + normalHeartRate + '\'' +
-                ", averageRespiration=" + averageRespiration +
-                ", burnedKcal=" + burnedKcal +
-                ", maxTemp=" + maxTemp +
-                ", minTemp=" + minTemp +
-                ", rain=" + rain +
-                ", humidity=" + humidity +
-                ", wind=" + wind +
-                '}';
-    }
+
 }

@@ -55,8 +55,31 @@ public class PersistenceManager {
 
         String preferenceAgeValue = preferences.getString(preferenceAgeKey, preferenceAgeDefault);
 
-        int age = Integer.parseInt(preferenceAgeValue);
+        int age = 0;
+        try{
+            age = Integer.parseInt(preferenceAgeValue);
+        }
+        catch (NumberFormatException ex){
+            age = 0;
+        }
 
         return age;
+    }
+
+    public int getRestingHeartRate(){
+        String preferenceRestingHRKey = context.getString(R.string.preference_restinghr_key);
+        String preferenceRestingHRDefault = context.getString(R.string.preference_restinghr_default);
+
+        String preferenceRestingHRValue = preferences.getString(preferenceRestingHRKey, preferenceRestingHRDefault);
+
+        int restingHeartRate = 0;
+        try{
+            restingHeartRate = Integer.parseInt(preferenceRestingHRValue);
+        }
+        catch (NumberFormatException ex){
+            restingHeartRate = 0;
+        }
+
+        return restingHeartRate;
     }
 }

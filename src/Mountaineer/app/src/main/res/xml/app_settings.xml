@@ -15,9 +15,13 @@
         <EditTextPreference
             android:defaultValue="@string/preference_age_default"
             android:key="@string/preference_age_key"
-            android:summary="%s"
             android:title="@string/preference_age_title"
             android:inputType="number"/>
 
+        <EditTextPreference
+            android:defaultValue="@string/preference_restinghr_default"
+            android:key="@string/preference_restinghr_key"
+            android:title="@string/preference_restinghr_title"
+            android:inputType="number"/>
     </PreferenceCategory>
 </PreferenceScreen>

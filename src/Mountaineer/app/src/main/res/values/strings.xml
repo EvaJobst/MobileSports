@@ -12,4 +12,8 @@
     <string name="preference_age_title">Age</string>
     <string name="preference_age_key">preferenceAge</string>
     <string name="preference_age_default">N/A</string>
+
+    <string name="preference_restinghr_title">Resting Heart Rate</string>
+    <string name="preference_restinghr_key">preferenceRestingHeartRate</string>
+    <string name="preference_restinghr_default">N/A</string>
 </resources>

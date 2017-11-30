@@ -30,16 +30,17 @@ public class SimulationHRM implements HRM {
     }
 
     @Override
-    public String getHeartRate() {
+    public int getHeartRate() {
         String line = "";
         try {
             while((line = bufferedReader.readLine()) != null) {
-                return line;
+                String[] values = line.split(",");
+                return Integer.parseInt(values[1]);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return line;
+        return 0;
     }
 }

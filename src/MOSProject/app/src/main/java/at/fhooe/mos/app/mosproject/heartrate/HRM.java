@@ -5,5 +5,5 @@ package at.fhooe.mos.app.mosproject.heartrate;
  */
 
 public interface HRM {
-    String getHeartRate();
+    int getHeartRate();
 }

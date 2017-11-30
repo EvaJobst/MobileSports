@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import at.fhooe.mos.app.mosproject.R;
+import at.fhooe.mos.app.mosproject.heartrate.HRCalculation;
 import at.fhooe.mos.app.mosproject.heartrate.HRM;
 import at.fhooe.mos.app.mosproject.heartrate.SensorFactory;
 import at.fhooe.mos.app.mosproject.heartrate.SimulationFactory;
@@ -33,10 +34,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class HeartRateSimulationActivity extends AppCompatActivity {
+    HRCalculation hrCalculation = new HRCalculation();
     Handler handler = new Handler();
     ArrayList<Integer> heartRateValues = new ArrayList<>();
     ArrayList<Float> trimps = new ArrayList<>();
-    SensorFactory sensorFactory;
     HRM heartRateMonitor;
     boolean isRunning = false;
 
@@ -93,6 +94,7 @@ public class HeartRateSimulationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_heart_rate_simulation);
         ButterKnife.bind(this);
 
+        SensorFactory sensorFactory;
         sensorFactory = new SimulationFactory();
 
         heartRateMonitor = sensorFactory.createHRM();
@@ -109,9 +111,8 @@ public class HeartRateSimulationActivity extends AppCompatActivity {
 
     public void simulate() {
         if (isRunning) {
-            String heartRate = heartRateMonitor.getHeartRate();
-            String[] values = heartRate.split(",");
-            heartRateValues.add(Integer.parseInt(values[1]));
+            int heartRate = heartRateMonitor.getHeartRate();
+            heartRateValues.add(heartRate);
             updateUI();
 
             handler.postDelayed(new Runnable() {
@@ -123,57 +124,17 @@ public class HeartRateSimulationActivity extends AppCompatActivity {
         }
     }
 
-    public ArrayList<Float> getFitness() {
-        ArrayList<Float> fitness = new ArrayList<>();
-
-        for(int i = 0; i < trimps.size(); i++) {
-            if(fitness.isEmpty()) {
-                fitness.add(1000f);
-            }
-
-            else {
-                float value = (float) (fitness.get(i-1) * Math.exp(-1/40) + trimps.get(i));
-                fitness.add(value);
-            }
-        }
-
-        return fitness;
-    }
-
-    public ArrayList<Float> getFatigue() {
-        ArrayList<Float> fatigue = new ArrayList<>();
-
-        for(int i = 0; i < trimps.size(); i++) {
-            if(fatigue.isEmpty()) {
-                fatigue.add(trimps.get(i));
-            }
-
-            else {
-                float value = (float) (fatigue.get(i-1) * Math.exp(-1/11) + trimps.get(i));
-                fatigue.add(value);
-            }
-        }
-
-        return fatigue;
-    }
-
-    public ArrayList<Float> getPerformance(ArrayList<Float> fitness, ArrayList<Float> fatigue) {
-        ArrayList<Float> performance = new ArrayList<>();
-
-        for(int i = 0; i < trimps.size(); i++) {
-            float value = fitness.get(i) - fatigue.get(i) * 2;
-            performance.add(value);
-        }
-
-        return performance;
-    }
-
     public void updateUI() {
         currentHR.setText(String.valueOf(heartRateValues.get(heartRateValues.size()-1)));
         minHR.setText(String.valueOf(Collections.min(heartRateValues)));
         maxHR.setText(String.valueOf(Collections.max(heartRateValues)));
-        averageHR.setText(String.valueOf(getAverageHR()));
-        maxHRPercent.setText(String.valueOf(getPercentHRmax()));
+        averageHR.setText(String.valueOf(hrCalculation.getAverageHR(heartRateValues)));
+
+        maxHRPercent.setText(String.valueOf(hrCalculation.getPercentHRmax(
+                maxHRInput.getEditText().getText().toString(),
+                ageInput.getEditText().getText().toString(),
+                maxHR.getText().toString()
+        )));
     }
 
     public void resetUI() {
@@ -185,43 +146,15 @@ public class HeartRateSimulationActivity extends AppCompatActivity {
         maxHRPercent.setText("0");
     }
 
-    public int getAverageHR() {
-        int sum = 0;
-        for(int value : heartRateValues) {
-            sum += value;
-        }
-
-        return sum/heartRateValues.size();
-    }
-
-    public int getPercentHRmax() {
-        double hrMax;
-        if(!maxHRInput.getEditText().getText().toString().isEmpty()) {
-            hrMax = Double.parseDouble(maxHRInput.getEditText().getText().toString());
-        }
-
-        else if(!ageInput.getEditText().getText().toString().isEmpty()) {
-            String age = ageInput.getEditText().getText().toString();
-            hrMax = 208 - (0.7 * Double.parseDouble(age));
-        }
-
-        else {
-            return 0;
-        }
-
-        double percent = (100 * Integer.parseInt(maxHR.getText().toString())) / hrMax;
-        return (int) percent;
-    }
-
     private void drawTrimpDataChart(){
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
 
         if(trimps.size() == 0)
             return;
 
-        ArrayList<Float> fitness = getFitness();
-        ArrayList<Float> fatigue = getFatigue();
-        ArrayList<Float> performance = getPerformance(fitness, fatigue);
+        ArrayList<Float> fitness = hrCalculation.getFitness(trimps);
+        ArrayList<Float> fatigue = hrCalculation.getFatigue(trimps);
+        ArrayList<Float> performance = hrCalculation.getPerformance(fitness, fatigue, trimps);
 
         ArrayList<Entry> fitnessEntries = new ArrayList<>();
         ArrayList<Entry> fatigueEntries = new ArrayList<>();

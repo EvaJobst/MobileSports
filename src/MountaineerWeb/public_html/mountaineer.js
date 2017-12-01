@@ -12,7 +12,13 @@ firebase.initializeApp(config);
 var allTours;
 $(document).ready(initPage);
 
+var keyValueTableTemplateFn;
+var tourListTemplateFn;
+
 function initPage() {
+    keyValueTableTemplateFn = doT.template($('#keyValueTableTemplate').text());
+    tourListTemplateFn = doT.template($('#tourListTemplate').text());
+
     $('#loadTours').click(function () {
         $(this).text('loading...');
         loadTours();
@@ -22,8 +28,8 @@ function initPage() {
         $(this).tab('show');
     });
 
-    loadTours();
-    //toursLoaded(JSON.parse('{"-L-BFSktECnlidMbLfBx":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":3,"elevation":0,"humidity":0,"maxTemp":0,"minTemp":0,"rain":0,"startTimestamp":1512034127190,"stopTimestamp":1512034130952,"totalSteps":0,"wind":0},"-L-BG7rLKDoKF1DKZapY":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":3,"elevation":0,"humidity":0,"maxTemp":0,"minTemp":0,"rain":0,"startTimestamp":1512034303813,"stopTimestamp":1512034307488,"totalSteps":0,"wind":0}}'));
+    //loadTours();
+    toursLoaded(JSON.parse('{"-L-BFSktECnlidMbLfBx":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":3,"elevation":0,"humidity":0,"maxTemp":0,"minTemp":0,"rain":0,"startTimestamp":1512034127190,"stopTimestamp":1512034130952,"totalSteps":0,"wind":0},"-L-BG7rLKDoKF1DKZapY":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":3,"elevation":0,"humidity":0,"maxTemp":0,"minTemp":0,"rain":0,"startTimestamp":1512034303813,"stopTimestamp":1512034307488,"totalSteps":0,"wind":0}}'));
 }
 
 function loadTours() {
@@ -37,22 +43,16 @@ function toursLoaded(tours) {
 
     $('#jsonDataDebug').text(JSON.stringify(allTours, null, 2));
 
-    var tourList = $('#tourList');
+    var data = [];
 
-    tourList.html('');
     $.each(allTours, function (tourId)
     {
-        var li = $('<li/>')
-                .addClass('nav-item')
-                .appendTo(tourList);
+        data.push({text: allTours[tourId]['startTimeString'], data: tourId});
+    });
 
-        $('<a/>')
-                .addClass('nav-link')
-                .text(allTours[tourId]['startTimeString'])
-                .click(function () {
-                    tourSelected(tourId)
-                })
-                .appendTo(li);
+    $('#tourList').html(tourListTemplateFn(data));
+    $('.nav-link').click(function () {
+        tourSelected($(this).attr('data'));
     });
 }
 
@@ -68,19 +68,13 @@ function processTourData(tours) {
 
 function tourSelected(tourId) {
     $('#tourDetailsTitle').text('Your Tour from ' + allTours[tourId]['startTimeString']);
-    tourOverviewTable = $('#tourOverviewTable');
 
-    getTableRow = function (content) {
-        return '<tr><th>StartTime</th><td>' + content + '</td></tr>';
-    };
+    var tableOverviewRows = [
+        ['StartTime', allTours[tourId]['startTimeString']],
+        ['StopTime', allTours[tourId]['stopTimeString']]
+    ];
 
-    var rows = '';
-
-    rows += getTableRow(allTours[tourId]['startTimeString']);
-    rows += getTableRow(allTours[tourId]['stopTimeString']);
-
-    tourOverviewTable.html('<tbody>' + rows + '</tbody>');
-
+    $('#tourOverviewTable').html(keyValueTableTemplateFn(tableOverviewRows));
 
     $('#tourDetails').show();
 }

@@ -6,7 +6,7 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title>MountaineerWeb</title>
         <meta charset='UTF-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 
@@ -17,7 +17,13 @@ and open the template in the editor.
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+        <script src='doT.min.js'></script>
+
         <script src='https://www.gstatic.com/firebasejs/4.6.2/firebase.js'></script>
+
+
+
+
 
         <script src='mountaineer.js'></script>
     </head>
@@ -36,9 +42,7 @@ and open the template in the editor.
                     <h3>Your Tours</h3>
                 </div>
 
-                <ul id='tourList' class='nav nav-pills nav-stacked'>
-                    <li class='navbar-text'>Loading ...</li>
-                </ul>
+                <span id='tourList'></span>
             </nav>
 
             <div id="tourDetails" class='collapse'>
@@ -53,7 +57,7 @@ and open the template in the editor.
                     <div id="tourOverviewTab" class="tab-pane fade in active">
                         <div class="row">
                             <div class="col-sm-6">
-                                <table id="tourOverviewTable" class='table table-striped'> </table>
+                                <div id="tourOverviewTable"></div>
                             </div>
                             <div class="col-sm-6">
                             </div>
@@ -62,7 +66,7 @@ and open the template in the editor.
                     <div id="tourDetailsTab" class="tab-pane fade">
                         <div class="row">
                             <div class="col-sm-6">
-                                <table id="tourDetailsTable" class='table table-striped'> </table>
+                                <div id="tourDetailsTable"></div>
                             </div>
                             <div class="col-sm-6">
                             </div>
@@ -76,5 +80,23 @@ and open the template in the editor.
             <h2>Debug Data</h2>
             <pre id='jsonDataDebug'>JSON data for debugging</pre>
         </div>
+
+        <script id="keyValueTableTemplate" type="text/x-dot-template">
+            <table class='table table-striped'>
+                <tbody>
+                {{ for(var i in it) { }}
+                    <tr><th>{{=(it[i][0])}}</th><td>{{=(it[i][1])}}</td></tr>
+                {{ } }}
+                </tbody>
+            </table>
+        </script>
+
+        <script id="tourListTemplate" type="text/x-dot-template">
+                <ul class='nav nav-pills nav-stacked'>
+                    {{ for(var i in it) { }}
+                        <li class='nav-item'><a class='nav-link' data={{=(it[i].data)}}>{{=(it[i].text)}}</a></li>
+                    {{ } }}
+                </ul>
+        </script>
     </body>
 </html>

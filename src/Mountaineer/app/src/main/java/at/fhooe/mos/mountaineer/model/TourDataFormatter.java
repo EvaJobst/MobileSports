@@ -24,7 +24,8 @@ public class TourDataFormatter {
     }
 
     public String getTotalSteps(Tour tour) {
-        return String.format(Locale.ENGLISH, "%04d", tour.getTotalSteps());
+        //return String.format(Locale.ENGLISH, "%04d", tour.getTotalSteps());
+        return String.valueOf(tour.getTotalSteps());
     }
 
     public String getDuration(Tour tour) {
@@ -42,5 +43,21 @@ public class TourDataFormatter {
     public String getStopTime(Tour tour) {
         Date date = new Date(tour.getStopTimestamp());
         return timeFormatter.format(date);
+    }
+
+    public String getMinMaxTemp(Tour tour) {
+        return tour.getWeather().getMain().getTemp_max() + "°C/" + tour.getWeather().getMain().getTemp_min() + "°C";
+    }
+
+    public String getHumidity(Tour tour) {
+        return "Humidity: " + tour.getWeather().getMain().getHumidity() + "%";
+    }
+
+    public String getWind(Tour tour) {
+        return "Wind: " + tour.getWeather().getWind().getSpeed() + "km/h";
+    }
+
+    public String getTemp(Tour tour) {
+        return String.valueOf(tour.getWeather().getMain().getTemp());
     }
 }

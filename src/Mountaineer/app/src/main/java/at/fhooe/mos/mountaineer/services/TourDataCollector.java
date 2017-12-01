@@ -1,17 +1,35 @@
 package at.fhooe.mos.mountaineer.services;
 
+import android.util.Log;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import at.fhooe.mos.mountaineer.model.Tour;
+import at.fhooe.mos.mountaineer.sensors.location.LocationEventListener;
 import at.fhooe.mos.mountaineer.sensors.pedometer.PedometerEventListener;
 import at.fhooe.mos.mountaineer.sensors.stopwatch.StopwatchEventListener;
+import at.fhooe.mos.mountaineer.model.Weather;
+import at.fhooe.mos.mountaineer.sensors.weather.WeatherService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by stefan on 25.11.2017.
  */
 
-public class TourDataCollector implements PedometerEventListener, StopwatchEventListener {
+public class TourDataCollector implements
+        PedometerEventListener,
+        StopwatchEventListener,
+        LocationEventListener,
+        Callback<Weather> {
+
+    private final String BASE_URL = "https://api.openweathermap.org/data/2.5/";
+    private final String API_KEY = "17b9da43ec1ff13f7f3b0b4ba8e21bb6";
+
     private boolean publishTourDataUpdates;
 
     private Tour tour = new Tour();
@@ -63,6 +81,35 @@ public class TourDataCollector implements PedometerEventListener, StopwatchEvent
         if (publishTourDataUpdates) {
             EventBus.getDefault().post(new TourDataUpdateEvent(tour));
         }
+    }
+
+    @Override
+    public void onLocationReceivedEvent(double latitude, double longitude) {
+        // TODO Fetch weather information
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        final WeatherService weatherService = retrofit.create(WeatherService.class);
+        Call<Weather> data = weatherService.fetch(String.valueOf(latitude), String.valueOf(longitude), "metric", API_KEY);
+        data.enqueue(this);
+
+        tour.setLocation("Lat: " + latitude + ", Long: " + longitude);
+        publishData();
+    }
+
+    @Override
+    public void onResponse(Call<Weather> call, Response<Weather> response) {
+        tour.setWeather(response.body());
+        Log.d("RESPONDED", response.body().toString());
+        publishData();
+    }
+
+    @Override
+    public void onFailure(Call<Weather> call, Throwable t) {
+        Log.e("FAILURE", t.getMessage());
     }
 
     public static class TourDataUpdateEvent {

@@ -93,9 +93,9 @@ public class TourDetailsActivity extends AppCompatActivity {
 
         // WEATHER
         // TODO tourTemp.setText();
-        tourMinMaxTemp.setText(tour.getMaxTemp() + "/" + tour.getMinTemp());
-        tourRain.setText(tour.getRain());
-        tourHumidity.setText(tour.getHumidity());
-        tourWind.setText(tour.getWind());
+        tourMinMaxTemp.setText(tour.getWeather().getMain().getTemp_max() + "/" + tour.getWeather().getMain().getTemp_min());
+        //tourRain.setText(tour.getWeather().getRain());
+        tourHumidity.setText((int) tour.getWeather().getMain().getHumidity());
+        tourWind.setText((int) tour.getWeather().getWind().getSpeed());
     }
 }

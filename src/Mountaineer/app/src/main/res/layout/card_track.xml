@@ -31,13 +31,14 @@
 
         <TextView
             android:id="@+id/tourSteps"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1234"
+            android:textAlignment="textEnd"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="@color/colorAccent"
             app:layout_constraintBottom_toTopOf="@id/tourAverageSteps"
-            app:layout_constraintLeft_toRightOf="@id/tourIcWalk" />
+            app:layout_constraintLeft_toRightOf="@id/tourIcWalk"
+            android:layout_width="60dp" />
 
         <TextView
             android:layout_width="wrap_content"

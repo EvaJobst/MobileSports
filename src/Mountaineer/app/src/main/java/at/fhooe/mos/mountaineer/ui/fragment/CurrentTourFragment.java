@@ -1,7 +1,11 @@
 package at.fhooe.mos.mountaineer.ui.fragment;
 
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +21,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import at.fhooe.mos.mountaineer.R;
 import at.fhooe.mos.mountaineer.model.Tour;
+import at.fhooe.mos.mountaineer.sensors.location.Location;
 import at.fhooe.mos.mountaineer.services.TourDataCollector;
 import at.fhooe.mos.mountaineer.model.TourDataFormatter;
 
@@ -89,6 +94,7 @@ public class CurrentTourFragment extends Fragment {
 
         EventBus.getDefault().post(new TourDataCollector.ControlEvent(true));
         EventBus.getDefault().register(this);
+        checkPermissions();
     }
 
     @Override
@@ -106,5 +112,18 @@ public class CurrentTourFragment extends Fragment {
         tourDuration.setText(tourDataFormatter.getDuration(tour));
 
         tourStartTime.setText(tourDataFormatter.getStartTime(tour));
+        tourLocation.setText(tour.getLocation());
+        tourTemp.setText(tourDataFormatter.getTemp(tour));
+        tourMinMaxTemp.setText(tourDataFormatter.getMinMaxTemp(tour));
+        tourHumidity.setText(tourDataFormatter.getHumidity(tour));
+        tourWind.setText(tourDataFormatter.getWind(tour));
+    }
+
+    public void checkPermissions() {
+        if (ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        }
     }
 }

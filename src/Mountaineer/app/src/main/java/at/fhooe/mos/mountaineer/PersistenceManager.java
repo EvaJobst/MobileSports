@@ -55,7 +55,7 @@ public class PersistenceManager {
 
         String preferenceAgeValue = preferences.getString(preferenceAgeKey, preferenceAgeDefault);
 
-        int age = 0;
+        int age;
         try{
             age = Integer.parseInt(preferenceAgeValue);
         }
@@ -72,7 +72,7 @@ public class PersistenceManager {
 
         String preferenceRestingHRValue = preferences.getString(preferenceRestingHRKey, preferenceRestingHRDefault);
 
-        int restingHeartRate = 0;
+        int restingHeartRate;
         try{
             restingHeartRate = Integer.parseInt(preferenceRestingHRValue);
         }

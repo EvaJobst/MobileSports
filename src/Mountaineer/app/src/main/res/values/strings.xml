@@ -2,8 +2,8 @@
     <string name="app_name">Mountaineer</string>
 
     <string name="tourActivityMenuSettings">Settings</string>
-    <string name="tourActivityMenuSave">Save</string>
     <string name="tourActivityMenuStop">Stop</string>
+    <string name="tourActivityMenuDoNotSave">Don\'t Save</string>
 
     <string name="preference_gender_title">Gender</string>
     <string name="preference_gender_key">preferenceGender</string>

@@ -74,7 +74,7 @@ public class TourDetailsActivity extends AppCompatActivity {
         // Todo Set image by path
 
         // GENERAL
-        tourLocation.setText(tour.getLocation());
+        //tourLocation.setText(tour.getLocation());
         tourDuration.setText(tour.getDuration());
         // TODO tourStartTime.setText();
 

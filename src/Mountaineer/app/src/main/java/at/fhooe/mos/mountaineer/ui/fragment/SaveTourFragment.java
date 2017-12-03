@@ -1,6 +1,7 @@
 package at.fhooe.mos.mountaineer.ui.fragment;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -19,14 +20,20 @@ import org.greenrobot.eventbus.Subscribe;
 import at.fhooe.mos.mountaineer.FirebaseManager;
 import at.fhooe.mos.mountaineer.PersistenceManager;
 import at.fhooe.mos.mountaineer.R;
+import at.fhooe.mos.mountaineer.model.Tour;
 import at.fhooe.mos.mountaineer.services.TourDataCollector;
+import at.fhooe.mos.mountaineer.ui.TourActivity;
 
 @EFragment(R.layout.fragment_save_tour)
 public class SaveTourFragment extends Fragment {
     private int requestCodeGallery = 123;
     private String selectedImagePath;
 
+    private TourActivity tourActivity;
+
     private PersistenceManager persistenceManager;
+
+    private Tour tour;
 
     @ViewById
     protected TextInputEditText addTitleToTour;
@@ -49,6 +56,23 @@ public class SaveTourFragment extends Fragment {
         super.onStop();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        tourActivity = (TourActivity) context;
+    }
+
+    @Click
+    protected void saveTourButtonClicked() {
+        String userId = persistenceManager.getUserId();
+        FirebaseManager firebaseManager = new FirebaseManager(userId);
+        firebaseManager.addTour(tour);
+
+        Toast.makeText(getContext(), "Tour Saved!", Toast.LENGTH_SHORT).show();
+
+        tourActivity.doStateTransition();
+    }
+
     @Click
     protected void addGalleryImageButtonClicked() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -66,11 +90,7 @@ public class SaveTourFragment extends Fragment {
 
     @Subscribe
     public void onMessageEvent(TourDataCollector.FinalTourDataEvent event) {
-        String userId = persistenceManager.getUserId();
-        FirebaseManager firebaseManager = new FirebaseManager(userId);
-        firebaseManager.addTour(event.getTour());
-
-        Toast.makeText(getContext(), "tour saved!", Toast.LENGTH_SHORT).show();
+        this.tour = event.getTour();
     }
 
     private String getPath(Uri uri) {

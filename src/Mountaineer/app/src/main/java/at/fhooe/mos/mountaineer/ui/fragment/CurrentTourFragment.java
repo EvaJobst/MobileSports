@@ -94,7 +94,6 @@ public class CurrentTourFragment extends Fragment {
 
         EventBus.getDefault().post(new TourDataCollector.ControlEvent(true));
         EventBus.getDefault().register(this);
-        checkPermissions();
     }
 
     @Override
@@ -112,18 +111,10 @@ public class CurrentTourFragment extends Fragment {
         tourDuration.setText(tourDataFormatter.getDuration(tour));
 
         tourStartTime.setText(tourDataFormatter.getStartTime(tour));
-        tourLocation.setText(tour.getLocation());
+        tourLocation.setText(tourDataFormatter.getLocation(tour));
         tourTemp.setText(tourDataFormatter.getTemp(tour));
         tourMinMaxTemp.setText(tourDataFormatter.getMinMaxTemp(tour));
         tourHumidity.setText(tourDataFormatter.getHumidity(tour));
         tourWind.setText(tourDataFormatter.getWind(tour));
-    }
-
-    public void checkPermissions() {
-        if (ActivityCompat.checkSelfPermission(getContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-        }
     }
 }

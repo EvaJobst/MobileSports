@@ -1,7 +1,10 @@
 package at.fhooe.mos.mountaineer.ui;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -18,16 +21,14 @@ import org.androidannotations.annotations.res.StringRes;
 import at.fhooe.mos.mountaineer.PersistenceManager;
 import at.fhooe.mos.mountaineer.R;
 import at.fhooe.mos.mountaineer.TourState;
-import at.fhooe.mos.mountaineer.model.Tour;
 import at.fhooe.mos.mountaineer.services.TourRecorderService_;
 import at.fhooe.mos.mountaineer.ui.fragment.CurrentTourFragment_;
-import at.fhooe.mos.mountaineer.ui.fragment.NewTourFragment;
 import at.fhooe.mos.mountaineer.ui.fragment.NewTourFragment_;
 import at.fhooe.mos.mountaineer.ui.fragment.SaveTourFragment_;
 
 @EActivity(R.layout.activity_tour)
 @OptionsMenu(R.menu.tour_activity_menu)
-public class TourActivity extends AppCompatActivity implements NewTourFragment.OnAddTourClickListener {
+public class TourActivity extends AppCompatActivity {
     private final static String TAG = TourActivity.class.getSimpleName();
 
     private PersistenceManager persistenceManager;
@@ -40,7 +41,7 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
     protected String tourActivityMenuStop;
 
     @StringRes
-    protected String tourActivityMenuSave;
+    protected String tourActivityMenuDoNotSave;
 
     @OptionsMenuItem
     protected MenuItem tourActivityMenuItem;
@@ -54,18 +55,24 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        checkPermissions();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         updateOptionsMenu();
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public void onAddTourClick() {
+    public void doStateTransition() {
         transitionToNextState();
     }
 
     @OptionsItem(R.id.tourActivityMenuItem)
-    void onOptionsItemClicked() {
+    protected void onOptionsItemClicked() {
         if (tourActivityMenuItem.getTitle().toString().equals(tourActivityMenuSettings)) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
@@ -74,7 +81,13 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
         }
     }
 
-    void transitionToNextState() {
+    private void transitionToNextState() {
+        if (currentState == TourState.newTour) {
+            if (checkPermissions() == false) {
+                return;
+            }
+        }
+
         switch (currentState) {
             case newTour:
                 currentState = TourState.currentTour;
@@ -92,8 +105,7 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
 
         if (currentState == TourState.newTour || currentState == TourState.currentTour) {
             persistenceManager.setCurrentState(currentState);
-        }
-        else if(currentState == TourState.saveTour){
+        } else if (currentState == TourState.saveTour) {
             persistenceManager.setCurrentState(TourState.newTour);
         }
 
@@ -102,7 +114,7 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
         updateTourRecordingStatus();
     }
 
-    void updateFragment() {
+    private void updateFragment() {
         Fragment newFragment = getFragmentForCurrentState();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
@@ -110,7 +122,7 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
         transaction.commit();
     }
 
-    void updateOptionsMenu() {
+    private void updateOptionsMenu() {
         switch (currentState) {
             case newTour:
                 tourActivityMenuItem.setTitle(tourActivityMenuSettings);
@@ -121,7 +133,7 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
                 tourActivityMenuItem.setVisible(true);
                 break;
             case saveTour:
-                tourActivityMenuItem.setTitle(tourActivityMenuSave);
+                tourActivityMenuItem.setTitle(tourActivityMenuDoNotSave);
                 tourActivityMenuItem.setVisible(true);
                 break;
             default:
@@ -158,11 +170,23 @@ public class TourActivity extends AppCompatActivity implements NewTourFragment.O
         }
     }
 
-    public void startTourRecording() {
+    public boolean checkPermissions() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private void startTourRecording() {
         TourRecorderService_.intent(this).start();
     }
 
-    public void stopTourRecording() {
+    private void stopTourRecording() {
         TourRecorderService_.intent(this).stop();
     }
+
 }

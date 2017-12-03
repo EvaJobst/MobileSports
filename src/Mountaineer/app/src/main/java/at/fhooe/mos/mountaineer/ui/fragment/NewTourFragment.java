@@ -10,31 +10,27 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import at.fhooe.mos.mountaineer.R;
+import at.fhooe.mos.mountaineer.ui.TourActivity;
 
 @EFragment(R.layout.fragment_new_tour)
 public class NewTourFragment extends Fragment {
-    OnAddTourClickListener onAddTourClickListener;
-
-    public interface OnAddTourClickListener {
-        void onAddTourClick();
-    }
+    private TourActivity tourActivity;
 
     @ViewById
-    FloatingActionButton addTourButton;
+    protected FloatingActionButton addTourButton;
 
     @Click
-    void addTourButtonClicked() {
-        onAddTourClickListener.onAddTourClick();
-    }
-
-
-    public NewTourFragment() {
-        // Required empty public constructor
+    protected void addTourButtonClicked() {
+        tourActivity.doStateTransition();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        onAddTourClickListener = (OnAddTourClickListener) context;
+        tourActivity = (TourActivity) context;
+    }
+
+    public NewTourFragment() {
+        // Required empty public constructor
     }
 }

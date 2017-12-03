@@ -45,19 +45,39 @@ public class TourDataFormatter {
         return timeFormatter.format(date);
     }
 
+    public String getLocation(Tour tour) {
+        return "Lat: " + tour.getLocationLat() + ", Long: " + tour.getLocationLong();
+    }
+
     public String getMinMaxTemp(Tour tour) {
+        if(tour.getWeather() == null){  //TODO: weather should never be null?
+            return "";
+        }
+
         return tour.getWeather().getMain().getTemp_max() + "°C/" + tour.getWeather().getMain().getTemp_min() + "°C";
     }
 
     public String getHumidity(Tour tour) {
+        if(tour.getWeather() == null){  //TODO: weather should never be null?
+            return "Humidity: ";
+        }
+
         return "Humidity: " + tour.getWeather().getMain().getHumidity() + "%";
     }
 
     public String getWind(Tour tour) {
+        if(tour.getWeather() == null){  //TODO: weather should never be null?
+            return "Wind: ";
+        }
+
         return "Wind: " + tour.getWeather().getWind().getSpeed() + "km/h";
     }
 
     public String getTemp(Tour tour) {
+        if(tour.getWeather() == null){  //TODO: weather should never be null?
+            return "";
+        }
+
         return String.valueOf(tour.getWeather().getMain().getTemp());
     }
 }

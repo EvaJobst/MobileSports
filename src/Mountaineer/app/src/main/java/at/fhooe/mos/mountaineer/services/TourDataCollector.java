@@ -96,7 +96,9 @@ public class TourDataCollector implements
         Call<Weather> data = weatherService.fetch(String.valueOf(latitude), String.valueOf(longitude), "metric", API_KEY);
         data.enqueue(this);
 
-        tour.setLocation("Lat: " + latitude + ", Long: " + longitude);
+        tour.setLocationLat(latitude);
+        tour.setLocationLong(longitude);
+
         publishData();
     }
 

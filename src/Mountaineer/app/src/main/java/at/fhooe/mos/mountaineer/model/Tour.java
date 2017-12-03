@@ -1,5 +1,7 @@
 package at.fhooe.mos.mountaineer.model;
 
+import android.support.annotation.Nullable;
+
 /**
  * Created by Eva on 20.11.2017.
  */
@@ -7,7 +9,8 @@ package at.fhooe.mos.mountaineer.model;
 public class Tour {
     // General
     private String name;
-    private String location;
+    private double locationLat;
+    private double locationLong;
     private String day;
     private long startTimestamp;
     private long stopTimestamp;
@@ -27,7 +30,7 @@ public class Tour {
     private int burnedKcal;
 
     // Weather
-    Weather weather;
+    private Weather weather;
     /*private int maxTemp;
     private int minTemp;
     private int rain;
@@ -42,12 +45,20 @@ public class Tour {
         this.name = name;
     }
 
-    public String getLocation() {
-        return location;
+    public double getLocationLat() {
+        return locationLat;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLocationLat(double locationLat) {
+        this.locationLat = locationLat;
+    }
+
+    public double getLocationLong() {
+        return locationLong;
+    }
+
+    public void setLocationLong(double locationLong) {
+        this.locationLong = locationLong;
     }
 
     public String getDay() {
@@ -166,7 +177,8 @@ public class Tour {
     public String toString() {
         return "Tour{" +
                 "name='" + name + '\'' +
-                ", location='" + location + '\'' +
+                ", locationLat='" + locationLat + '\'' +
+                ", locationLong='" + locationLong + '\'' +
                 ", day='" + day + '\'' +
                 ", startTimestamp=" + startTimestamp +
                 ", stopTimestamp=" + stopTimestamp +

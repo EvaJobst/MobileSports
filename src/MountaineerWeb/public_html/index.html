@@ -21,9 +21,7 @@ and open the template in the editor.
 
         <script src='https://www.gstatic.com/firebasejs/4.6.2/firebase.js'></script>
 
-
-
-
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCEBS4uXwZGmYJGvWFfFgxQUVafhbvIyZQ"></script>
 
         <script src='mountaineer.js'></script>
     </head>
@@ -42,15 +40,18 @@ and open the template in the editor.
                     <h3>Your Tours</h3>
                 </div>
 
-                <span id='tourList'></span>
+                <div id='tourList'>
+                    loading ...
+                </div>
             </nav>
 
             <div id="tourDetails" class='collapse'>
                 <h2 id='tourDetailsTitle'>Tour Details</h2>
 
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#tourOverviewTab">Overview</a></li>
-                    <li><a href="#tourDetailsTab">TourDetails</a></li>
+                    <li class="active"><a href="#tourOverviewTab" data-toggle="tab">Overview</a></li>
+                    <li><a href="#tourDetailsTab" data-toggle="tab">TourDetails</a></li>
+                    <li><a href="#tourMapTab" data-toggle="tab">Map</a></li>
                 </ul>
 
                 <div class="tab-content">
@@ -72,6 +73,16 @@ and open the template in the editor.
                             </div>
                         </div> 
                     </div>
+                    <div id="tourMapTab" class="tab-pane fade">
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div id="map"></div>
+                            </div>
+                            <div class="col-sm-6">
+                            </div>
+                        </div> 
+                    </div>
                 </div>
             </div>
         </div>
@@ -83,20 +94,23 @@ and open the template in the editor.
 
         <script id="keyValueTableTemplate" type="text/x-dot-template">
             <table class='table table-striped'>
-                <tbody>
-                {{ for(var i in it) { }}
-                    <tr><th>{{=(it[i][0])}}</th><td>{{=(it[i][1])}}</td></tr>
-                {{ } }}
-                </tbody>
+            <tbody>
+            {{ for(var i in it) { }}
+            <tr><th>{{=(it[i][0])}}</th><td>{{=(it[i][1])}}</td></tr>
+            {{ } }}
+            </tbody>
             </table>
         </script>
 
         <script id="tourListTemplate" type="text/x-dot-template">
-                <ul class='nav nav-pills nav-stacked'>
-                    {{ for(var i in it) { }}
-                        <li class='nav-item'><a class='nav-link' data={{=(it[i].data)}}>{{=(it[i].text)}}</a></li>
-                    {{ } }}
-                </ul>
+            <ul class='nav nav-pills nav-stacked'>
+            {{ for(var i in it) { }}
+            <li class='nav-item'><a class='nav-link' data={{=(it[i].data)}}>{{=(it[i].text)}}</a></li>
+            {{ } }}
+            </ul>
         </script>
+
+
+
     </body>
 </html>

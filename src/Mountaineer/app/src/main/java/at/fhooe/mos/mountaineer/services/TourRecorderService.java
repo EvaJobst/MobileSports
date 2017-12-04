@@ -6,12 +6,9 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.widget.Toast;
 
 import org.androidannotations.annotations.EService;
 
-import at.fhooe.mos.mountaineer.FirebaseManager;
-import at.fhooe.mos.mountaineer.PersistenceManager;
 import at.fhooe.mos.mountaineer.sensors.location.Location;
 import at.fhooe.mos.mountaineer.sensors.pedometer.PedometerManager;
 import at.fhooe.mos.mountaineer.sensors.stopwatch.Stopwatch;

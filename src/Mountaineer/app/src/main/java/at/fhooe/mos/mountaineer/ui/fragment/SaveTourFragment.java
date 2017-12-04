@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.widget.Button;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.Click;
@@ -17,8 +18,9 @@ import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import at.fhooe.mos.mountaineer.FirebaseManager;
-import at.fhooe.mos.mountaineer.PersistenceManager;
+import at.fhooe.mos.mountaineer.persistence.FirebaseAddEventsListener;
+import at.fhooe.mos.mountaineer.persistence.FirebaseManager;
+import at.fhooe.mos.mountaineer.persistence.PersistenceManager;
 import at.fhooe.mos.mountaineer.R;
 import at.fhooe.mos.mountaineer.model.Tour;
 import at.fhooe.mos.mountaineer.services.TourDataCollector;
@@ -40,6 +42,9 @@ public class SaveTourFragment extends Fragment {
 
     @ViewById
     protected FloatingActionButton addGalleryImageButton;
+
+    @ViewById
+    protected Button saveTourButton;
 
     @Override
     public void onStart() {
@@ -64,13 +69,25 @@ public class SaveTourFragment extends Fragment {
 
     @Click
     protected void saveTourButtonClicked() {
+        saveTourButton.setText("Saving ...");
+
         String userId = persistenceManager.getUserId();
         FirebaseManager firebaseManager = new FirebaseManager(userId);
-        firebaseManager.addTour(tour);
+        firebaseManager.addTour(tour, new FirebaseAddEventsListener() {
 
-        Toast.makeText(getContext(), "Tour Saved!", Toast.LENGTH_SHORT).show();
+            @Override
+            public void addSucceededEvent() {
+                Toast.makeText(getContext(), "Tour Saved!", Toast.LENGTH_SHORT).show();
 
-        tourActivity.doStateTransition();
+                tourActivity.doStateTransition();
+            }
+
+            @Override
+            public void addFailedEvent() {
+                saveTourButton.setText("Save");
+                Toast.makeText(getContext(), "Tour not saved!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Click

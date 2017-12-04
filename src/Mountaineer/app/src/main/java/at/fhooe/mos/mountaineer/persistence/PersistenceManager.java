@@ -1,9 +1,11 @@
-package at.fhooe.mos.mountaineer;
+package at.fhooe.mos.mountaineer.persistence;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import at.fhooe.mos.mountaineer.R;
+import at.fhooe.mos.mountaineer.TourState;
 import at.fhooe.mos.mountaineer.model.Gender;
 
 

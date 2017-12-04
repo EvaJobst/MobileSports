@@ -1,4 +1,4 @@
-package at.fhooe.mos.mountaineer;
+package at.fhooe.mos.mountaineer.persistence;
 
 
 import at.fhooe.mos.mountaineer.model.Tour;
@@ -7,6 +7,6 @@ import at.fhooe.mos.mountaineer.model.Tour;
  * Created by Eva on 17.11.2017.
  */
 
-public interface FirebaseEventListener {
+public interface FirebaseFetchEventListener {
     void onFetchEvent(Tour tour);
 }

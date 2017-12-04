@@ -25,7 +25,7 @@ public class Location extends EventSource<LocationEventListener> implements Loca
 
     @Override
     public void onLocationChanged(android.location.Location location) {
-        for (LocationEventListener listener : eventListeners) {
+        for (LocationEventListener listener : super.eventListeners) {
             listener.onLocationReceivedEvent(location.getLatitude(), location.getLongitude());
         }
     }

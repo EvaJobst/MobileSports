@@ -28,7 +28,7 @@ public class Stopwatch extends EventSource<StopwatchEventListener> {
         startTime = System.currentTimeMillis();
         running = true;
 
-        for (StopwatchEventListener listener : eventListeners) {
+        for (StopwatchEventListener listener : super.eventListeners) {
             listener.onStartEvent(startTime);
         }
 
@@ -41,7 +41,7 @@ public class Stopwatch extends EventSource<StopwatchEventListener> {
         stopTime = System.currentTimeMillis();
         running = false;
 
-        for (StopwatchEventListener listener : eventListeners) {
+        for (StopwatchEventListener listener : super.eventListeners) {
             listener.onStopEvent(stopTime);
         }
     }
@@ -70,7 +70,7 @@ public class Stopwatch extends EventSource<StopwatchEventListener> {
         public void run() {
 
             if (running) {
-                for (StopwatchEventListener listener : eventListeners) {
+                for (StopwatchEventListener listener : Stopwatch.super.eventListeners) {
                     listener.onElapsedSecondsEvent(getElapsedSeconds());
                 }
 

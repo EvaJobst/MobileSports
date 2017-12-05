@@ -184,7 +184,7 @@ public class TourDataCollector implements
 
             int stepsInLastPeriod = totalSteps - lastTotalSteps;
 
-            tour.getStepsPerPeriod().add(stepsInLastPeriod);
+            tour.getTourDetails().addStepCountAtTime(tour.getDuration(), stepsInLastPeriod);
 
             lastTotalSteps = totalSteps;
 

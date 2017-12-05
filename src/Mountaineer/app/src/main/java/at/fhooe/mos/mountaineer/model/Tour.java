@@ -18,7 +18,6 @@ public class Tour {
 
     // Distance
     private int totalSteps;
-    private ArrayList<Integer> stepsPerPeriod = new ArrayList<>();
     private int averageSteps;
     private int distance;
     private int elevation;
@@ -37,6 +36,12 @@ public class Tour {
     private int rain;
     private int humidity;
     private int wind;*/
+
+    private TourDetails tourDetails;
+
+    public Tour(){
+        tourDetails = new TourDetails();
+    }
 
     public String getName() {
         return name;
@@ -100,14 +105,6 @@ public class Tour {
 
     public void setTotalSteps(int totalSteps) {
         this.totalSteps = totalSteps;
-    }
-
-    public ArrayList<Integer> getStepsPerPeriod() {
-        return stepsPerPeriod;
-    }
-
-    public void setStepsPerPeriod(ArrayList<Integer> stepsPerPeriod) {
-        this.stepsPerPeriod = stepsPerPeriod;
     }
 
     public int getAverageSteps() {
@@ -180,6 +177,14 @@ public class Tour {
 
     public void setWeather(Weather weather) {
         this.weather = weather;
+    }
+
+    public TourDetails getTourDetails() {
+        return tourDetails;
+    }
+
+    public void setTourDetails(TourDetails tourDetails) {
+        this.tourDetails = tourDetails;
     }
 
     @Override

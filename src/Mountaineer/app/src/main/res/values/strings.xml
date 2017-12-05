@@ -28,4 +28,8 @@
     <string name="preference_restinghr_title">Resting Heart Rate</string>
     <string name="preference_restinghr_key">preferenceRestingHeartRate</string>
     <string name="preference_restinghr_default">N/A</string>
+
+    <string name="preference_simulate_title">Simulate Sensor Data</string>
+    <string name="preference_simulate_key">preferenceSimulateSensorData</string>
+    <string name="preference_simulate_default">false</string>
 </resources>

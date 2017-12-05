@@ -1,4 +1,4 @@
-package at.fhooe.mos.mountaineer.sensors.pedometer;
+package at.fhooe.mos.mountaineer.sensors.stepsensor;
 
 import android.content.Context;
 import android.os.Handler;
@@ -9,20 +9,20 @@ import at.fhooe.mos.mountaineer.EventSource;
  * Created by stefan on 05.12.2017.
  */
 
-public class PedometerManagerSimulator extends EventSource<PedometerEventListener> implements PedometerManagerInterface {
+public class SimulatedStepSensor extends EventSource<StepSensorEventListener> implements StepSensor {
     private Handler handler;
     private PeriodicRunnable periodicRunnable;
-    private int nextRunTimeMs;
+    private int nextRunInMs;
 
     public void setup(Context context) {
         if(handler != null){
-            throw new RuntimeException("PedometerManagerSimulator is already set up. setup() called more than once!");
+            throw new RuntimeException("SimulatedStepSensor is already set up. setup() called more than once!");
         }
 
         handler = new Handler();
         periodicRunnable = new PeriodicRunnable();
-        nextRunTimeMs = 1000;
-        handler.postDelayed(periodicRunnable, nextRunTimeMs);
+        nextRunInMs = 1000;
+        handler.postDelayed(periodicRunnable, nextRunInMs);
     }
 
 
@@ -34,11 +34,11 @@ public class PedometerManagerSimulator extends EventSource<PedometerEventListene
 
         @Override
         public void run() {
-            for (PedometerEventListener listener : eventListeners) {
+            for (StepSensorEventListener listener : eventListeners) {
                 listener.onStepDetectedEvent();
             }
 
-            handler.postDelayed(this, nextRunTimeMs);
+            handler.postDelayed(this, nextRunInMs);
         }
     }
 }

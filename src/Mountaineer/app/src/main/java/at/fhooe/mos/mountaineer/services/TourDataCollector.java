@@ -7,8 +7,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import at.fhooe.mos.mountaineer.model.Tour;
-import at.fhooe.mos.mountaineer.sensors.location.LocationEventListener;
-import at.fhooe.mos.mountaineer.sensors.pedometer.PedometerEventListener;
+import at.fhooe.mos.mountaineer.sensors.location.LocationSensorEventListener;
+import at.fhooe.mos.mountaineer.sensors.stepsensor.StepSensorEventListener;
 import at.fhooe.mos.mountaineer.sensors.stopwatch.StopwatchEventListener;
 import at.fhooe.mos.mountaineer.model.Weather;
 import at.fhooe.mos.mountaineer.sensors.weather.WeatherService;
@@ -23,9 +23,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class TourDataCollector implements
-        PedometerEventListener,
+        StepSensorEventListener,
         StopwatchEventListener,
-        LocationEventListener,
+        LocationSensorEventListener,
         Callback<Weather> {
 
     private static final int PERIODIC_SUMMATION_TIME_MS = 60*1000;
@@ -61,13 +61,10 @@ public class TourDataCollector implements
     }
 
     @Override
-    public void onStartEvent(long timestamp) {
-        tour.setStartTimestamp(timestamp);
-    }
-
-    @Override
-    public void onStopEvent(long timestamp) {
-        tour.setStopTimestamp(timestamp);
+    public void onFinalTimeEvent(long startTimestamp, long stopTimestamp, int elapsedSeconds) {
+        tour.setStartTimestamp(startTimestamp);
+        tour.setStopTimestamp(stopTimestamp);
+        tour.setDuration(elapsedSeconds);
     }
 
     public Tour getTour() {
@@ -76,7 +73,7 @@ public class TourDataCollector implements
 
     @Subscribe
     public void onMessageEvent(ControlEvent event) {
-        publishTourDataUpdates = event.publishTourDataUpdates;
+        publishTourDataUpdates = event.getPublishTourDataUpdates();
     }
 
     public void start(){

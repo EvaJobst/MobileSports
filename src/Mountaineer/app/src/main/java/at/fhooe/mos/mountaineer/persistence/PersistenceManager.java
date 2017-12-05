@@ -135,4 +135,19 @@ public class PersistenceManager {
 
         return restingHeartRate;
     }
+
+    public boolean getSimulateSensorData(){
+        String preferenceSimulateKey = context.getString(R.string.preference_simulate_key);
+        String preferenceSimulateDefault = context.getString(R.string.preference_simulate_default);
+
+        boolean defaultValue = Boolean.parseBoolean(preferenceSimulateDefault);
+
+        boolean preferenceSimulateValue = preferences.getBoolean(preferenceSimulateKey, defaultValue);
+
+        return preferenceSimulateValue;
+    }
+
+    public static PersistenceManager Get(Context context){
+        return new PersistenceManager(context);
+    }
 }

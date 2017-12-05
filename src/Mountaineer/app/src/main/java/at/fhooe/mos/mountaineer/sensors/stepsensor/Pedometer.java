@@ -1,4 +1,4 @@
-package at.fhooe.mos.mountaineer.sensors.pedometer;
+package at.fhooe.mos.mountaineer.sensors.stepsensor;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -10,7 +10,7 @@ import at.fhooe.mos.mountaineer.EventSource;
  * Created by stefan on 10.11.2017.
  */
 
-public class Pedometer extends EventSource<PedometerEventListener> implements SensorEventListener {
+public class Pedometer extends EventSource<StepSensorEventListener> implements SensorEventListener {
     public static final float PRECISION = 0.20f;
     public static final float MIN_DYNAMIC_PRECISION = 0.5f;
     public static final int MIN_TIME_BETWEEN_STEPS_MS = 200;
@@ -128,7 +128,7 @@ public class Pedometer extends EventSource<PedometerEventListener> implements Se
     }
 
     protected void notifyListeners() {
-        for (PedometerEventListener listener : super.eventListeners) {
+        for (StepSensorEventListener listener : super.eventListeners) {
             listener.onStepDetectedEvent();
         }
     }

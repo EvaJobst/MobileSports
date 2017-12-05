@@ -1,7 +1,12 @@
 package at.fhooe.mos.mountaineer.sensors;
 
-import at.fhooe.mos.mountaineer.sensors.pedometer.PedometerManagerInterface;
-import at.fhooe.mos.mountaineer.sensors.pedometer.PedometerManagerSimulator;
+import at.fhooe.mos.mountaineer.sensors.location.LocationSensor;
+import at.fhooe.mos.mountaineer.sensors.location.SimulatedLocationSensor;
+import at.fhooe.mos.mountaineer.sensors.stepsensor.StepSensor;
+import at.fhooe.mos.mountaineer.sensors.stepsensor.SimulatedStepSensor;
+import at.fhooe.mos.mountaineer.sensors.stopwatch.RealStopwatch;
+import at.fhooe.mos.mountaineer.sensors.stopwatch.SimulatedStopwatch;
+import at.fhooe.mos.mountaineer.sensors.stopwatch.Stopwatch;
 
 /**
  * Created by stefan on 05.12.2017.
@@ -9,7 +14,17 @@ import at.fhooe.mos.mountaineer.sensors.pedometer.PedometerManagerSimulator;
 
 public class SimulationSensorFactory implements SensorFactory {
     @Override
-    public PedometerManagerInterface getPedometerManager() {
-        return new PedometerManagerSimulator();
+    public StepSensor getStepSensor() {
+        return new SimulatedStepSensor();
+    }
+
+    @Override
+    public Stopwatch getStopwatch() {
+        return new SimulatedStopwatch();
+    }
+
+    @Override
+    public LocationSensor getLocationSensor() {
+        return new SimulatedLocationSensor();
     }
 }

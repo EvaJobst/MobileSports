@@ -52,8 +52,6 @@ public class TourActivity extends AppCompatActivity {
         persistenceManager = new PersistenceManager(this);
         currentState = persistenceManager.getCurrentState();
         updateFragment();
-
-        PersistenceManager persistenceManager = new PersistenceManager(this);
     }
 
     @Override

@@ -11,23 +11,23 @@
 
     <string name="preference_age_title">Age</string>
     <string name="preference_age_key">preferenceAge</string>
-    <string name="preference_age_default">N/A</string>
+    <string name="preference_age_default">0</string>
 
     <string name="preference_height_title">Height</string>
     <string name="preference_height_key">preferenceHeight</string>
-    <string name="preference_height_default">N/A</string>
+    <string name="preference_height_default">0</string>
 
     <string name="preference_mass_title">Body Mass</string>
     <string name="preference_mass_key">preferenceBodyMass</string>
-    <string name="preference_mass_default">N/A</string>
+    <string name="preference_mass_default">0</string>
 
     <string name="preference_par_title">Physical Activity Rating (PA-R)</string>
     <string name="preference_par_key">preferencePar</string>
-    <string name="preference_par_default">N/A</string>
+    <string name="preference_par_default">0</string>
 
     <string name="preference_restinghr_title">Resting Heart Rate</string>
     <string name="preference_restinghr_key">preferenceRestingHeartRate</string>
-    <string name="preference_restinghr_default">N/A</string>
+    <string name="preference_restinghr_default">0</string>
 
     <string name="preference_simulate_title">Simulate Sensor Data</string>
     <string name="preference_simulate_key">preferenceSimulateSensorData</string>

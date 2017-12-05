@@ -53,87 +53,47 @@ public class PersistenceManager {
 
     public int getAge(){
         String preferenceAgeKey = context.getString(R.string.preference_age_key);
-        String preferenceAgeDefault = context.getString(R.string.preference_age_default);
+        int preferenceAgeDefault = Integer.valueOf(context.getString(R.string.preference_age_default));
 
-        String preferenceAgeValue = preferences.getString(preferenceAgeKey, preferenceAgeDefault);
+        int preferenceAgeValue = preferences.getInt(preferenceAgeKey, preferenceAgeDefault);
 
-        int age;
-        try{
-            age = Integer.parseInt(preferenceAgeValue);
-        }
-        catch (NumberFormatException ex){
-            age = 0;
-        }
-
-        return age;
+        return preferenceAgeValue;
     }
 
     public int getHeight(){
         String preferenceHeightKey = context.getString(R.string.preference_height_key);
-        String preferenceHeightDefault = context.getString(R.string.preference_height_default);
+        int preferenceHeightDefault = Integer.valueOf(context.getString(R.string.preference_height_default));
 
-        String preferenceHeightValue = preferences.getString(preferenceHeightKey, preferenceHeightDefault);
+        int preferenceHeightValue = preferences.getInt(preferenceHeightKey, preferenceHeightDefault);
 
-        int height;
-        try{
-            height = Integer.parseInt(preferenceHeightValue);
-        }
-        catch (NumberFormatException ex){
-            height = 0;
-        }
-
-        return height;
+        return preferenceHeightValue;
     }
 
     public int getBodyMass(){
         String preferenceMassKey = context.getString(R.string.preference_mass_key);
-        String preferenceMassDefault = context.getString(R.string.preference_mass_default);
+        int preferenceMassDefault = Integer.valueOf(context.getString(R.string.preference_mass_default));
 
-        String preferenceMassValue = preferences.getString(preferenceMassKey, preferenceMassDefault);
+        int preferenceMassValue = preferences.getInt(preferenceMassKey, preferenceMassDefault);
 
-        int mass;
-        try{
-            mass = Integer.parseInt(preferenceMassValue);
-        }
-        catch (NumberFormatException ex){
-            mass = 0;
-        }
-
-        return mass;
+        return preferenceMassValue;
     }
 
     public int getPar(){
         String preferenceParKey = context.getString(R.string.preference_par_key);
-        String preferenceParDefault = context.getString(R.string.preference_par_default);
+        int preferenceParDefault = Integer.valueOf(context.getString(R.string.preference_par_default));
 
-        String preferenceParValue = preferences.getString(preferenceParKey, preferenceParDefault);
+        int preferenceParValue = preferences.getInt(preferenceParKey, preferenceParDefault);
 
-        int par;
-        try{
-            par = Integer.parseInt(preferenceParValue);
-        }
-        catch (NumberFormatException ex){
-            par = 0;
-        }
-
-        return par;
+        return preferenceParValue;
     }
 
     public int getRestingHeartRate(){
         String preferenceRestingHRKey = context.getString(R.string.preference_restinghr_key);
-        String preferenceRestingHRDefault = context.getString(R.string.preference_restinghr_default);
+        int preferenceRestingHRDefault = Integer.valueOf(context.getString(R.string.preference_restinghr_default));
 
-        String preferenceRestingHRValue = preferences.getString(preferenceRestingHRKey, preferenceRestingHRDefault);
+        int preferenceRestingHRValue = preferences.getInt(preferenceRestingHRKey, preferenceRestingHRDefault);
 
-        int restingHeartRate;
-        try{
-            restingHeartRate = Integer.parseInt(preferenceRestingHRValue);
-        }
-        catch (NumberFormatException ex){
-            restingHeartRate = 0;
-        }
-
-        return restingHeartRate;
+        return preferenceRestingHRValue;
     }
 
     public boolean getSimulateSensorData(){

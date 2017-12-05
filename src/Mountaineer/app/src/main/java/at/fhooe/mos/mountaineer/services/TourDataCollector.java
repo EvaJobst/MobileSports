@@ -175,18 +175,9 @@ public class TourDataCollector implements
     }
 
     private class PeriodicSummation implements Runnable {
-        int lastTotalSteps = 0;
-
         @Override
         public void run() {
-
-            int totalSteps = tour.getTotalSteps();
-
-            int stepsInLastPeriod = totalSteps - lastTotalSteps;
-
-            tour.getTourDetails().addStepCountAtTime(tour.getDuration(), stepsInLastPeriod);
-
-            lastTotalSteps = totalSteps;
+            tour.getTourDetails().addStepCountAtTime(tour.getDuration(), tour.getTotalSteps());
 
             handler.postDelayed(this, PERIODIC_SUMMATION_TIME_MS);
         }

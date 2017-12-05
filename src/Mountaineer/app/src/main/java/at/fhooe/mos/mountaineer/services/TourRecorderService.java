@@ -9,8 +9,10 @@ import android.os.PowerManager;
 
 import org.androidannotations.annotations.EService;
 
+import at.fhooe.mos.mountaineer.sensors.RealSensorFactory;
+import at.fhooe.mos.mountaineer.sensors.SensorFactory;
 import at.fhooe.mos.mountaineer.sensors.location.Location;
-import at.fhooe.mos.mountaineer.sensors.pedometer.PedometerManager;
+import at.fhooe.mos.mountaineer.sensors.pedometer.PedometerManagerInterface;
 import at.fhooe.mos.mountaineer.sensors.stopwatch.Stopwatch;
 import at.fhooe.mos.mountaineer.ui.MainNotificationManager;
 
@@ -32,7 +34,7 @@ public class TourRecorderService extends Service {
 
     private MainNotificationManager mainNotificationManager;
 
-    private PedometerManager pedometerManager;
+    private PedometerManagerInterface pedometerManager;
     private Stopwatch stopwatch;
     private Location location;
 
@@ -45,6 +47,8 @@ public class TourRecorderService extends Service {
     public void onCreate() {
         super.onCreate();
 
+        SensorFactory sensorFactory = new RealSensorFactory();
+
         mainNotificationManager = new MainNotificationManager(this);
 
         handler = new Handler();
@@ -53,7 +57,10 @@ public class TourRecorderService extends Service {
         tourDataCollector = new TourDataCollector();
         tourDataCollector.start();
 
-        pedometerManager = new PedometerManager(this);
+        pedometerManager = sensorFactory.getPedometerManager();
+        pedometerManager.setup(this);
+        pedometerManager.registerListener(tourDataCollector);
+
         stopwatch = new Stopwatch();
         stopwatch.registerListener(tourDataCollector);
 
@@ -63,7 +70,6 @@ public class TourRecorderService extends Service {
         acquireWakeLock();
         startForeground(mainNotificationManager.getNotificationId(), mainNotificationManager.getNotification());
 
-        pedometerManager.setup(tourDataCollector);
         stopwatch.start();
 
         startNotificationUpdates();

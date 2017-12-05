@@ -7,24 +7,23 @@ import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 
+import at.fhooe.mos.mountaineer.EventSource;
+
 /**
  * Created by stefan on 25.11.2017.
  */
 
-public class PedometerManager {
+public class PedometerManager implements PedometerManagerInterface {
     private Context context;
     private SensorManager sensorManager;
     private Sensor accelerometerSensor;
     private Pedometer pedometer;
     private PedometerManager.ScreenOffBroadcastReceiver screenOffBroadcastReceiver;
 
-    public PedometerManager(Context context) {
+    public void setup(Context context) {
         this.context = context;
-    }
 
-    public void setup(PedometerEventListener pedometerEventListener) {
         pedometer = new Pedometer();
-        pedometer.registerListener(pedometerEventListener);
 
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -33,6 +32,16 @@ public class PedometerManager {
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
         screenOffBroadcastReceiver = new PedometerManager.ScreenOffBroadcastReceiver();
         context.registerReceiver(screenOffBroadcastReceiver, filter);
+    }
+
+    @Override
+    public void registerListener(PedometerEventListener pedometerEventListener) {
+        pedometer.registerListener(pedometerEventListener);
+    }
+
+    @Override
+    public void removeListener(PedometerEventListener listener) {
+        pedometer.removeListener(listener);
     }
 
     public void destroy() {

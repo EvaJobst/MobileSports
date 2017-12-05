@@ -68,6 +68,57 @@ public class PersistenceManager {
         return age;
     }
 
+    public int getHeight(){
+        String preferenceHeightKey = context.getString(R.string.preference_height_key);
+        String preferenceHeightDefault = context.getString(R.string.preference_height_default);
+
+        String preferenceHeightValue = preferences.getString(preferenceHeightKey, preferenceHeightDefault);
+
+        int height;
+        try{
+            height = Integer.parseInt(preferenceHeightValue);
+        }
+        catch (NumberFormatException ex){
+            height = 0;
+        }
+
+        return height;
+    }
+
+    public int getBodyMass(){
+        String preferenceMassKey = context.getString(R.string.preference_mass_key);
+        String preferenceMassDefault = context.getString(R.string.preference_mass_default);
+
+        String preferenceMassValue = preferences.getString(preferenceMassKey, preferenceMassDefault);
+
+        int mass;
+        try{
+            mass = Integer.parseInt(preferenceMassValue);
+        }
+        catch (NumberFormatException ex){
+            mass = 0;
+        }
+
+        return mass;
+    }
+
+    public int getPar(){
+        String preferenceParKey = context.getString(R.string.preference_par_key);
+        String preferenceParDefault = context.getString(R.string.preference_par_default);
+
+        String preferenceParValue = preferences.getString(preferenceParKey, preferenceParDefault);
+
+        int par;
+        try{
+            par = Integer.parseInt(preferenceParValue);
+        }
+        catch (NumberFormatException ex){
+            par = 0;
+        }
+
+        return par;
+    }
+
     public int getRestingHeartRate(){
         String preferenceRestingHRKey = context.getString(R.string.preference_restinghr_key);
         String preferenceRestingHRDefault = context.getString(R.string.preference_restinghr_default);

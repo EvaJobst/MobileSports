@@ -1,5 +1,6 @@
 package at.fhooe.mos.mountaineer.services;
 
+import android.os.Handler;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
@@ -27,8 +28,12 @@ public class TourDataCollector implements
         LocationEventListener,
         Callback<Weather> {
 
+    private static final int PERIODIC_SUMMATION_TIME_MS = 60*1000;
     private final String BASE_URL = "https://api.openweathermap.org/data/2.5/";
     private final String API_KEY = "17b9da43ec1ff13f7f3b0b4ba8e21bb6";
+
+    private Handler handler;
+    private PeriodicSummation periodicSummation;
 
     private boolean publishTourDataUpdates;
 
@@ -36,6 +41,9 @@ public class TourDataCollector implements
 
     public TourDataCollector() {
         publishTourDataUpdates = true;
+
+        handler = new Handler();
+        periodicSummation = new PeriodicSummation();
 
         EventBus.getDefault().register(this);
     }
@@ -69,6 +77,14 @@ public class TourDataCollector implements
     @Subscribe
     public void onMessageEvent(ControlEvent event) {
         publishTourDataUpdates = event.publishTourDataUpdates;
+    }
+
+    public void start(){
+        startPeriodicSummation();
+    }
+
+    public void stop(){
+        stopPeriodicSummation();
     }
 
     public void publishFinalTourData() {
@@ -147,6 +163,32 @@ public class TourDataCollector implements
 
         public boolean getPublishTourDataUpdates() {
             return publishTourDataUpdates;
+        }
+    }
+
+    private void startPeriodicSummation() {
+        handler.postDelayed(periodicSummation, PERIODIC_SUMMATION_TIME_MS);
+    }
+
+    private void stopPeriodicSummation() {
+        handler.removeCallbacks(periodicSummation);
+    }
+
+    private class PeriodicSummation implements Runnable {
+        int lastTotalSteps = 0;
+
+        @Override
+        public void run() {
+
+            int totalSteps = tour.getTotalSteps();
+
+            int stepsInLastPeriod = totalSteps - lastTotalSteps;
+
+            tour.getStepsPerPeriod().add(stepsInLastPeriod);
+
+            lastTotalSteps = totalSteps;
+
+            handler.postDelayed(this, PERIODIC_SUMMATION_TIME_MS);
         }
     }
 }

@@ -1,6 +1,6 @@
 package at.fhooe.mos.mountaineer.model;
 
-import android.support.annotation.Nullable;
+import java.util.ArrayList;
 
 /**
  * Created by Eva on 20.11.2017.
@@ -18,6 +18,7 @@ public class Tour {
 
     // Distance
     private int totalSteps;
+    private ArrayList<Integer> stepsPerPeriod = new ArrayList<>();
     private int averageSteps;
     private int distance;
     private int elevation;
@@ -99,6 +100,14 @@ public class Tour {
 
     public void setTotalSteps(int totalSteps) {
         this.totalSteps = totalSteps;
+    }
+
+    public ArrayList<Integer> getStepsPerPeriod() {
+        return stepsPerPeriod;
+    }
+
+    public void setStepsPerPeriod(ArrayList<Integer> stepsPerPeriod) {
+        this.stepsPerPeriod = stepsPerPeriod;
     }
 
     public int getAverageSteps() {

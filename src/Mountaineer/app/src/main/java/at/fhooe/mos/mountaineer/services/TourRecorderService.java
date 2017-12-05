@@ -51,6 +51,7 @@ public class TourRecorderService extends Service {
         periodicNotificationUpdater = new PeriodicNotificationUpdater();
 
         tourDataCollector = new TourDataCollector();
+        tourDataCollector.start();
 
         pedometerManager = new PedometerManager(this);
         stopwatch = new Stopwatch();
@@ -77,6 +78,7 @@ public class TourRecorderService extends Service {
         pedometerManager.destroy();
         stopwatch.stop();
 
+        tourDataCollector.stop();
         tourDataCollector.publishFinalTourData();
 
         releaseWakeLock();

@@ -19,6 +19,24 @@
             android:inputType="number"/>
 
         <EditTextPreference
+            android:defaultValue="@string/preference_height_default"
+            android:key="@string/preference_height_key"
+            android:title="@string/preference_height_title"
+            android:inputType="number"/>
+
+        <EditTextPreference
+            android:defaultValue="@string/preference_mass_default"
+            android:key="@string/preference_mass_key"
+            android:title="@string/preference_mass_title"
+            android:inputType="number"/>
+
+        <EditTextPreference
+            android:defaultValue="@string/preference_par_default"
+            android:key="@string/preference_par_key"
+            android:title="@string/preference_par_title"
+            android:inputType="number"/>
+
+        <EditTextPreference
             android:defaultValue="@string/preference_restinghr_default"
             android:key="@string/preference_restinghr_key"
             android:title="@string/preference_restinghr_title"

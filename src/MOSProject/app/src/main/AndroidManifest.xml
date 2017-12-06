@@ -3,6 +3,11 @@
     package="at.fhooe.mos.app.mosproject">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
 
     <application
         android:allowBackup="true"
@@ -27,8 +32,10 @@
         <activity
             android:name=".ui.DebugActivity"
             android:label="@string/title_activity_debug"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".ui.HeartRateSimulationActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.HeartRateSimulationActivity" />
+        <activity android:name=".ui.HeartRateDeviceActivity" />
+        <activity android:name=".ui.ScanHeartRateDeviceActivity"></activity>
     </application>
 
 </manifest>

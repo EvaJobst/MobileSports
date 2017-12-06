@@ -1,15 +1,9 @@
 package at.fhooe.mos.app.mosproject.ui;
 
 
-import android.app.ActivityManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -48,12 +42,15 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.startStopStepDetectorService)
     Button startStopStepDetectorService;
 
-    @BindView(R.id.openHeartRateSimulation)
-    Button openHeartRateSimulation;
-
     @OnClick(R.id.openHeartRateSimulation)
     public void onOpenHeartRateSimulationClick() {
         Intent intent = new Intent(MainActivity.this, HeartRateSimulationActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.openHeartRateDevice)
+    public void onOpenHeartRateDeviceClick() {
+        Intent intent = new Intent(MainActivity.this, ScanHeartRateDeviceActivity.class);
         startActivity(intent);
     }
 

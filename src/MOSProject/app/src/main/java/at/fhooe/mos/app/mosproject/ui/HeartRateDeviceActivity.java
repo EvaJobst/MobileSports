@@ -1,6 +1,7 @@
 package at.fhooe.mos.app.mosproject.ui;
 
 import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +25,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class HeartRateDeviceActivity extends AppCompatActivity {
-    //public static BluetoothDevice bluetoothDevice;
     Boolean isRunning = false;
     HRCalculation hrCalculation = new HRCalculation();
     Handler handler = new Handler();
@@ -78,7 +78,9 @@ public class HeartRateDeviceActivity extends AppCompatActivity {
 
         SensorFactory sensorFactory;
         sensorFactory = new DeviceFactory();
+
         heartRateMonitor = sensorFactory.createHRM();
+        heartRateMonitor.initialize(this);
     }
 
     public void resetUI() {

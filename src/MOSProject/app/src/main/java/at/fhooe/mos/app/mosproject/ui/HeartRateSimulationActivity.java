@@ -70,9 +70,7 @@ public class HeartRateSimulationActivity extends AppCompatActivity {
         if(isRunning) {
             startSensorSimulator.setText("Stop Simulation");
 
-            if(heartRateMonitor instanceof SimulationHRM) {
-                ((SimulationHRM)heartRateMonitor).openFile(this);
-            }
+            heartRateMonitor.initialize(this);
 
             simulate();
         }

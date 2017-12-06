@@ -19,16 +19,6 @@ public class SimulationHRM implements HRM {
     String fileName = "simulation_data/lichtenberg.txt";
     BufferedReader bufferedReader = null;
 
-    public void openFile(Activity activity) {
-        try {
-            AssetManager assetManager = activity.getAssets();
-            InputStreamReader inputStreamReader = new InputStreamReader(assetManager.open(fileName));
-            bufferedReader = new BufferedReader(inputStreamReader);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public int getHeartRate() {
         String line = "";
@@ -42,5 +32,16 @@ public class SimulationHRM implements HRM {
         }
 
         return 0;
+    }
+
+    @Override
+    public void initialize(Activity activity) {
+        try {
+            AssetManager assetManager = activity.getAssets();
+            InputStreamReader inputStreamReader = new InputStreamReader(assetManager.open(fileName));
+            bufferedReader = new BufferedReader(inputStreamReader);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

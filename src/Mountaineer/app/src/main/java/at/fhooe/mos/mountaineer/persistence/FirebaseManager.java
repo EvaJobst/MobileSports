@@ -9,7 +9,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import at.fhooe.mos.mountaineer.EventSource;
-import at.fhooe.mos.mountaineer.model.Tour;
+import at.fhooe.mos.mountaineer.model.tour.Tour;
+import at.fhooe.mos.mountaineer.model.tour.TourDetails;
 
 
 /**
@@ -18,25 +19,43 @@ import at.fhooe.mos.mountaineer.model.Tour;
 
 public class FirebaseManager extends EventSource<FirebaseFetchEventListener> {
     private static final String TOURS_REFERENCE = "tours";
+    private static final String TOUR_DETAILS_REFERENCE = "tourDetails";
 
     private DatabaseReference userToursDb;
+    private DatabaseReference userTourDetailsDb;
 
     public FirebaseManager(String userId) {
         userToursDb = FirebaseDatabase.getInstance().getReference(TOURS_REFERENCE + "/" + userId);
+        userTourDetailsDb = FirebaseDatabase.getInstance().getReference(TOUR_DETAILS_REFERENCE + "/" + userId);
     }
 
-    public void addTour(Tour tour, final FirebaseAddEventsListener eventListener) {
+    public void addTour(final Tour tour, final FirebaseAddEventsListener eventListener) {
+        final TourDetails tourDetails = tour.getTourDetails();
+        tour.setTourDetails(null);  //temporally remove details to save tour and details separately
+
         userToursDb.push().setValue(tour, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if(databaseError == null){
-                    eventListener.addSucceededEvent();
-                }
-                else{
+                if (databaseError == null) {
+                    String key = databaseReference.getKey();
+
+                    userTourDetailsDb.child(key).setValue(tourDetails, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            if (databaseError == null) {
+                                eventListener.addSucceededEvent();
+                            } else {
+                                eventListener.addFailedEvent();
+                            }
+                        }
+                    });
+                } else {
                     eventListener.addFailedEvent();
                 }
             }
         });
+
+        tour.setTourDetails(tourDetails);   //add details again
     }
 
     public void fetchTour(String id) {

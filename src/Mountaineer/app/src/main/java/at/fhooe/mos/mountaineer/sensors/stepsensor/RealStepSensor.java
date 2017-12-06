@@ -1,4 +1,4 @@
-package at.fhooe.mos.mountaineer.sensors.pedometer;
+package at.fhooe.mos.mountaineer.sensors.stepsensor;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,28 +11,35 @@ import android.hardware.SensorManager;
  * Created by stefan on 25.11.2017.
  */
 
-public class PedometerManager {
+public class RealStepSensor implements StepSensor {
     private Context context;
     private SensorManager sensorManager;
     private Sensor accelerometerSensor;
     private Pedometer pedometer;
-    private PedometerManager.ScreenOffBroadcastReceiver screenOffBroadcastReceiver;
+    private RealStepSensor.ScreenOffBroadcastReceiver screenOffBroadcastReceiver;
 
-    public PedometerManager(Context context) {
+    public void setup(Context context) {
         this.context = context;
-    }
 
-    public void setup(PedometerEventListener pedometerEventListener) {
         pedometer = new Pedometer();
-        pedometer.registerListener(pedometerEventListener);
 
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         registerSensorListeners();
 
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
-        screenOffBroadcastReceiver = new PedometerManager.ScreenOffBroadcastReceiver();
+        screenOffBroadcastReceiver = new RealStepSensor.ScreenOffBroadcastReceiver();
         context.registerReceiver(screenOffBroadcastReceiver, filter);
+    }
+
+    @Override
+    public void registerListener(StepSensorEventListener stepSensorEventListener) {
+        pedometer.registerListener(stepSensorEventListener);
+    }
+
+    @Override
+    public void removeListener(StepSensorEventListener listener) {
+        pedometer.removeListener(listener);
     }
 
     public void destroy() {
@@ -55,8 +62,8 @@ public class PedometerManager {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 // Unregisters the listener and registers it again.
-                PedometerManager.this.unregisterSensorListeners();
-                PedometerManager.this.registerSensorListeners();
+                RealStepSensor.this.unregisterSensorListeners();
+                RealStepSensor.this.registerSensorListeners();
             }
         }
     }

@@ -2,10 +2,10 @@ package at.fhooe.mos.mountaineer.sensors.location;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 
 import at.fhooe.mos.mountaineer.EventSource;
 
@@ -13,19 +13,25 @@ import at.fhooe.mos.mountaineer.EventSource;
  * Created by Eva on 30.11.2017.
  */
 
-public class Location extends EventSource<LocationEventListener> implements LocationListener {
+public class RealLocationSensor extends EventSource<LocationSensorEventListener> implements LocationSensor, LocationListener {
     LocationManager locationManager;
 
+    @Override
     @SuppressLint("MissingPermission")
-    public Location(Context context) {
+    public void setup(Context context) {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
         locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
     }
 
     @Override
-    public void onLocationChanged(android.location.Location location) {
-        for (LocationEventListener listener : super.eventListeners) {
+    public void destroy() {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        for (LocationSensorEventListener listener : super.eventListeners) {
             listener.onLocationReceivedEvent(location.getLatitude(), location.getLongitude());
         }
     }

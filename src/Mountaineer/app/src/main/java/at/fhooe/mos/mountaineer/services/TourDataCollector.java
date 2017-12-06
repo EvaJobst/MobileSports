@@ -1,34 +1,36 @@
 package at.fhooe.mos.mountaineer.services;
 
+import android.os.Handler;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import at.fhooe.mos.mountaineer.model.Tour;
-import at.fhooe.mos.mountaineer.sensors.location.LocationEventListener;
-import at.fhooe.mos.mountaineer.sensors.pedometer.PedometerEventListener;
+import at.fhooe.mos.mountaineer.model.tour.Tour;
+import at.fhooe.mos.mountaineer.model.weather.Weather;
+import at.fhooe.mos.mountaineer.sensors.heartrate.HeartRateSensorEventListener;
+import at.fhooe.mos.mountaineer.sensors.location.LocationSensorEventListener;
+import at.fhooe.mos.mountaineer.sensors.stepsensor.StepSensorEventListener;
 import at.fhooe.mos.mountaineer.sensors.stopwatch.StopwatchEventListener;
-import at.fhooe.mos.mountaineer.model.Weather;
-import at.fhooe.mos.mountaineer.sensors.weather.WeatherService;
+import at.fhooe.mos.mountaineer.webservices.OpenWeatherMap;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by stefan on 25.11.2017.
  */
 
 public class TourDataCollector implements
-        PedometerEventListener,
+        StepSensorEventListener,
         StopwatchEventListener,
-        LocationEventListener,
-        Callback<Weather> {
+        LocationSensorEventListener,
+        HeartRateSensorEventListener {
 
-    private final String BASE_URL = "https://api.openweathermap.org/data/2.5/";
-    private final String API_KEY = "17b9da43ec1ff13f7f3b0b4ba8e21bb6";
+    private static final int PERIODIC_SUMMATION_TIME_MS = 60 * 1000;
+
+    private Handler handler;
+    private PeriodicSummation periodicSummation;
 
     private boolean publishTourDataUpdates;
 
@@ -36,6 +38,9 @@ public class TourDataCollector implements
 
     public TourDataCollector() {
         publishTourDataUpdates = true;
+
+        handler = new Handler();
+        periodicSummation = new PeriodicSummation();
 
         EventBus.getDefault().register(this);
     }
@@ -53,22 +58,51 @@ public class TourDataCollector implements
     }
 
     @Override
-    public void onStartEvent(long timestamp) {
-        tour.setStartTimestamp(timestamp);
+    public void onFinalTimeEvent(long startTimestamp, long stopTimestamp, int elapsedSeconds) {
+        tour.setStartTimestamp(startTimestamp);
+        tour.setStopTimestamp(stopTimestamp);
+        tour.setDuration(elapsedSeconds);
     }
 
     @Override
-    public void onStopEvent(long timestamp) {
-        tour.setStopTimestamp(timestamp);
+    public void onLocationReceivedEvent(double latitude, double longitude) {
+        tour.setLocationLat(latitude);
+        tour.setLocationLong(longitude);
+
+        publishData();
+
+        OpenWeatherMap.fetchWeather(latitude, longitude, new Callback<Weather>() {
+            @Override
+            public void onResponse(Call<Weather> call, Response<Weather> response) {
+                tour.setWeather(response.body());
+                publishData();
+            }
+
+            @Override
+            public void onFailure(Call<Weather> call, Throwable t) {
+                Log.e("TourDataCollector", "Could not fetch weather data!\n" + t.getMessage());
+            }
+        });
     }
 
-    public Tour getTour() {
-        return tour;
+    @Override
+    public void onHeatRateEvent(double heartRate) {
+        tour.getTourDetails().addHeartRateAtTime(tour.getDuration(), heartRate);
+
+        tour.setCurrentHeartRate(heartRate);
     }
 
     @Subscribe
     public void onMessageEvent(ControlEvent event) {
-        publishTourDataUpdates = event.publishTourDataUpdates;
+        publishTourDataUpdates = event.getPublishTourDataUpdates();
+    }
+
+    public void start() {
+        startPeriodicSummation();
+    }
+
+    public void stop() {
+        stopPeriodicSummation();
     }
 
     public void publishFinalTourData() {
@@ -77,41 +111,14 @@ public class TourDataCollector implements
         EventBus.getDefault().postSticky(new FinalTourDataEvent(tour));
     }
 
+    public Tour getTour() {
+        return tour;
+    }
+
     private void publishData() {
         if (publishTourDataUpdates) {
             EventBus.getDefault().post(new TourDataUpdateEvent(tour));
         }
-    }
-
-    @Override
-    public void onLocationReceivedEvent(double latitude, double longitude) {
-        // TODO Fetch weather information
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        final WeatherService weatherService = retrofit.create(WeatherService.class);
-        Call<Weather> data = weatherService.fetch(String.valueOf(latitude), String.valueOf(longitude), "metric", API_KEY);
-        data.enqueue(this);
-
-        tour.setLocationLat(latitude);
-        tour.setLocationLong(longitude);
-
-        publishData();
-    }
-
-    @Override
-    public void onResponse(Call<Weather> call, Response<Weather> response) {
-        tour.setWeather(response.body());
-        Log.d("RESPONDED", response.body().toString());
-        publishData();
-    }
-
-    @Override
-    public void onFailure(Call<Weather> call, Throwable t) {
-        Log.e("FAILURE", t.getMessage());
     }
 
     public static class TourDataUpdateEvent {
@@ -147,6 +154,23 @@ public class TourDataCollector implements
 
         public boolean getPublishTourDataUpdates() {
             return publishTourDataUpdates;
+        }
+    }
+
+    private void startPeriodicSummation() {
+        handler.postDelayed(periodicSummation, PERIODIC_SUMMATION_TIME_MS);
+    }
+
+    private void stopPeriodicSummation() {
+        handler.removeCallbacks(periodicSummation);
+    }
+
+    private class PeriodicSummation implements Runnable {
+        @Override
+        public void run() {
+            tour.getTourDetails().addStepCountAtTime(tour.getDuration(), tour.getTotalSteps());
+
+            handler.postDelayed(this, PERIODIC_SUMMATION_TIME_MS);
         }
     }
 }

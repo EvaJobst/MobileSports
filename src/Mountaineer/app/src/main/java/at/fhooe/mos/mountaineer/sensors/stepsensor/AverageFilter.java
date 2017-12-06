@@ -1,4 +1,4 @@
-package at.fhooe.mos.mountaineer.sensors.pedometer;
+package at.fhooe.mos.mountaineer.sensors.stepsensor;
 
 /**
  * Created by stefan on 11.11.2017.

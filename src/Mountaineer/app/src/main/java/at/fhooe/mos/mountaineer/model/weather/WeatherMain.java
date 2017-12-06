@@ -1,16 +1,16 @@
-package at.fhooe.mos.mountaineer.model;
+package at.fhooe.mos.mountaineer.model.weather;
 
 /**
  * Created by Eva on 30.11.2017.
  */
 
 public class WeatherMain {
-    int temp;
-    int humidity;
-    int temp_min;
-    int temp_max;
+    double temp;
+    double humidity;
+    double temp_min;
+    double temp_max;
 
-    public WeatherMain(int temp, int humidity, int temp_min, int temp_max) {
+    public WeatherMain(double temp, double humidity, double temp_min, double temp_max) {
         this.temp = temp;
         this.humidity = humidity;
         this.temp_min = temp_min;
@@ -20,35 +20,35 @@ public class WeatherMain {
     public WeatherMain() {
     }
 
-    public int getTemp() {
+    public double getTemp() {
         return temp;
     }
 
-    public void setTemp(int temp) {
+    public void setTemp(double temp) {
         this.temp = temp;
     }
 
-    public int getHumidity() {
+    public double getHumidity() {
         return humidity;
     }
 
-    public void setHumidity(int humidity) {
+    public void setHumidity(double humidity) {
         this.humidity = humidity;
     }
 
-    public int getTemp_min() {
+    public double getTemp_min() {
         return temp_min;
     }
 
-    public void setTemp_min(int temp_min) {
+    public void setTemp_min(double temp_min) {
         this.temp_min = temp_min;
     }
 
-    public int getTemp_max() {
+    public double getTemp_max() {
         return temp_max;
     }
 
-    public void setTemp_max(int temp_max) {
+    public void setTemp_max(double temp_max) {
         this.temp_max = temp_max;
     }
 

@@ -6,7 +6,8 @@ import android.preference.PreferenceManager;
 
 import at.fhooe.mos.mountaineer.R;
 import at.fhooe.mos.mountaineer.TourState;
-import at.fhooe.mos.mountaineer.model.Gender;
+import at.fhooe.mos.mountaineer.model.user.Gender;
+import at.fhooe.mos.mountaineer.model.user.UserInformation;
 
 
 /**
@@ -37,11 +38,23 @@ public class PersistenceManager {
         return TourState.valueOf(state);
     }
 
-    public String getUserId(){
+    public UserInformation getUserInformation() {
+        return new UserInformation(
+                getUserId(),
+                getGender(),
+                getAge(),
+                getHeight(),
+                getBodyMass(),
+                getPar(),
+                getRestingHeartRate()
+        );
+    }
+
+    public String getUserId() {
         return "user1";
     }
 
-    public Gender getGender(){
+    public Gender getGender() {
         String preferenceGenderKey = context.getString(R.string.preference_gender_key);
         String preferenceGenderDefault = context.getString(R.string.preference_gender_default);
 
@@ -51,37 +64,63 @@ public class PersistenceManager {
         return gender;
     }
 
-    public int getAge(){
+    public int getAge() {
         String preferenceAgeKey = context.getString(R.string.preference_age_key);
-        String preferenceAgeDefault = context.getString(R.string.preference_age_default);
+        int preferenceAgeDefault = Integer.valueOf(context.getString(R.string.preference_age_default));
 
-        String preferenceAgeValue = preferences.getString(preferenceAgeKey, preferenceAgeDefault);
+        int preferenceAgeValue = preferences.getInt(preferenceAgeKey, preferenceAgeDefault);
 
-        int age;
-        try{
-            age = Integer.parseInt(preferenceAgeValue);
-        }
-        catch (NumberFormatException ex){
-            age = 0;
-        }
-
-        return age;
+        return preferenceAgeValue;
     }
 
-    public int getRestingHeartRate(){
+    public int getHeight() {
+        String preferenceHeightKey = context.getString(R.string.preference_height_key);
+        int preferenceHeightDefault = Integer.valueOf(context.getString(R.string.preference_height_default));
+
+        int preferenceHeightValue = preferences.getInt(preferenceHeightKey, preferenceHeightDefault);
+
+        return preferenceHeightValue;
+    }
+
+    public int getBodyMass() {
+        String preferenceMassKey = context.getString(R.string.preference_mass_key);
+        int preferenceMassDefault = Integer.valueOf(context.getString(R.string.preference_mass_default));
+
+        int preferenceMassValue = preferences.getInt(preferenceMassKey, preferenceMassDefault);
+
+        return preferenceMassValue;
+    }
+
+    public int getPar() {
+        String preferenceParKey = context.getString(R.string.preference_par_key);
+        int preferenceParDefault = Integer.valueOf(context.getString(R.string.preference_par_default));
+
+        int preferenceParValue = preferences.getInt(preferenceParKey, preferenceParDefault);
+
+        return preferenceParValue;
+    }
+
+    public int getRestingHeartRate() {
         String preferenceRestingHRKey = context.getString(R.string.preference_restinghr_key);
-        String preferenceRestingHRDefault = context.getString(R.string.preference_restinghr_default);
+        int preferenceRestingHRDefault = Integer.valueOf(context.getString(R.string.preference_restinghr_default));
 
-        String preferenceRestingHRValue = preferences.getString(preferenceRestingHRKey, preferenceRestingHRDefault);
+        int preferenceRestingHRValue = preferences.getInt(preferenceRestingHRKey, preferenceRestingHRDefault);
 
-        int restingHeartRate;
-        try{
-            restingHeartRate = Integer.parseInt(preferenceRestingHRValue);
-        }
-        catch (NumberFormatException ex){
-            restingHeartRate = 0;
-        }
+        return preferenceRestingHRValue;
+    }
 
-        return restingHeartRate;
+    public boolean getSimulateSensorData() {
+        String preferenceSimulateKey = context.getString(R.string.preference_simulate_key);
+        String preferenceSimulateDefault = context.getString(R.string.preference_simulate_default);
+
+        boolean defaultValue = Boolean.parseBoolean(preferenceSimulateDefault);
+
+        boolean preferenceSimulateValue = preferences.getBoolean(preferenceSimulateKey, defaultValue);
+
+        return preferenceSimulateValue;
+    }
+
+    public static PersistenceManager Get(Context context) {
+        return new PersistenceManager(context);
     }
 }

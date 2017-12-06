@@ -1,4 +1,4 @@
-package at.fhooe.mos.mountaineer.model;
+package at.fhooe.mos.mountaineer.model.weather;
 
 /**
  * Created by Eva on 30.11.2017.
@@ -6,9 +6,9 @@ package at.fhooe.mos.mountaineer.model;
 
 public class Wind {
     double speed;
-    int deg;
+    double deg;
 
-    public Wind(double speed, int deg) {
+    public Wind(double speed, double deg) {
         this.speed = speed;
         this.deg = deg;
     }
@@ -24,11 +24,11 @@ public class Wind {
         this.speed = speed;
     }
 
-    public int getDeg() {
+    public double getDeg() {
         return deg;
     }
 
-    public void setDeg(int deg) {
+    public void setDeg(double deg) {
         this.deg = deg;
     }
 }

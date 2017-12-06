@@ -1,7 +1,7 @@
 package at.fhooe.mos.mountaineer.persistence;
 
 
-import at.fhooe.mos.mountaineer.model.Tour;
+import at.fhooe.mos.mountaineer.model.tour.Tour;
 
 /**
  * Created by Eva on 17.11.2017.

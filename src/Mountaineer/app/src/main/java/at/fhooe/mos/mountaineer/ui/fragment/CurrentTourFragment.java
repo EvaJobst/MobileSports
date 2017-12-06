@@ -1,11 +1,7 @@
 package at.fhooe.mos.mountaineer.ui.fragment;
 
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,10 +16,9 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import at.fhooe.mos.mountaineer.R;
-import at.fhooe.mos.mountaineer.model.Tour;
-import at.fhooe.mos.mountaineer.sensors.location.Location;
+import at.fhooe.mos.mountaineer.model.tour.Tour;
+import at.fhooe.mos.mountaineer.model.tour.TourDataFormatter;
 import at.fhooe.mos.mountaineer.services.TourDataCollector;
-import at.fhooe.mos.mountaineer.model.TourDataFormatter;
 
 @EFragment
 public class CurrentTourFragment extends Fragment {
@@ -92,6 +87,8 @@ public class CurrentTourFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        updateUI(Tour.getEmptyTour());
+
         EventBus.getDefault().post(new TourDataCollector.ControlEvent(true));
         EventBus.getDefault().register(this);
     }
@@ -107,6 +104,11 @@ public class CurrentTourFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(TourDataCollector.TourDataUpdateEvent event) {
         Tour tour = event.getTour();
+
+        updateUI(tour);
+    }
+
+    private void updateUI(Tour tour) {
         tourSteps.setText(tourDataFormatter.getTotalSteps(tour));
         tourDuration.setText(tourDataFormatter.getDuration(tour));
 
@@ -116,5 +118,6 @@ public class CurrentTourFragment extends Fragment {
         tourMinMaxTemp.setText(tourDataFormatter.getMinMaxTemp(tour));
         tourHumidity.setText(tourDataFormatter.getHumidity(tour));
         tourWind.setText(tourDataFormatter.getWind(tour));
+        tourHeartRate.setText(tourDataFormatter.getCurrentHeartRate(tour));
     }
 }

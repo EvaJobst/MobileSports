@@ -9,9 +9,13 @@ import android.os.PowerManager;
 
 import org.androidannotations.annotations.EService;
 
-import at.fhooe.mos.mountaineer.sensors.location.Location;
-import at.fhooe.mos.mountaineer.sensors.pedometer.PedometerManager;
-import at.fhooe.mos.mountaineer.sensors.stopwatch.Stopwatch;
+import java.util.ArrayList;
+
+import at.fhooe.mos.mountaineer.persistence.PersistenceManager;
+import at.fhooe.mos.mountaineer.sensors.RealSensorFactory;
+import at.fhooe.mos.mountaineer.sensors.Sensor;
+import at.fhooe.mos.mountaineer.sensors.SensorFactory;
+import at.fhooe.mos.mountaineer.sensors.SimulationSensorFactory;
 import at.fhooe.mos.mountaineer.ui.MainNotificationManager;
 
 /**
@@ -32,9 +36,7 @@ public class TourRecorderService extends Service {
 
     private MainNotificationManager mainNotificationManager;
 
-    private PedometerManager pedometerManager;
-    private Stopwatch stopwatch;
-    private Location location;
+    private ArrayList<Sensor> sensors;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -50,20 +52,31 @@ public class TourRecorderService extends Service {
         handler = new Handler();
         periodicNotificationUpdater = new PeriodicNotificationUpdater();
 
+        sensors = new ArrayList<>();
+        SensorFactory sensorFactory;
+
+        if (PersistenceManager.Get(this).getSimulateSensorData()) {
+            sensorFactory = new SimulationSensorFactory();
+        } else {
+            sensorFactory = new RealSensorFactory();
+        }
+
+        sensors.add(sensorFactory.getStopwatch());
+        sensors.add(sensorFactory.getLocationSensor());
+        sensors.add(sensorFactory.getStepSensor());
+        sensors.add(sensorFactory.getHeartRateSensor());
+
         tourDataCollector = new TourDataCollector();
 
-        pedometerManager = new PedometerManager(this);
-        stopwatch = new Stopwatch();
-        stopwatch.registerListener(tourDataCollector);
+        for (Sensor sensor : sensors) {
+            sensor.setup(this);
+            sensor.registerListener(tourDataCollector);
+        }
 
-        location = new Location(this);
-        location.registerListener(tourDataCollector);
+        tourDataCollector.start();
 
         acquireWakeLock();
         startForeground(mainNotificationManager.getNotificationId(), mainNotificationManager.getNotification());
-
-        pedometerManager.setup(tourDataCollector);
-        stopwatch.start();
 
         startNotificationUpdates();
     }
@@ -72,13 +85,15 @@ public class TourRecorderService extends Service {
     public void onDestroy() {
         stopNotificationUpdates();
 
-        stopForeground(true);
+        for (Sensor sensor : sensors) {
+            sensor.destroy();
+            sensor.removeListener(tourDataCollector);
+        }
 
-        pedometerManager.destroy();
-        stopwatch.stop();
-
+        tourDataCollector.stop();
         tourDataCollector.publishFinalTourData();
 
+        stopForeground(true);
         releaseWakeLock();
 
         super.onDestroy();

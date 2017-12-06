@@ -1,6 +1,6 @@
-package at.fhooe.mos.mountaineer.sensors.weather;
+package at.fhooe.mos.mountaineer.webservices;
 
-import at.fhooe.mos.mountaineer.model.Weather;
+import at.fhooe.mos.mountaineer.model.weather.Weather;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -14,6 +14,6 @@ public interface WeatherService {
     Call<Weather> fetch(
             @Query("lat") String latitude,
             @Query("lon") String longitude,
-            @Query("units") String unit,
+            @Query("units") String units,
             @Query("APPID") String key);
 }

@@ -1,4 +1,4 @@
-package at.fhooe.mos.mountaineer.model;
+package at.fhooe.mos.mountaineer.model.user;
 
 /**
  * Created by stefan on 29.11.2017.

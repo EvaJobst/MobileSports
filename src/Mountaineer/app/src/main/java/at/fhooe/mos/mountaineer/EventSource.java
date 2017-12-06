@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Created by stefan on 25.11.2017.
  */
 
-public abstract class EventSource<T> {
+public abstract class EventSource<T> implements EventSourceInterface<T> {
     protected ArrayList<T> eventListeners = new ArrayList<>();
 
     public void registerListener(T listener) {

@@ -1,6 +1,6 @@
-package at.fhooe.mos.mountaineer.model;
+package at.fhooe.mos.mountaineer.model.tour;
 
-import android.support.annotation.Nullable;
+import at.fhooe.mos.mountaineer.model.weather.Weather;
 
 /**
  * Created by Eva on 20.11.2017.
@@ -24,18 +24,19 @@ public class Tour {
 
     // Health
     private int averageSpeed;
-    private int averageHeartRate;
+    private double currentHeartRate;
     private String normalHeartRate;
     private int averageRespiration;
     private int burnedKcal;
 
     // Weather
     private Weather weather;
-    /*private int maxTemp;
-    private int minTemp;
-    private int rain;
-    private int humidity;
-    private int wind;*/
+
+    private TourDetails tourDetails;
+
+    public Tour() {
+        tourDetails = new TourDetails();
+    }
 
     public String getName() {
         return name;
@@ -133,12 +134,12 @@ public class Tour {
         this.averageSpeed = averageSpeed;
     }
 
-    public int getAverageHeartRate() {
-        return averageHeartRate;
+    public double getCurrentHeartRate() {
+        return currentHeartRate;
     }
 
-    public void setAverageHeartRate(int averageHeartRate) {
-        this.averageHeartRate = averageHeartRate;
+    public void setCurrentHeartRate(double currentHeartRate) {
+        this.currentHeartRate = currentHeartRate;
     }
 
     public String getNormalHeartRate() {
@@ -173,6 +174,14 @@ public class Tour {
         this.weather = weather;
     }
 
+    public TourDetails getTourDetails() {
+        return tourDetails;
+    }
+
+    public void setTourDetails(TourDetails tourDetails) {
+        this.tourDetails = tourDetails;
+    }
+
     @Override
     public String toString() {
         return "Tour{" +
@@ -188,7 +197,7 @@ public class Tour {
                 ", distance=" + distance +
                 ", elevation=" + elevation +
                 ", averageSpeed=" + averageSpeed +
-                ", averageHeartRate=" + averageHeartRate +
+                ", currentHeartRate=" + currentHeartRate +
                 ", normalHeartRate='" + normalHeartRate + '\'' +
                 ", averageRespiration=" + averageRespiration +
                 ", burnedKcal=" + burnedKcal +
@@ -196,45 +205,7 @@ public class Tour {
                 '}';
     }
 
-    /*public int getMaxTemp() {
-        return maxTemp;
+    public static Tour getEmptyTour() {
+        return new Tour();
     }
-
-    public void setMaxTemp(int maxTemp) {
-        this.maxTemp = maxTemp;
-    }
-
-    public int getMinTemp() {
-        return minTemp;
-    }
-
-    public void setMinTemp(int minTemp) {
-        this.minTemp = minTemp;
-    }
-
-    public int getRain() {
-        return rain;
-    }
-
-    public void setRain(int rain) {
-        this.rain = rain;
-    }
-
-    public int getHumidity() {
-        return humidity;
-    }
-
-    public void setHumidity(int humidity) {
-        this.humidity = humidity;
-    }
-
-    public int getWind() {
-        return wind;
-    }
-
-    public void setWind(int wind) {
-        this.wind = wind;
-    }*/
-
-
 }

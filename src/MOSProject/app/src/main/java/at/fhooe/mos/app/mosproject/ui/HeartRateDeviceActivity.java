@@ -83,6 +83,15 @@ public class HeartRateDeviceActivity extends AppCompatActivity {
         heartRateMonitor.initialize(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        if(heartRateMonitor instanceof DeviceHRM) {
+            ((DeviceHRM)heartRateMonitor).stopService();
+        }
+
+        super.onDestroy();
+    }
+
     public void resetUI() {
         heartRateValues = new ArrayList<>();
         currentHR.setText("0");

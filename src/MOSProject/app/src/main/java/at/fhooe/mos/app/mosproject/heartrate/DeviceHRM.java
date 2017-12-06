@@ -10,6 +10,9 @@ import android.content.Intent;
  */
 
 public class DeviceHRM implements HRM {
+    Intent serviceIntent;
+    Activity activity;
+
     @Override
     public int getHeartRate() {
         return BLEService.heartRate;
@@ -17,7 +20,12 @@ public class DeviceHRM implements HRM {
 
     @Override
     public void initialize(Activity activity) {
-        Intent intent = new Intent(activity, BLEService.class);
-        activity.startService(intent);
+        activity = activity;
+        serviceIntent = new Intent(activity, BLEService.class);
+        activity.startService(serviceIntent);
+    }
+
+    public void stopService() {
+        activity.stopService(serviceIntent);
     }
 }

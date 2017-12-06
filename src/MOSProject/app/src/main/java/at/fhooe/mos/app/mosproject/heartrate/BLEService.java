@@ -74,6 +74,12 @@ public class BLEService extends Service {
     }
 
     @Override
+    public void onDestroy() {
+        bluetoothGatt.disconnect();
+        super.onDestroy();
+    }
+
+    @Override
     public void onCreate() {
         bluetoothGatt = bluetoothDevice.connectGatt(this, true, bluetoothGattCallback);
         bluetoothGatt.discoverServices();

@@ -7,6 +7,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import at.fhooe.mos.mountaineer.model.Tour;
+import at.fhooe.mos.mountaineer.sensors.heartrate.HeartRateSensorEventListener;
 import at.fhooe.mos.mountaineer.sensors.location.LocationSensorEventListener;
 import at.fhooe.mos.mountaineer.sensors.stepsensor.StepSensorEventListener;
 import at.fhooe.mos.mountaineer.sensors.stopwatch.StopwatchEventListener;
@@ -23,7 +24,8 @@ import retrofit2.Response;
 public class TourDataCollector implements
         StepSensorEventListener,
         StopwatchEventListener,
-        LocationSensorEventListener {
+        LocationSensorEventListener,
+        HeartRateSensorEventListener {
 
     private static final int PERIODIC_SUMMATION_TIME_MS = 60*1000;
 
@@ -62,8 +64,32 @@ public class TourDataCollector implements
         tour.setDuration(elapsedSeconds);
     }
 
-    public Tour getTour() {
-        return tour;
+    @Override
+    public void onLocationReceivedEvent(double latitude, double longitude) {
+        tour.setLocationLat(latitude);
+        tour.setLocationLong(longitude);
+
+        publishData();
+
+        OpenWeatherMap.fetchWeather(latitude, longitude, new Callback<Weather>() {
+            @Override
+            public void onResponse(Call<Weather> call, Response<Weather> response) {
+                tour.setWeather(response.body());
+                publishData();
+            }
+
+            @Override
+            public void onFailure(Call<Weather> call, Throwable t) {
+                Log.e("TourDataCollector", "Could not fetch weather data!\n" + t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void onHeatRateEvent(double heartRate) {
+        tour.getTourDetails().addHeartRateAtTime(tour.getDuration(), heartRate);
+
+        tour.setCurrentHeartRate(heartRate);
     }
 
     @Subscribe
@@ -85,31 +111,14 @@ public class TourDataCollector implements
         EventBus.getDefault().postSticky(new FinalTourDataEvent(tour));
     }
 
+    public Tour getTour() {
+        return tour;
+    }
+
     private void publishData() {
         if (publishTourDataUpdates) {
             EventBus.getDefault().post(new TourDataUpdateEvent(tour));
         }
-    }
-
-    @Override
-    public void onLocationReceivedEvent(double latitude, double longitude) {
-        tour.setLocationLat(latitude);
-        tour.setLocationLong(longitude);
-
-        publishData();
-
-        OpenWeatherMap.fetchWeatherForLocation(latitude, longitude, new Callback<Weather>() {
-            @Override
-            public void onResponse(Call<Weather> call, Response<Weather> response) {
-                tour.setWeather(response.body());
-                publishData();
-            }
-
-            @Override
-            public void onFailure(Call<Weather> call, Throwable t) {
-                Log.e("TourDataCollector", "Could not fetch weather data!\n" + t.getMessage());
-            }
-        });
     }
 
     public static class TourDataUpdateEvent {

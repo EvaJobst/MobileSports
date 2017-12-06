@@ -70,6 +70,7 @@ public class TourDetailsActivity extends AppCompatActivity {
 
     @UiThread
     void createUI(Tour tour) {
+        /*
         tourName.setText(tour.getName());
         // Todo Set image by path
 
@@ -86,7 +87,7 @@ public class TourDetailsActivity extends AppCompatActivity {
         tourElevation.setText(tour.getElevation());
 
         // HEALTH
-        tourHeartRate.setText(tour.getAverageHeartRate());
+        tourHeartRate.setText(""+tour.getCurrentHeartRate());
         tourNormalHeartRate.setText(tour.getNormalHeartRate());
         tourRespiration.setText(tour.getAverageRespiration());
         tourKcal.setText(tour.getBurnedKcal());
@@ -96,6 +97,6 @@ public class TourDetailsActivity extends AppCompatActivity {
         tourMinMaxTemp.setText(tour.getWeather().getMain().getTemp_max() + "/" + tour.getWeather().getMain().getTemp_min());
         //tourRain.setText(tour.getWeather().getRain());
         tourHumidity.setText((int) tour.getWeather().getMain().getHumidity());
-        tourWind.setText((int) tour.getWeather().getWind().getSpeed());
+        tourWind.setText((int) tour.getWeather().getWind().getSpeed());*/
     }
 }

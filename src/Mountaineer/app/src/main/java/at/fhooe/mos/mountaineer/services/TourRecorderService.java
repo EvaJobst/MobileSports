@@ -64,6 +64,7 @@ public class TourRecorderService extends Service {
         sensors.add(sensorFactory.getStopwatch());
         sensors.add(sensorFactory.getLocationSensor());
         sensors.add(sensorFactory.getStepSensor());
+        sensors.add(sensorFactory.getHeartRateSensor());
 
         tourDataCollector = new TourDataCollector();
 

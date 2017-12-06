@@ -1,5 +1,8 @@
 package at.fhooe.mos.mountaineer.sensors;
 
+import at.fhooe.mos.mountaineer.sensors.heartrate.HeartRateSensor;
+import at.fhooe.mos.mountaineer.sensors.heartrate.RealHeartRateSensor;
+import at.fhooe.mos.mountaineer.sensors.heartrate.SimulatedHeartRateSensor;
 import at.fhooe.mos.mountaineer.sensors.location.LocationSensor;
 import at.fhooe.mos.mountaineer.sensors.location.RealLocationSensor;
 import at.fhooe.mos.mountaineer.sensors.stepsensor.RealStepSensor;
@@ -25,5 +28,10 @@ public class RealSensorFactory implements SensorFactory {
     @Override
     public LocationSensor getLocationSensor() {
         return new RealLocationSensor();
+    }
+
+    @Override
+    public HeartRateSensor getHeartRateSensor() {
+        return new RealHeartRateSensor();
     }
 }

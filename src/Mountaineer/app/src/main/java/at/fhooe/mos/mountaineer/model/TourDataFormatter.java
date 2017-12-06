@@ -45,6 +45,10 @@ public class TourDataFormatter {
         return timeFormatter.format(date);
     }
 
+    public String getCurrentHeartRate(Tour tour){
+        return Double.toString(tour.getCurrentHeartRate());
+    }
+
     public String getLocation(Tour tour) {
         return "Lat: " + tour.getLocationLat() + ", Long: " + tour.getLocationLong();
     }
@@ -59,7 +63,7 @@ public class TourDataFormatter {
 
     public String getHumidity(Tour tour) {
         if(tour.getWeather() == null){  //TODO: weather should never be null?
-            return "Humidity: ";
+            return "Humidity: --";
         }
 
         return "Humidity: " + tour.getWeather().getMain().getHumidity() + "%";
@@ -67,7 +71,7 @@ public class TourDataFormatter {
 
     public String getWind(Tour tour) {
         if(tour.getWeather() == null){  //TODO: weather should never be null?
-            return "Wind: ";
+            return "Wind: --";
         }
 
         return "Wind: " + tour.getWeather().getWind().getSpeed() + "km/h";

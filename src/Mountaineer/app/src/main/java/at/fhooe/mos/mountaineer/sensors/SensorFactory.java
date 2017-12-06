@@ -1,5 +1,6 @@
 package at.fhooe.mos.mountaineer.sensors;
 
+import at.fhooe.mos.mountaineer.sensors.heartrate.HeartRateSensor;
 import at.fhooe.mos.mountaineer.sensors.location.LocationSensor;
 import at.fhooe.mos.mountaineer.sensors.stepsensor.StepSensor;
 import at.fhooe.mos.mountaineer.sensors.stopwatch.Stopwatch;
@@ -12,4 +13,5 @@ public interface SensorFactory {
     StepSensor getStepSensor();
     Stopwatch getStopwatch();
     LocationSensor getLocationSensor();
+    HeartRateSensor getHeartRateSensor();
 }

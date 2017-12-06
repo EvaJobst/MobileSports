@@ -87,6 +87,8 @@ public class CurrentTourFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        updateUI(Tour.getEmptyTour());
+
         EventBus.getDefault().post(new TourDataCollector.ControlEvent(true));
         EventBus.getDefault().register(this);
     }
@@ -102,6 +104,11 @@ public class CurrentTourFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(TourDataCollector.TourDataUpdateEvent event) {
         Tour tour = event.getTour();
+
+        updateUI(tour);
+    }
+
+    private void updateUI(Tour tour){
         tourSteps.setText(tourDataFormatter.getTotalSteps(tour));
         tourDuration.setText(tourDataFormatter.getDuration(tour));
 
@@ -111,5 +118,6 @@ public class CurrentTourFragment extends Fragment {
         tourMinMaxTemp.setText(tourDataFormatter.getMinMaxTemp(tour));
         tourHumidity.setText(tourDataFormatter.getHumidity(tour));
         tourWind.setText(tourDataFormatter.getWind(tour));
+        tourHeartRate.setText(tourDataFormatter.getCurrentHeartRate(tour));
     }
 }

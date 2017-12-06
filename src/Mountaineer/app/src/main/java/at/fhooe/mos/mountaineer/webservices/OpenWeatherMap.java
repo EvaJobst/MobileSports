@@ -15,7 +15,7 @@ public class OpenWeatherMap {
     private static final String API_KEY = "17b9da43ec1ff13f7f3b0b4ba8e21bb6";
     private static final String UNITS = "metric";
 
-    public static void fetchWeatherForLocation(double latitude, double longitude, Callback<Weather> callback) {
+    public static void fetchWeather(double latitude, double longitude, Callback<Weather> callback) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())

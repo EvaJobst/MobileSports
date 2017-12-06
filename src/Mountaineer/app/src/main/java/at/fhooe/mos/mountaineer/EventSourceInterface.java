@@ -6,5 +6,6 @@ package at.fhooe.mos.mountaineer;
 
 public interface EventSourceInterface<T> {
     void registerListener(T listener);
+
     void removeListener(T listener);
 }

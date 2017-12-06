@@ -11,8 +11,8 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import at.fhooe.mos.mountaineer.R;
-import at.fhooe.mos.mountaineer.model.Tour;
-import at.fhooe.mos.mountaineer.model.TourDataFormatter;
+import at.fhooe.mos.mountaineer.model.tour.Tour;
+import at.fhooe.mos.mountaineer.model.tour.TourDataFormatter;
 
 /**
  * Created by stefan on 25.11.2017.

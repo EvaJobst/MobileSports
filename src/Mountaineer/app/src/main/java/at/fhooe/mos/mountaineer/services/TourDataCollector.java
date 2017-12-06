@@ -6,12 +6,12 @@ import android.util.Log;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import at.fhooe.mos.mountaineer.model.Tour;
+import at.fhooe.mos.mountaineer.model.tour.Tour;
+import at.fhooe.mos.mountaineer.model.weather.Weather;
 import at.fhooe.mos.mountaineer.sensors.heartrate.HeartRateSensorEventListener;
 import at.fhooe.mos.mountaineer.sensors.location.LocationSensorEventListener;
 import at.fhooe.mos.mountaineer.sensors.stepsensor.StepSensorEventListener;
 import at.fhooe.mos.mountaineer.sensors.stopwatch.StopwatchEventListener;
-import at.fhooe.mos.mountaineer.model.weather.Weather;
 import at.fhooe.mos.mountaineer.webservices.OpenWeatherMap;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,7 +27,7 @@ public class TourDataCollector implements
         LocationSensorEventListener,
         HeartRateSensorEventListener {
 
-    private static final int PERIODIC_SUMMATION_TIME_MS = 60*1000;
+    private static final int PERIODIC_SUMMATION_TIME_MS = 60 * 1000;
 
     private Handler handler;
     private PeriodicSummation periodicSummation;
@@ -97,11 +97,11 @@ public class TourDataCollector implements
         publishTourDataUpdates = event.getPublishTourDataUpdates();
     }
 
-    public void start(){
+    public void start() {
         startPeriodicSummation();
     }
 
-    public void stop(){
+    public void stop() {
         stopPeriodicSummation();
     }
 

@@ -18,11 +18,11 @@ import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import at.fhooe.mos.mountaineer.R;
+import at.fhooe.mos.mountaineer.model.tour.Tour;
 import at.fhooe.mos.mountaineer.persistence.FirebaseAddEventsListener;
 import at.fhooe.mos.mountaineer.persistence.FirebaseManager;
 import at.fhooe.mos.mountaineer.persistence.PersistenceManager;
-import at.fhooe.mos.mountaineer.R;
-import at.fhooe.mos.mountaineer.model.Tour;
 import at.fhooe.mos.mountaineer.services.TourDataCollector;
 import at.fhooe.mos.mountaineer.ui.TourActivity;
 

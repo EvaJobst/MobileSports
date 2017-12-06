@@ -6,7 +6,8 @@ import android.preference.PreferenceManager;
 
 import at.fhooe.mos.mountaineer.R;
 import at.fhooe.mos.mountaineer.TourState;
-import at.fhooe.mos.mountaineer.model.Gender;
+import at.fhooe.mos.mountaineer.model.user.Gender;
+import at.fhooe.mos.mountaineer.model.user.UserInformation;
 
 
 /**
@@ -37,11 +38,23 @@ public class PersistenceManager {
         return TourState.valueOf(state);
     }
 
-    public String getUserId(){
+    public UserInformation getUserInformation() {
+        return new UserInformation(
+                getUserId(),
+                getGender(),
+                getAge(),
+                getHeight(),
+                getBodyMass(),
+                getPar(),
+                getRestingHeartRate()
+        );
+    }
+
+    public String getUserId() {
         return "user1";
     }
 
-    public Gender getGender(){
+    public Gender getGender() {
         String preferenceGenderKey = context.getString(R.string.preference_gender_key);
         String preferenceGenderDefault = context.getString(R.string.preference_gender_default);
 
@@ -51,7 +64,7 @@ public class PersistenceManager {
         return gender;
     }
 
-    public int getAge(){
+    public int getAge() {
         String preferenceAgeKey = context.getString(R.string.preference_age_key);
         int preferenceAgeDefault = Integer.valueOf(context.getString(R.string.preference_age_default));
 
@@ -60,7 +73,7 @@ public class PersistenceManager {
         return preferenceAgeValue;
     }
 
-    public int getHeight(){
+    public int getHeight() {
         String preferenceHeightKey = context.getString(R.string.preference_height_key);
         int preferenceHeightDefault = Integer.valueOf(context.getString(R.string.preference_height_default));
 
@@ -69,7 +82,7 @@ public class PersistenceManager {
         return preferenceHeightValue;
     }
 
-    public int getBodyMass(){
+    public int getBodyMass() {
         String preferenceMassKey = context.getString(R.string.preference_mass_key);
         int preferenceMassDefault = Integer.valueOf(context.getString(R.string.preference_mass_default));
 
@@ -78,7 +91,7 @@ public class PersistenceManager {
         return preferenceMassValue;
     }
 
-    public int getPar(){
+    public int getPar() {
         String preferenceParKey = context.getString(R.string.preference_par_key);
         int preferenceParDefault = Integer.valueOf(context.getString(R.string.preference_par_default));
 
@@ -87,7 +100,7 @@ public class PersistenceManager {
         return preferenceParValue;
     }
 
-    public int getRestingHeartRate(){
+    public int getRestingHeartRate() {
         String preferenceRestingHRKey = context.getString(R.string.preference_restinghr_key);
         int preferenceRestingHRDefault = Integer.valueOf(context.getString(R.string.preference_restinghr_default));
 
@@ -96,7 +109,7 @@ public class PersistenceManager {
         return preferenceRestingHRValue;
     }
 
-    public boolean getSimulateSensorData(){
+    public boolean getSimulateSensorData() {
         String preferenceSimulateKey = context.getString(R.string.preference_simulate_key);
         String preferenceSimulateDefault = context.getString(R.string.preference_simulate_default);
 
@@ -107,7 +120,7 @@ public class PersistenceManager {
         return preferenceSimulateValue;
     }
 
-    public static PersistenceManager Get(Context context){
+    public static PersistenceManager Get(Context context) {
         return new PersistenceManager(context);
     }
 }

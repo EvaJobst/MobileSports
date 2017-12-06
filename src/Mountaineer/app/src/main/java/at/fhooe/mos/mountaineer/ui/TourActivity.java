@@ -18,9 +18,9 @@ import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.OptionsMenuItem;
 import org.androidannotations.annotations.res.StringRes;
 
-import at.fhooe.mos.mountaineer.persistence.PersistenceManager;
 import at.fhooe.mos.mountaineer.R;
 import at.fhooe.mos.mountaineer.TourState;
+import at.fhooe.mos.mountaineer.persistence.PersistenceManager;
 import at.fhooe.mos.mountaineer.services.TourRecorderService_;
 import at.fhooe.mos.mountaineer.ui.fragment.CurrentTourFragment_;
 import at.fhooe.mos.mountaineer.ui.fragment.NewTourFragment_;

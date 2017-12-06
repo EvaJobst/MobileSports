@@ -9,8 +9,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import at.fhooe.mos.mountaineer.EventSource;
-import at.fhooe.mos.mountaineer.model.Tour;
-import at.fhooe.mos.mountaineer.model.TourDetails;
+import at.fhooe.mos.mountaineer.model.tour.Tour;
+import at.fhooe.mos.mountaineer.model.tour.TourDetails;
 
 
 /**
@@ -36,22 +36,20 @@ public class FirebaseManager extends EventSource<FirebaseFetchEventListener> {
         userToursDb.push().setValue(tour, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if(databaseError == null){
+                if (databaseError == null) {
                     String key = databaseReference.getKey();
 
                     userTourDetailsDb.child(key).setValue(tourDetails, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                            if(databaseError == null){
+                            if (databaseError == null) {
                                 eventListener.addSucceededEvent();
-                            }
-                            else{
+                            } else {
                                 eventListener.addFailedEvent();
                             }
                         }
                     });
-                }
-                else{
+                } else {
                     eventListener.addFailedEvent();
                 }
             }

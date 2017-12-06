@@ -15,7 +15,7 @@ public class SimulatedStepSensor extends EventSource<StepSensorEventListener> im
     private int nextRunInMs;
 
     public void setup(Context context) {
-        if(handler != null){
+        if (handler != null) {
             throw new RuntimeException("SimulatedStepSensor is already set up. setup() called more than once!");
         }
 
@@ -26,11 +26,11 @@ public class SimulatedStepSensor extends EventSource<StepSensorEventListener> im
     }
 
 
-    public void destroy(){
+    public void destroy() {
         handler.removeCallbacks(periodicRunnable);
     }
 
-    private class PeriodicRunnable implements Runnable{
+    private class PeriodicRunnable implements Runnable {
 
         @Override
         public void run() {

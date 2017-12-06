@@ -1,4 +1,4 @@
-package at.fhooe.mos.mountaineer.model;
+package at.fhooe.mos.mountaineer.model.tour;
 
 import java.util.HashMap;
 
@@ -11,16 +11,16 @@ public class TourDetails {
     private HashMap<String, Integer> stepCountAtTime;
     private HashMap<String, Double> heartRateAtTime;
 
-    public TourDetails(){
+    public TourDetails() {
         stepCountAtTime = new HashMap<>();
         heartRateAtTime = new HashMap<>();
     }
 
-    public void addStepCountAtTime(int time, int stepCount){
+    public void addStepCountAtTime(int time, int stepCount) {
         stepCountAtTime.put(Integer.toString(time), stepCount);
     }
 
-    public void addHeartRateAtTime(int time, double heartRate){
+    public void addHeartRateAtTime(int time, double heartRate) {
         heartRateAtTime.put(Integer.toString(time), heartRate);
     }
 

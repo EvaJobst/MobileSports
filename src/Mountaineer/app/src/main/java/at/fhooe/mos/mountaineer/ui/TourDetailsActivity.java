@@ -10,7 +10,7 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import at.fhooe.mos.mountaineer.R;
-import at.fhooe.mos.mountaineer.model.Tour;
+import at.fhooe.mos.mountaineer.model.tour.Tour;
 
 @EActivity(R.layout.activity_tour_details)
 

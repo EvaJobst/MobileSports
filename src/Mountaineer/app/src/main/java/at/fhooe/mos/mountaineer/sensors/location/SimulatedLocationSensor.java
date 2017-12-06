@@ -28,7 +28,7 @@ public class SimulatedLocationSensor extends EventSource<LocationSensorEventList
         handler.removeCallbacks(periodicRunnable);
     }
 
-    private class PeriodicRunnable implements Runnable{
+    private class PeriodicRunnable implements Runnable {
 
         @Override
         public void run() {

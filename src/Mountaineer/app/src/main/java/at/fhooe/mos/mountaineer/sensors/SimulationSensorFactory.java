@@ -4,9 +4,8 @@ import at.fhooe.mos.mountaineer.sensors.heartrate.HeartRateSensor;
 import at.fhooe.mos.mountaineer.sensors.heartrate.SimulatedHeartRateSensor;
 import at.fhooe.mos.mountaineer.sensors.location.LocationSensor;
 import at.fhooe.mos.mountaineer.sensors.location.SimulatedLocationSensor;
-import at.fhooe.mos.mountaineer.sensors.stepsensor.StepSensor;
 import at.fhooe.mos.mountaineer.sensors.stepsensor.SimulatedStepSensor;
-import at.fhooe.mos.mountaineer.sensors.stopwatch.RealStopwatch;
+import at.fhooe.mos.mountaineer.sensors.stepsensor.StepSensor;
 import at.fhooe.mos.mountaineer.sensors.stopwatch.SimulatedStopwatch;
 import at.fhooe.mos.mountaineer.sensors.stopwatch.Stopwatch;
 

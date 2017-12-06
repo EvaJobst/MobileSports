@@ -16,9 +16,9 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import at.fhooe.mos.mountaineer.R;
-import at.fhooe.mos.mountaineer.model.Tour;
+import at.fhooe.mos.mountaineer.model.tour.Tour;
+import at.fhooe.mos.mountaineer.model.tour.TourDataFormatter;
 import at.fhooe.mos.mountaineer.services.TourDataCollector;
-import at.fhooe.mos.mountaineer.model.TourDataFormatter;
 
 @EFragment
 public class CurrentTourFragment extends Fragment {
@@ -108,7 +108,7 @@ public class CurrentTourFragment extends Fragment {
         updateUI(tour);
     }
 
-    private void updateUI(Tour tour){
+    private void updateUI(Tour tour) {
         tourSteps.setText(tourDataFormatter.getTotalSteps(tour));
         tourDuration.setText(tourDataFormatter.getDuration(tour));
 

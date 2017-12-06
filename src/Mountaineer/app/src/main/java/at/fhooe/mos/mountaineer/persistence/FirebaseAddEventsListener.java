@@ -7,5 +7,6 @@ package at.fhooe.mos.mountaineer.persistence;
 
 public interface FirebaseAddEventsListener {
     void addSucceededEvent();
+
     void addFailedEvent();
 }

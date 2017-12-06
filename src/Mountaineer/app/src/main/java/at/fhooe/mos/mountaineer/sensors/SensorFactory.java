@@ -11,7 +11,10 @@ import at.fhooe.mos.mountaineer.sensors.stopwatch.Stopwatch;
 
 public interface SensorFactory {
     StepSensor getStepSensor();
+
     Stopwatch getStopwatch();
+
     LocationSensor getLocationSensor();
+
     HeartRateSensor getHeartRateSensor();
 }

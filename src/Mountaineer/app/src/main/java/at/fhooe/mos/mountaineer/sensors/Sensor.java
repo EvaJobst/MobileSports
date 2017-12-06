@@ -10,5 +10,6 @@ import at.fhooe.mos.mountaineer.EventSourceInterface;
 
 public interface Sensor<T> extends EventSourceInterface<T> {
     void setup(Context context);
+
     void destroy();
 }

@@ -1,4 +1,4 @@
-package at.fhooe.mos.mountaineer.model;
+package at.fhooe.mos.mountaineer.model.tour;
 
 import at.fhooe.mos.mountaineer.model.weather.Weather;
 
@@ -34,7 +34,7 @@ public class Tour {
 
     private TourDetails tourDetails;
 
-    public Tour(){
+    public Tour() {
         tourDetails = new TourDetails();
     }
 
@@ -205,7 +205,7 @@ public class Tour {
                 '}';
     }
 
-    public static Tour getEmptyTour(){
+    public static Tour getEmptyTour() {
         return new Tour();
     }
 }

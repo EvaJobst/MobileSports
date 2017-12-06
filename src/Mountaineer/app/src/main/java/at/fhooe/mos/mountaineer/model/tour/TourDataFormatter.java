@@ -1,6 +1,7 @@
-package at.fhooe.mos.mountaineer.model;
+package at.fhooe.mos.mountaineer.model.tour;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -12,11 +13,13 @@ import java.util.Locale;
 public class TourDataFormatter {
     private static DateFormat timeFormatter = new SimpleDateFormat("HH:mm");
     private static DateFormat dateFormatter = new SimpleDateFormat("MM:DD");
+    private static DecimalFormat shortDecimalFormatter = new DecimalFormat("0.0");
+    private static DecimalFormat longDecimalFormatter = new DecimalFormat("0.000");
 
     private static TourDataFormatter instance = null;
 
     public static synchronized TourDataFormatter getInstance() {
-        if(instance == null){
+        if (instance == null) {
             instance = new TourDataFormatter();
         }
 
@@ -45,43 +48,44 @@ public class TourDataFormatter {
         return timeFormatter.format(date);
     }
 
-    public String getCurrentHeartRate(Tour tour){
-        return Double.toString(tour.getCurrentHeartRate());
+    public String getCurrentHeartRate(Tour tour) {
+        return shortDecimalFormatter.format(tour.getCurrentHeartRate());
     }
 
     public String getLocation(Tour tour) {
-        return "Lat: " + tour.getLocationLat() + ", Long: " + tour.getLocationLong();
+        return "Lat: " + longDecimalFormatter.format(tour.getLocationLat()) + ", Long: " + longDecimalFormatter.format(tour.getLocationLong());
     }
 
     public String getMinMaxTemp(Tour tour) {
-        if(tour.getWeather() == null){  //TODO: weather should never be null?
+        if (tour.getWeather() == null) {  //TODO: weather should never be null?
             return "";
         }
 
-        return tour.getWeather().getMain().getTemp_max() + "°C/" + tour.getWeather().getMain().getTemp_min() + "°C";
+        return shortDecimalFormatter.format(tour.getWeather().getMain().getTemp_max()) + "°C/"
+                + shortDecimalFormatter.format(tour.getWeather().getMain().getTemp_min()) + "°C";
     }
 
     public String getHumidity(Tour tour) {
-        if(tour.getWeather() == null){  //TODO: weather should never be null?
+        if (tour.getWeather() == null) {  //TODO: weather should never be null?
             return "Humidity: --";
         }
 
-        return "Humidity: " + tour.getWeather().getMain().getHumidity() + "%";
+        return "Humidity: " + shortDecimalFormatter.format(tour.getWeather().getMain().getHumidity()) + "%";
     }
 
     public String getWind(Tour tour) {
-        if(tour.getWeather() == null){  //TODO: weather should never be null?
+        if (tour.getWeather() == null) {  //TODO: weather should never be null?
             return "Wind: --";
         }
 
-        return "Wind: " + tour.getWeather().getWind().getSpeed() + "km/h";
+        return "Wind: " + shortDecimalFormatter.format(tour.getWeather().getWind().getSpeed()) + "km/h";
     }
 
     public String getTemp(Tour tour) {
-        if(tour.getWeather() == null){  //TODO: weather should never be null?
+        if (tour.getWeather() == null) {  //TODO: weather should never be null?
             return "";
         }
 
-        return String.valueOf(tour.getWeather().getMain().getTemp());
+        return shortDecimalFormatter.format(tour.getWeather().getMain().getTemp());
     }
 }

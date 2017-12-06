@@ -38,7 +38,7 @@ public class SimulatedHeartRateSensor extends EventSource<HeartRateSensorEventLi
         handler.removeCallbacks(periodicRunnable);
 
         try {
-            if(bufferedReader != null)
+            if (bufferedReader != null)
                 bufferedReader.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -58,11 +58,11 @@ public class SimulatedHeartRateSensor extends EventSource<HeartRateSensorEventLi
     private int getHeartRate() {
         String line = "";
 
-        if(bufferedReader == null)
+        if (bufferedReader == null)
             return 0;
 
         try {
-            if((line = bufferedReader.readLine()) != null) {
+            if ((line = bufferedReader.readLine()) != null) {
                 String[] values = line.split(",");
                 return Integer.parseInt(values[1]);
             }
@@ -73,7 +73,7 @@ public class SimulatedHeartRateSensor extends EventSource<HeartRateSensorEventLi
         return 0;
     }
 
-    private class PeriodicRunnable implements Runnable{
+    private class PeriodicRunnable implements Runnable {
 
         @Override
         public void run() {

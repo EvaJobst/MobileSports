@@ -16,12 +16,12 @@ public class TourDetails {
         heartRateAtTime = new HashMap<>();
     }
 
-    public void addStepCountAtTime(int time, int stepCount) {
-        stepCountAtTime.put(Integer.toString(time), stepCount);
+    public void addStepCountAtTime(long time, int stepCount) {
+        stepCountAtTime.put(Long.toString(time), stepCount);
     }
 
-    public void addHeartRateAtTime(int time, double heartRate) {
-        heartRateAtTime.put(Integer.toString(time), heartRate);
+    public void addHeartRateAtTime(long time, double heartRate) {
+        heartRateAtTime.put(Long.toString(time), heartRate);
     }
 
     public HashMap<String, Integer> getStepCountAtTime() {

@@ -68,7 +68,11 @@ a, a:hover, a:focus {
     width: 100%;
 }
 
-#map {
+.map {
     height: 400px;
     width: 600px;
+}
+
+.diagramContainer{
+    width: 75%;
 }

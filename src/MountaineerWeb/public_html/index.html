@@ -23,6 +23,9 @@ and open the template in the editor.
 
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCEBS4uXwZGmYJGvWFfFgxQUVafhbvIyZQ"></script>
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.3/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+
         <script src='mountaineer.js'></script>
     </head>
     <body>
@@ -72,12 +75,17 @@ and open the template in the editor.
                             <div class="col-sm-6">
                             </div>
                         </div> 
+                        <div class="diagramContainer">
+                            <canvas id="heartRateChart" width="200" height="100"></canvas>
+                        </div>
+                        <div class="diagramContainer">
+                            <canvas id="stepsChart" width="200" height="100"></canvas>
+                        </div>
                     </div>
                     <div id="tourMapTab" class="tab-pane fade">
-
                         <div class="row">
                             <div class="col-sm-6">
-                                <div id="map"></div>
+                                <div id="map" class="map"></div>
                             </div>
                             <div class="col-sm-6">
                             </div>
@@ -89,7 +97,16 @@ and open the template in the editor.
         <div>
             <hr/>
             <h2>Debug Data</h2>
-            <pre id='jsonDataDebug'>JSON data for debugging</pre>
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3>Tours</h3>
+                    <pre id='jsonDataDebug'>JSON data for debugging</pre>
+                </div>
+                <div class="col-sm-6">
+                    <h3>Tour Details</h3>
+                    <pre id='jsonDataDebug2'>JSON data for debugging</pre>
+                </div>
+            </div> 
         </div>
 
         <script id="keyValueTableTemplate" type="text/x-dot-template">

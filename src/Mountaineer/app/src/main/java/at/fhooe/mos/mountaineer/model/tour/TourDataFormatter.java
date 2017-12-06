@@ -32,19 +32,19 @@ public class TourDataFormatter {
     }
 
     public String getDuration(Tour tour) {
-        int durationSeconds = tour.getDuration();
-        int minutes = durationSeconds / 60;
-        int seconds = durationSeconds % 60;
+        long durationSeconds = tour.getDuration();
+        int minutes = (int) durationSeconds / 60;
+        int seconds = (int) durationSeconds % 60;
         return String.format(Locale.ENGLISH, "%02d:%02d", minutes, seconds);
     }
 
     public String getStartTime(Tour tour) {
-        Date date = new Date(tour.getStartTimestamp());
+        Date date = new Date(tour.getStartTimestampMillis());
         return timeFormatter.format(date);
     }
 
     public String getStopTime(Tour tour) {
-        Date date = new Date(tour.getStopTimestamp());
+        Date date = new Date(tour.getStopTimestampMillis());
         return timeFormatter.format(date);
     }
 

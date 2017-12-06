@@ -52,13 +52,13 @@ public class TourDataCollector implements
     }
 
     @Override
-    public void onElapsedSecondsEvent(int elapsedSeconds) {
+    public void onElapsedSecondsEvent(long elapsedSeconds) {
         tour.setDuration(elapsedSeconds);
         publishData();
     }
 
     @Override
-    public void onFinalTimeEvent(long startTimestamp, long stopTimestamp, int elapsedSeconds) {
+    public void onFinalTimeEvent(long startTimestamp, long stopTimestamp, long elapsedSeconds) {
         tour.setStartTimestamp(startTimestamp);
         tour.setStopTimestamp(stopTimestamp);
         tour.setDuration(elapsedSeconds);

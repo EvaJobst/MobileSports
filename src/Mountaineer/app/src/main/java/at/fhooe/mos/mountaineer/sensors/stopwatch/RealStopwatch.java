@@ -34,7 +34,7 @@ public class RealStopwatch extends EventSource<StopwatchEventListener> implement
     }
 
     private void start() {
-        startTimeMs = System.currentTimeMillis();
+        startTimeMs = getUnixTime();
         running = true;
 
         startPeriodicUpdates();
@@ -43,7 +43,7 @@ public class RealStopwatch extends EventSource<StopwatchEventListener> implement
     private void stop() {
         stopPeriodicUpdates();
 
-        stopTimeMs = System.currentTimeMillis();
+        stopTimeMs = getUnixTime();
         running = false;
 
         for (StopwatchEventListener listener : super.eventListeners) {
@@ -51,15 +51,15 @@ public class RealStopwatch extends EventSource<StopwatchEventListener> implement
         }
     }
 
-    public int getElapsedSeconds() {
-        return (int) getElapsedMilliseconds() / 1000;
-    }
-
-    private long getElapsedMilliseconds() {
+    private long getElapsedSeconds() {
         if (running) {
-            return System.currentTimeMillis() - startTimeMs;
+            return getUnixTime() - startTimeMs;
         }
         return stopTimeMs - startTimeMs;
+    }
+
+    private long getUnixTime(){
+        return System.currentTimeMillis() / 1000L;
     }
 
     private void startPeriodicUpdates() {

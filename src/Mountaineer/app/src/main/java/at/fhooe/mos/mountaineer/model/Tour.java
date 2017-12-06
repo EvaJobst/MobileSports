@@ -1,6 +1,6 @@
 package at.fhooe.mos.mountaineer.model;
 
-import java.util.ArrayList;
+import at.fhooe.mos.mountaineer.model.weather.Weather;
 
 /**
  * Created by Eva on 20.11.2017.

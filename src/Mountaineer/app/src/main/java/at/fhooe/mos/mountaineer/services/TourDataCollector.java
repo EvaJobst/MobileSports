@@ -10,13 +10,11 @@ import at.fhooe.mos.mountaineer.model.Tour;
 import at.fhooe.mos.mountaineer.sensors.location.LocationSensorEventListener;
 import at.fhooe.mos.mountaineer.sensors.stepsensor.StepSensorEventListener;
 import at.fhooe.mos.mountaineer.sensors.stopwatch.StopwatchEventListener;
-import at.fhooe.mos.mountaineer.model.Weather;
-import at.fhooe.mos.mountaineer.sensors.weather.WeatherService;
+import at.fhooe.mos.mountaineer.model.weather.Weather;
+import at.fhooe.mos.mountaineer.webservices.OpenWeatherMap;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by stefan on 25.11.2017.
@@ -25,12 +23,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class TourDataCollector implements
         StepSensorEventListener,
         StopwatchEventListener,
-        LocationSensorEventListener,
-        Callback<Weather> {
+        LocationSensorEventListener {
 
     private static final int PERIODIC_SUMMATION_TIME_MS = 60*1000;
-    private final String BASE_URL = "https://api.openweathermap.org/data/2.5/";
-    private final String API_KEY = "17b9da43ec1ff13f7f3b0b4ba8e21bb6";
 
     private Handler handler;
     private PeriodicSummation periodicSummation;
@@ -98,33 +93,23 @@ public class TourDataCollector implements
 
     @Override
     public void onLocationReceivedEvent(double latitude, double longitude) {
-        // TODO Fetch weather information
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        final WeatherService weatherService = retrofit.create(WeatherService.class);
-        Call<Weather> data = weatherService.fetch(String.valueOf(latitude), String.valueOf(longitude), "metric", API_KEY);
-        data.enqueue(this);
-
         tour.setLocationLat(latitude);
         tour.setLocationLong(longitude);
 
         publishData();
-    }
 
-    @Override
-    public void onResponse(Call<Weather> call, Response<Weather> response) {
-        tour.setWeather(response.body());
-        Log.d("RESPONDED", response.body().toString());
-        publishData();
-    }
+        OpenWeatherMap.fetchWeatherForLocation(latitude, longitude, new Callback<Weather>() {
+            @Override
+            public void onResponse(Call<Weather> call, Response<Weather> response) {
+                tour.setWeather(response.body());
+                publishData();
+            }
 
-    @Override
-    public void onFailure(Call<Weather> call, Throwable t) {
-        Log.e("FAILURE", t.getMessage());
+            @Override
+            public void onFailure(Call<Weather> call, Throwable t) {
+                Log.e("TourDataCollector", "Could not fetch weather data!\n" + t.getMessage());
+            }
+        });
     }
 
     public static class TourDataUpdateEvent {

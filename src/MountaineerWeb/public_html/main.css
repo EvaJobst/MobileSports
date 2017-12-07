@@ -61,6 +61,11 @@ a, a:hover, a:focus {
     background: #9cd3d3;
 }
 
+#sidebar .nav-stacked {
+    overflow-y: auto;
+	height: 70vh;
+}
+
 #sidebar ul li a {
     padding: 10px;
     font-size: 1.1em;
@@ -72,15 +77,8 @@ a, a:hover, a:focus {
     background: #f6f6f6;
 }
 
-#startPage {
+#content {
     padding: 20px;
-    transition: all 0.3s;
-    width: 100%;
-}
-
-#tourDetails {
-    padding: 20px;
-    transition: all 0.3s;
     width: 100%;
 }
 

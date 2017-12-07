@@ -1,8 +1,12 @@
 package at.fhooe.mos.mountaineer.ui;
 
 import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -11,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsItem;
@@ -59,6 +64,7 @@ public class TourActivity extends AppCompatActivity {
         super.onStart();
 
         checkPermissions();
+
     }
 
     @Override
@@ -83,7 +89,7 @@ public class TourActivity extends AppCompatActivity {
 
     private void transitionToNextState() {
         if (currentState == TourState.newTour) {
-            if (checkPermissions() == false) {
+            if (checkPermissions() == false || checkBLEEnabled() == false || checkLocationEnabled() == false) {
                 return;
             }
         }
@@ -171,10 +177,49 @@ public class TourActivity extends AppCompatActivity {
     }
 
     public boolean checkPermissions() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        String[] requiredPermissions = new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.BLUETOOTH,
+                Manifest.permission.BLUETOOTH_ADMIN,
+        };
 
+        boolean permissionMissing = false;
+
+        for (String permission : requiredPermissions) {
+            if(ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED){
+                permissionMissing = true;
+                break;
+            }
+        }
+        requestPermissions(requiredPermissions, 2);
+
+        if (permissionMissing) {
+            ActivityCompat.requestPermissions(this, requiredPermissions, 1);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    protected boolean checkLocationEnabled() {
+        LocationManager locationMgmt =
+                (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!locationMgmt.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Toast.makeText(this, "Location Service Not Available!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    protected boolean checkBLEEnabled() {
+        final BluetoothManager bluetoothManager =
+                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
+        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
+            Toast.makeText(this, "BLE Service Not Available", Toast.LENGTH_SHORT).show();
             return false;
         }
 

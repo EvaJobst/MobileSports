@@ -53,7 +53,12 @@ public class TourDataFormatter {
     }
 
     public String getLocation(Tour tour) {
-        return "Lat: " + longDecimalFormatter.format(tour.getLocationLat()) + ", Long: " + longDecimalFormatter.format(tour.getLocationLong());
+        if(tour.getStartLocation() == null){
+            return "Lat: -- , Long: --";
+        }
+
+        return "Lat: " + longDecimalFormatter.format(tour.getStartLocation().getLatitude()) +
+                ", Long: " + longDecimalFormatter.format(tour.getStartLocation().getLongitude());
     }
 
     public String getMinMaxTemp(Tour tour) {
@@ -66,7 +71,7 @@ public class TourDataFormatter {
     }
 
     public String getHumidity(Tour tour) {
-        if (tour.getWeather() == null) {  //TODO: weather should never be null?
+        if (tour.getWeather() == null) {
             return "Humidity: --";
         }
 
@@ -74,7 +79,7 @@ public class TourDataFormatter {
     }
 
     public String getWind(Tour tour) {
-        if (tour.getWeather() == null) {  //TODO: weather should never be null?
+        if (tour.getWeather() == null) {
             return "Wind: --";
         }
 
@@ -82,7 +87,7 @@ public class TourDataFormatter {
     }
 
     public String getTemp(Tour tour) {
-        if (tour.getWeather() == null) {  //TODO: weather should never be null?
+        if (tour.getWeather() == null) {
             return "";
         }
 

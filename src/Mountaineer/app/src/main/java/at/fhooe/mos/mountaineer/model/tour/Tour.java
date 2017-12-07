@@ -9,9 +9,7 @@ import at.fhooe.mos.mountaineer.model.weather.Weather;
 public class Tour {
     // General
     private String name;
-    private double locationLat;
-    private double locationLong;
-    private String day;
+    private LocationPoint startLocation;
     private long startTimestamp;
     private long stopTimestamp;
     private long duration;
@@ -46,28 +44,12 @@ public class Tour {
         this.name = name;
     }
 
-    public double getLocationLat() {
-        return locationLat;
+    public LocationPoint getStartLocation() {
+        return startLocation;
     }
 
-    public void setLocationLat(double locationLat) {
-        this.locationLat = locationLat;
-    }
-
-    public double getLocationLong() {
-        return locationLong;
-    }
-
-    public void setLocationLong(double locationLong) {
-        this.locationLong = locationLong;
-    }
-
-    public String getDay() {
-        return day;
-    }
-
-    public void setDay(String day) {
-        this.day = day;
+    public void setStartLocation(LocationPoint startLocation) {
+        this.startLocation = startLocation;
     }
 
     public long getDuration() {
@@ -194,9 +176,7 @@ public class Tour {
     public String toString() {
         return "Tour{" +
                 "name='" + name + '\'' +
-                ", locationLat='" + locationLat + '\'' +
-                ", locationLong='" + locationLong + '\'' +
-                ", day='" + day + '\'' +
+                ", startLocation=" + startLocation +
                 ", startTimestamp=" + startTimestamp +
                 ", stopTimestamp=" + stopTimestamp +
                 ", duration=" + duration +
@@ -210,6 +190,7 @@ public class Tour {
                 ", averageRespiration=" + averageRespiration +
                 ", burnedKcal=" + burnedKcal +
                 ", weather=" + weather +
+                ", tourDetails=" + tourDetails +
                 '}';
     }
 

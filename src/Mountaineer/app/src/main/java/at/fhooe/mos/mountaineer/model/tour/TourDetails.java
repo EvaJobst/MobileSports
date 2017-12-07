@@ -10,10 +10,12 @@ public class TourDetails {
     //string as key because firebase does not support integer keys
     private HashMap<String, Integer> stepCountAtTime;
     private HashMap<String, Double> heartRateAtTime;
+    private HashMap<String, LocationPoint> locationPointAtTime;
 
     public TourDetails() {
         stepCountAtTime = new HashMap<>();
         heartRateAtTime = new HashMap<>();
+        locationPointAtTime = new HashMap<>();
     }
 
     public void addStepCountAtTime(long time, int stepCount) {
@@ -24,11 +26,19 @@ public class TourDetails {
         heartRateAtTime.put(Long.toString(time), heartRate);
     }
 
+    public void addLocationPointAtTime(long time, LocationPoint locationPoint) {
+        locationPointAtTime.put(Long.toString(time), locationPoint);
+    }
+
     public HashMap<String, Integer> getStepCountAtTime() {
         return stepCountAtTime;
     }
 
     public HashMap<String, Double> getHeartRateAtTime() {
         return heartRateAtTime;
+    }
+
+    public HashMap<String, LocationPoint> getLocationPointAtTime() {
+        return locationPointAtTime;
     }
 }

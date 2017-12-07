@@ -6,6 +6,7 @@ import android.util.Log;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import at.fhooe.mos.mountaineer.model.tour.LocationPoint;
 import at.fhooe.mos.mountaineer.model.tour.Tour;
 import at.fhooe.mos.mountaineer.model.weather.Weather;
 import at.fhooe.mos.mountaineer.sensors.heartrate.HeartRateSensorEventListener;
@@ -36,6 +37,12 @@ public class TourDataCollector implements
 
     private Tour tour = new Tour();
 
+    private double heartRateSum = 0;
+    private int heartRateSumCount = 0;
+    private int stepCountSum = 0;
+
+    private boolean weatherFetched = false;
+
     public TourDataCollector() {
         publishTourDataUpdates = true;
 
@@ -48,6 +55,8 @@ public class TourDataCollector implements
     @Override
     public void onStepDetectedEvent() {
         tour.setTotalSteps(tour.getTotalSteps() + 1);
+        stepCountSum++;
+
         publishData();
     }
 
@@ -65,29 +74,37 @@ public class TourDataCollector implements
     }
 
     @Override
-    public void onLocationReceivedEvent(double latitude, double longitude) {
-        tour.setLocationLat(latitude);
-        tour.setLocationLong(longitude);
+    public void onLocationReceivedEvent(double latitude, double longitude, double altitude) {
+        if(tour.getStartLocation() == null)
+        {
+            tour.setStartLocation(new LocationPoint(latitude, longitude, altitude));
+        }
+
+        tour.getTourDetails().addLocationPointAtTime(tour.getDuration(), new LocationPoint(latitude, longitude, altitude));
 
         publishData();
 
-        OpenWeatherMap.fetchWeather(latitude, longitude, new Callback<Weather>() {
-            @Override
-            public void onResponse(Call<Weather> call, Response<Weather> response) {
-                tour.setWeather(response.body());
-                publishData();
-            }
+        if(weatherFetched == false){
+            OpenWeatherMap.fetchWeather(latitude, longitude, new Callback<Weather>() {
+                @Override
+                public void onResponse(Call<Weather> call, Response<Weather> response) {
+                    tour.setWeather(response.body());
+                    publishData();
+                    weatherFetched = true;
+                }
 
-            @Override
-            public void onFailure(Call<Weather> call, Throwable t) {
-                Log.e("TourDataCollector", "Could not fetch weather data!\n" + t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Call<Weather> call, Throwable t) {
+                    Log.e("TourDataCollector", "Could not fetch weather data!\n" + t.getMessage());
+                }
+            });
+        }
     }
 
     @Override
     public void onHeatRateEvent(double heartRate) {
-        tour.getTourDetails().addHeartRateAtTime(tour.getDuration(), heartRate);
+        heartRateSum += heartRate;
+        heartRateSumCount++;
 
         tour.setCurrentHeartRate(heartRate);
     }
@@ -168,7 +185,16 @@ public class TourDataCollector implements
     private class PeriodicSummation implements Runnable {
         @Override
         public void run() {
-            tour.getTourDetails().addStepCountAtTime(tour.getDuration(), tour.getTotalSteps());
+            tour.getTourDetails().addStepCountAtTime(tour.getDuration(), stepCountSum);
+            tour.setAverageSteps(stepCountSum);
+            stepCountSum = 0;
+
+            double averageHeartRateInPeriod = heartRateSum / heartRateSumCount;
+            averageHeartRateInPeriod = Math.floor(averageHeartRateInPeriod * 100) / 100;
+
+            tour.getTourDetails().addHeartRateAtTime(tour.getDuration(), averageHeartRateInPeriod);
+            heartRateSum = 0;
+            heartRateSumCount = 0;
 
             handler.postDelayed(this, PERIODIC_SUMMATION_TIME_MS);
         }

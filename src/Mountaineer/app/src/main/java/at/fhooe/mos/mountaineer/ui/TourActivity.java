@@ -204,9 +204,8 @@ public class TourActivity extends AppCompatActivity {
     }
 
     protected boolean checkLocationEnabled() {
-        LocationManager locationMgmt =
-                (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (!locationMgmt.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             Toast.makeText(this, "Location Service Not Available!", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -215,8 +214,7 @@ public class TourActivity extends AppCompatActivity {
     }
 
     protected boolean checkBLEEnabled() {
-        final BluetoothManager bluetoothManager =
-                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
         if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
             Toast.makeText(this, "BLE Service Not Available", Toast.LENGTH_SHORT).show();

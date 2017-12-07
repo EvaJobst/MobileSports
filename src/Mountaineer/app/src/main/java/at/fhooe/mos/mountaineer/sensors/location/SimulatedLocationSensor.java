@@ -3,6 +3,8 @@ package at.fhooe.mos.mountaineer.sensors.location;
 import android.content.Context;
 import android.os.Handler;
 
+import java.util.Random;
+
 import at.fhooe.mos.mountaineer.EventSource;
 
 /**
@@ -14,12 +16,22 @@ public class SimulatedLocationSensor extends EventSource<LocationSensorEventList
     private Handler handler;
     private PeriodicRunnable periodicRunnable;
     private int nextRunInMs;
+    private double nextLatitude;
+    private double nextLongitude;
+    private double nextAltitude;
+    private Random random;
 
     @Override
     public void setup(Context context) {
         handler = new Handler();
         periodicRunnable = new PeriodicRunnable();
+
         nextRunInMs = 10_000;
+        nextLatitude = 48.123;
+        nextLongitude = 14.567;
+        nextAltitude = 100;
+        random = new Random();
+
         handler.postDelayed(periodicRunnable, nextRunInMs);
     }
 
@@ -33,8 +45,12 @@ public class SimulatedLocationSensor extends EventSource<LocationSensorEventList
         @Override
         public void run() {
             for (LocationSensorEventListener listener : eventListeners) {
-                listener.onLocationReceivedEvent(45.123, 40.567);
+                listener.onLocationReceivedEvent(nextLatitude, nextLongitude, nextAltitude);
             }
+
+            nextLatitude += (random.nextDouble() - 0.5) / 100;
+            nextLongitude += (random.nextDouble() - 0.5) / 100;
+            nextAltitude += (random.nextDouble() - 0.5) * 10;
 
             handler.postDelayed(this, nextRunInMs);
         }

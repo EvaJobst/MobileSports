@@ -14,14 +14,19 @@ import at.fhooe.mos.mountaineer.EventSource;
  */
 
 public class RealLocationSensor extends EventSource<LocationSensorEventListener> implements LocationSensor, LocationListener {
-    LocationManager locationManager;
+    private final static int MIN_TIME_BETWEEN_UPDATES_MS = 60 * 1000;
+
+    private LocationManager locationManager;
 
     @Override
     @SuppressLint("MissingPermission")
     public void setup(Context context) {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+
         locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
         locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_UPDATES_MS,0, this);
     }
 
     @Override
@@ -32,7 +37,7 @@ public class RealLocationSensor extends EventSource<LocationSensorEventListener>
     @Override
     public void onLocationChanged(Location location) {
         for (LocationSensorEventListener listener : super.eventListeners) {
-            listener.onLocationReceivedEvent(location.getLatitude(), location.getLongitude());
+            listener.onLocationReceivedEvent(location.getLatitude(), location.getLongitude(), location.getAltitude());
         }
     }
 

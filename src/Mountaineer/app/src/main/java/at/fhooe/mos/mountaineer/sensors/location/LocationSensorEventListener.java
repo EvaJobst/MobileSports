@@ -5,5 +5,5 @@ package at.fhooe.mos.mountaineer.sensors.location;
  */
 
 public interface LocationSensorEventListener {
-    void onLocationReceivedEvent(double latitude, double longitude);
+    void onLocationReceivedEvent(double latitude, double longitude, double altitude);
 }

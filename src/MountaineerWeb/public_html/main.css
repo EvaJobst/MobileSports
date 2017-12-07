@@ -1,10 +1,19 @@
 
-@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+@import "https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700";
+
+@font-face {
+    font-family: 'Aleo';
+    src: url('res/Aleo-Regular.otf'); /* IE9 Compat Modes */
+}
+
+@font-face {
+    font-family: 'Aleo Bold';
+    src: url('res/Aleo-Bold.otf'); /* IE9 Compat Modes */
+}
 
 
 body {
-    font-family: 'Poppins', sans-serif;
-
+    font-family: 'Roboto Light', sans-serif;
     color: #252525;
 }
 
@@ -25,8 +34,10 @@ a, a:hover, a:focus {
     -o-object-fit: contain;
     object-fit: contain;
 }
-.navbar-brand {
-    color: #ff7260 !important;
+.sidebar-brand {
+    font-family: "Aleo";
+    font-size: xx-large;
+    color: #f6f6f6 !important;
 }
 
 .nav-tabs {
@@ -61,9 +72,14 @@ a, a:hover, a:focus {
     background: #f6f6f6;
 }
 
+#startPage {
+    padding: 20px;
+    transition: all 0.3s;
+    width: 100%;
+}
+
 #tourDetails {
     padding: 20px;
-
     transition: all 0.3s;
     width: 100%;
 }

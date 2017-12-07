@@ -103,6 +103,10 @@ function generateMenu() {
     });
 }
 
+function showStartPage() {
+    $('#startPage').show();
+}
+
 function tourSelected(tourId) {
     selectedTourId = tourId;
 
@@ -168,7 +172,7 @@ function tourDetailsLoaded(tourDetails) {
     drawStepsChart(stepsChartData);
 }
 
-function centerMap(lat, long, ) {
+function centerMap(lat, long) {
     var location = {lat: lat, lng: long};
     var zoom = 8;
 

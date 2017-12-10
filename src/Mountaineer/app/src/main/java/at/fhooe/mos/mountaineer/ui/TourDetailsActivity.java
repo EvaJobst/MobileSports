@@ -13,13 +13,10 @@ import at.fhooe.mos.mountaineer.R;
 import at.fhooe.mos.mountaineer.model.tour.Tour;
 
 @EActivity(R.layout.activity_tour_details)
-
 public class TourDetailsActivity extends AppCompatActivity {
 
     @ViewById
     ImageView tourImage;
-    @ViewById
-    TextView tourName;
 
     // GENERAL
     @ViewById
@@ -32,8 +29,6 @@ public class TourDetailsActivity extends AppCompatActivity {
     // TRACK
     @ViewById
     TextView tourSteps;
-    @ViewById
-    TextView tourAverageSteps;
     @ViewById
     TextView tourSpeed;
     @ViewById

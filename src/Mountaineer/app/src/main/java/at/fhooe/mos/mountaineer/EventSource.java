@@ -18,4 +18,12 @@ public abstract class EventSource<T> implements EventSourceInterface<T> {
     public void removeListener(T listener) {
         eventListeners.remove(listener);
     }
+
+    public ArrayList<T> getEventListeners() {
+        return eventListeners;
+    }
+
+    public void setEventListeners(ArrayList<T> eventListeners) {
+        this.eventListeners = eventListeners;
+    }
 }

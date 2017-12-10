@@ -7,85 +7,166 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorAccent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <ImageView
             android:id="@+id/tourIcSun"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:src="@drawable/ic_sun"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tourMinMaxTemp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="29°C/12°C"
+            android:layout_marginLeft="8dp"
+            android:text="0°C / 0°C"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            app:layout_constraintBottom_toBottomOf="@id/tourIcSun"
-            app:layout_constraintLeft_toRightOf="@id/tourIcSun" />
+            app:layout_constraintBottom_toTopOf="@id/tourWeatherDescription"
+            app:layout_constraintLeft_toLeftOf="parent" />
 
         <TextView
             android:id="@+id/tourTemp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="26"
-            android:textAlignment="textEnd"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            android:textColor="@color/colorAccent"
+            android:layout_marginLeft="6dp"
+            android:fontFamily="sans-serif-light"
+            android:text="0°"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/white"
+            android:textSize="50sp"
             app:layout_constraintBottom_toTopOf="@id/tourMinMaxTemp"
-            app:layout_constraintLeft_toRightOf="@id/tourIcSun" />
+            app:layout_constraintLeft_toLeftOf="parent" />
 
         <TextView
+            android:id="@+id/tourWeatherDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:text="°C"
-            app:layout_constraintBottom_toBottomOf="@id/tourTemp"
-            app:layout_constraintLeft_toRightOf="@id/tourTemp" />
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="8dp"
+            android:text="Description"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse"
+            app:layout_constraintBottom_toTopOf="@id/tourWeatherBottom"
+            app:layout_constraintLeft_toLeftOf="parent" />
 
         <View
-            android:layout_margin="8dp"
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorLightGrey"
-            app:layout_constraintTop_toBottomOf="@id/tourMinMaxTemp"
-            app:layout_constraintLeft_toLeftOf="parent"/>
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/white"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <TextView
-            android:id="@+id/tourRain"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="8dp"
-            android:text="Rain: 0%"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            app:layout_constraintLeft_toLeftOf="@id/tourIcSun"
-            app:layout_constraintTop_toBottomOf="@id/tourMinMaxTemp" />
+        <LinearLayout
+            android:id="@+id/tourWeatherBottom"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
 
-        <TextView
-            android:id="@+id/tourHumidity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:text="Humidity: 82%"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            app:layout_constraintLeft_toLeftOf="@id/tourIcSun"
-            app:layout_constraintTop_toBottomOf="@id/tourRain" />
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.325"
+                android:layout_gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/tourWind"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:text="Wind: 3km/h"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            app:layout_constraintLeft_toLeftOf="@id/tourIcSun"
-            app:layout_constraintTop_toBottomOf="@id/tourHumidity" />
+                <ImageView
+                    android:id="@+id/tourRainIcon"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_android_black_24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tourRain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:text="0 %"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/tourRainIcon"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.325"
+                android:layout_gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/tourHumidityIcon"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_android_black_24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tourHumidity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:text="0 %"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/tourHumidityIcon"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.35"
+                android:layout_gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/tourWindIcon"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_android_black_24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tourWind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:text="0 km/h"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/tourWindIcon"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
+        </LinearLayout>
+
     </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>

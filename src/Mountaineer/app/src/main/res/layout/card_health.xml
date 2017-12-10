@@ -5,76 +5,100 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.constraint.ConstraintLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_gravity="center">
+        android:layout_height="match_parent"
+        android:background="@color/colorAccent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-        <ImageView
-            android:id="@+id/tourIcHeart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_heart"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tourNormalHeartRate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Normal: 80-120"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            app:layout_constraintBottom_toBottomOf="@id/tourIcHeart"
-            app:layout_constraintLeft_toRightOf="@id/tourIcHeart" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.4">
+            <ImageView
+                android:id="@+id/tourIcBody"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_body"
+                android:scaleType="center"/>
 
-        <TextView
-            android:id="@+id/tourHeartRate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="118"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            android:textColor="@color/colorAccent"
-            app:layout_constraintBottom_toTopOf="@id/tourNormalHeartRate"
-            app:layout_constraintLeft_toRightOf="@id/tourIcHeart" />
+            <ImageView
+                android:id="@+id/tourIcHeart"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/ic_heart"
+                app:layout_constraintLeft_toLeftOf="@id/tourIcBody"
+                app:layout_constraintRight_toRightOf="@id/tourIcBody"
+                app:layout_constraintTop_toTopOf="@id/tourIcBody"
+                app:layout_constraintBottom_toBottomOf="@id/tourIcBody"/>
+        </android.support.constraint.ConstraintLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:text="beats"
-            app:layout_constraintBottom_toBottomOf="@id/tourHeartRate"
-            app:layout_constraintLeft_toRightOf="@id/tourHeartRate" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="24dp"
+            android:layout_weight="0.6">
 
-        <View
-            android:layout_margin="8dp"
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorLightGrey"
-            app:layout_constraintTop_toBottomOf="@id/tourNormalHeartRate"
-            app:layout_constraintLeft_toLeftOf="parent"/>
+            <TextView
+                android:id="@+id/tourHeartRate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:text="118"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
+                android:textSize="50sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/tourNormalHeartRate"/>
 
-        <TextView
-            android:id="@+id/tourRespiration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="8dp"
-            android:text="Respiration: 18/min."
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            app:layout_constraintLeft_toLeftOf="@id/tourIcHeart"
-            app:layout_constraintTop_toBottomOf="@id/tourNormalHeartRate" />
+            <TextView
+                android:id="@+id/tourNormalHeartRate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Normal: 80-120"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/tourRespiration"/>
 
-        <TextView
-            android:id="@+id/tourKcal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:text="Calories: 123 kCal"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            app:layout_constraintLeft_toLeftOf="@id/tourIcHeart"
-            app:layout_constraintTop_toBottomOf="@id/tourRespiration" />
-    </android.support.constraint.ConstraintLayout>
+            <ImageView
+                android:id="@+id/tourRespirationIcon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="4dp"
+                android:src="@drawable/ic_android_black_24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/tourRespiration" />
+
+            <TextView
+                android:id="@+id/tourRespiration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="18/min."
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/tourRespirationIcon" />
+
+            <TextView
+                android:id="@+id/tourKcal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:text="123 kCal"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/tourRespiration" />
+        </android.support.constraint.ConstraintLayout>
+
+    </LinearLayout>
 
 </android.support.v7.widget.CardView>

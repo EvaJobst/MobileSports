@@ -32,7 +32,7 @@ public class TourRecorderService extends Service {
     private Handler handler;
     private PeriodicNotificationUpdater periodicNotificationUpdater;
 
-    private TourDataCollector tourDataCollector;
+    public static TourDataCollector tourDataCollector;
 
     private MainNotificationManager mainNotificationManager;
 

@@ -29,7 +29,7 @@ import at.fhooe.mos.mountaineer.ui.TourActivity;
 @EFragment(R.layout.fragment_save_tour)
 public class SaveTourFragment extends Fragment {
     private int requestCodeGallery = 123;
-    private String selectedImagePath;
+
 
     private TourActivity tourActivity;
 
@@ -79,7 +79,7 @@ public class SaveTourFragment extends Fragment {
             public void addSucceededEvent() {
                 Toast.makeText(getContext(), "Tour Saved!", Toast.LENGTH_SHORT).show();
 
-                tourActivity.doStateTransition();
+                //tourActivity.doStateTransition();
             }
 
             @Override
@@ -92,45 +92,17 @@ public class SaveTourFragment extends Fragment {
 
     @Click
     protected void addGalleryImageButtonClicked() {
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(galleryIntent, requestCodeGallery);
+
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == requestCodeGallery && data != null) {
-            Uri selectedImageUri = data.getData();
-            selectedImagePath = getPath(selectedImageUri);
-            Toast.makeText(getContext(), "Image selected!", Toast.LENGTH_SHORT).show();
-        }
-    }
+
 
     @Subscribe
     public void onMessageEvent(TourDataCollector.FinalTourDataEvent event) {
         this.tour = event.getTour();
     }
 
-    private String getPath(Uri uri) {
-        // just some safety built in
-        if (uri == null) {
-            // TODO perform some logging or show user feedback
-            return null;
-        }
-        // try to retrieve the image from the media store first
-        // this will only work for images selected from gallery
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getActivity().managedQuery(uri, projection, null, null, null);
-        if (cursor != null) {
-            int column_index = cursor
-                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            String path = cursor.getString(column_index);
-            cursor.close();
-            return path;
-        }
-        // this is our fallback here
-        return uri.getPath();
-    }
+
 
     public SaveTourFragment() {
         // Required empty public constructor

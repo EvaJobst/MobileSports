@@ -21,7 +21,7 @@ public class NewTourFragment extends Fragment {
 
     @Click
     protected void addTourButtonClicked() {
-        tourActivity.doStateTransition();
+        //tourActivity.doStateTransition();
     }
 
     @Override

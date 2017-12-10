@@ -1,8 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/tourActivityMenuItem"
-        android:icon="@drawable/ic_flag"
+        android:id="@+id/mainActivityMenuItem"
+        android:icon="@drawable/ic_settings"
         android:title="PLACEHOLDER"
         app:showAsAction="always" />
 </menu>

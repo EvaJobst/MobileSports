@@ -13,6 +13,7 @@ public class Tour {
     private long startTimestamp;
     private long stopTimestamp;
     private long duration;
+    private String imagePath;
 
     // Distance
     private int totalSteps;
@@ -196,5 +197,13 @@ public class Tour {
 
     public static Tour getEmptyTour() {
         return new Tour();
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

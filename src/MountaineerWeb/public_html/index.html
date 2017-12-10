@@ -47,55 +47,54 @@ and open the template in the editor.
                 </div>
             </nav>
 
-            <div id="tourDetails" style="background-image:url('res/logo_round.png')">
+            <div id="content" style="background-image:url('res/logo_round.png')">
 
-            </div>
+				<div id="tourDetails" class='collapse'>
+					<h2 id='tourDetailsTitle'>Tour Details</h2>
 
-            <div id="tourDetails" class='collapse'>
-                <h2 id='tourDetailsTitle'>Tour Details</h2>
+					<ul class="nav nav-tabs">
+						<li class="active"><a href="#tourOverviewTab" data-toggle="tab">Overview</a></li>
+						<li><a href="#tourDetailsTab" data-toggle="tab">TourDetails</a></li>
+						<li><a href="#tourMapTab" data-toggle="tab">Map</a></li>
+					</ul>
 
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#tourOverviewTab" data-toggle="tab">Overview</a></li>
-                    <li><a href="#tourDetailsTab" data-toggle="tab">TourDetails</a></li>
-                    <li><a href="#tourMapTab" data-toggle="tab">Map</a></li>
-                </ul>
-
-                <div class="tab-content">
-                    <div id="tourOverviewTab" class="tab-pane fade in active">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div id="tourOverviewTable"></div>
-                            </div>
-                            <div class="col-sm-6">
-                            </div>
-                        </div> 
-                    </div>
-                    <div id="tourDetailsTab" class="tab-pane fade">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div id="tourDetailsTable"></div>
-                            </div>
-                            <div class="col-sm-6">
-                            </div>
-                        </div> 
-                        <div class="diagramContainer">
-                            <canvas id="heartRateChart" width="200" height="100"></canvas>
-                        </div>
-                        <div class="diagramContainer">
-                            <canvas id="stepsChart" width="200" height="100"></canvas>
-                        </div>
-                    </div>
-                    <div id="tourMapTab" class="tab-pane fade">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div id="map" class="map"></div>
-                            </div>
-                            <div class="col-sm-6">
-                            </div>
-                        </div> 
-                    </div>
-                </div>
-            </div>
+					<div class="tab-content">
+						<div id="tourOverviewTab" class="tab-pane fade in active">
+							<div class="row">
+								<div class="col-sm-6">
+									<div id="tourOverviewTable"></div>
+								</div>
+								<div class="col-sm-6">
+								</div>
+							</div> 
+						</div>
+						<div id="tourDetailsTab" class="tab-pane fade">
+							<div class="row">
+								<div class="col-sm-6">
+									<div id="tourDetailsTable"></div>
+								</div>
+								<div class="col-sm-6">
+								</div>
+							</div> 
+							<div class="diagramContainer">
+								<canvas id="heartRateChart" width="200" height="100"></canvas>
+							</div>
+							<div class="diagramContainer">
+								<canvas id="stepsChart" width="200" height="100"></canvas>
+							</div>
+						</div>
+						<div id="tourMapTab" class="tab-pane fade">
+							<div class="row">
+								<div class="col-sm-6">
+									<div id="map" class="map"></div>
+								</div>
+								<div class="col-sm-6">
+								</div>
+							</div> 
+						</div>
+					</div>
+				</div>
+			</div>
         </div>
         <div>
             <hr/>

@@ -44,7 +44,7 @@ public class SimulatedLocationSensor extends EventSource<LocationSensorEventList
 
         @Override
         public void run() {
-            for (LocationSensorEventListener listener : eventListeners) {
+            for (LocationSensorEventListener listener : getEventListeners()) {
                 listener.onLocationReceivedEvent(nextLatitude, nextLongitude, nextAltitude);
             }
 

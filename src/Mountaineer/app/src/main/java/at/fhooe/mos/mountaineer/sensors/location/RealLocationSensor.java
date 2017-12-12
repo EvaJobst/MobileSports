@@ -36,7 +36,7 @@ public class RealLocationSensor extends EventSource<LocationSensorEventListener>
 
     @Override
     public void onLocationChanged(Location location) {
-        for (LocationSensorEventListener listener : super.eventListeners) {
+        for (LocationSensorEventListener listener : super.getEventListeners()) {
             listener.onLocationReceivedEvent(location.getLatitude(), location.getLongitude(), location.getAltitude());
         }
     }

@@ -128,7 +128,7 @@ public class Pedometer extends EventSource<StepSensorEventListener> implements S
     }
 
     protected void notifyListeners() {
-        for (StepSensorEventListener listener : super.eventListeners) {
+        for (StepSensorEventListener listener : super.getEventListeners()) {
             listener.onStepDetectedEvent();
         }
     }

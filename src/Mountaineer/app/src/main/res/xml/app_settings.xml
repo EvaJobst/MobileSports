@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <PreferenceCategory android:title="Heart Rate Monitoring">
-
+    <PreferenceCategory android:title="General">
         <ListPreference
             android:defaultValue="@string/preference_gender_default"
             android:entries="@array/gender"
@@ -35,13 +33,17 @@
             android:key="@string/preference_par_key"
             android:title="@string/preference_par_title"
             android:inputType="number"/>
+    </PreferenceCategory>
 
+    <PreferenceCategory android:title="Heart Rate Monitoring">
         <at.fhooe.mos.mountaineer.ui.IntEditTextPreference
             android:defaultValue="@string/preference_restinghr_default"
             android:key="@string/preference_restinghr_key"
             android:title="@string/preference_restinghr_title"
             android:inputType="number"/>
+    </PreferenceCategory>
 
+    <PreferenceCategory android:title="Simulation">
         <CheckBoxPreference
             android:defaultValue="@string/preference_simulate_default"
             android:key="@string/preference_simulate_key"

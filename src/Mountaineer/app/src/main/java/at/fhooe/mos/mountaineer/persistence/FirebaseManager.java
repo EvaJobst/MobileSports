@@ -64,7 +64,7 @@ public class FirebaseManager extends EventSource<FirebaseFetchEventListener> {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Tour tour = dataSnapshot.getValue(Tour.class);
 
-                for (FirebaseFetchEventListener listener : FirebaseManager.super.eventListeners) {
+                for (FirebaseFetchEventListener listener : FirebaseManager.super.getEventListeners()) {
                     listener.onFetchEvent(tour);
                 }
             }

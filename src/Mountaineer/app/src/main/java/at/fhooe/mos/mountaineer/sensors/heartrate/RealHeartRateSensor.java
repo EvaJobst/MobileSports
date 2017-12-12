@@ -57,7 +57,7 @@ public class RealHeartRateSensor extends EventSource<HeartRateSensorEventListene
                 @Override
                 public void run() {
                     if(isScanning){
-                        Toast.makeText(RealHeartRateSensor.this.context, "Giving up scanning for BLE devices.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RealHeartRateSensor.this.context, "No BLE device found!", Toast.LENGTH_SHORT).show();
                         bluetoothAdapter.stopLeScan(leScanCallback);
                         isScanning = false;
                     }
@@ -68,6 +68,11 @@ public class RealHeartRateSensor extends EventSource<HeartRateSensorEventListene
 
     @Override
     public void destroy() {
+        if(bluetoothAdapter != null && isScanning){
+            bluetoothAdapter.stopLeScan(leScanCallback);
+            isScanning = false;
+        }
+
         if (bluetoothGattConnection != null) {
             bluetoothGattConnection.disconnect();
         }
@@ -113,7 +118,7 @@ public class RealHeartRateSensor extends EventSource<HeartRateSensorEventListene
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             int heartRate = characteristic.getValue()[1];
 
-            for (HeartRateSensorEventListener listener : eventListeners) {
+            for (HeartRateSensorEventListener listener : getEventListeners()) {
                 listener.onHeatRateEvent(heartRate);
             }
         }

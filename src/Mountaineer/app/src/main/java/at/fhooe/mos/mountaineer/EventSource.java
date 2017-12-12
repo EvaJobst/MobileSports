@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 
 public abstract class EventSource<T> implements EventSourceInterface<T> {
-    protected ArrayList<T> eventListeners = new ArrayList<>();
+    private ArrayList<T> eventListeners = new ArrayList<>();
 
     public void registerListener(T listener) {
         if (!eventListeners.contains(listener)) {
@@ -19,11 +19,7 @@ public abstract class EventSource<T> implements EventSourceInterface<T> {
         eventListeners.remove(listener);
     }
 
-    public ArrayList<T> getEventListeners() {
+    protected ArrayList<T> getEventListeners() {
         return eventListeners;
-    }
-
-    public void setEventListeners(ArrayList<T> eventListeners) {
-        this.eventListeners = eventListeners;
     }
 }

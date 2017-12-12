@@ -77,7 +77,7 @@ public class SimulatedHeartRateSensor extends EventSource<HeartRateSensorEventLi
 
         @Override
         public void run() {
-            for (HeartRateSensorEventListener listener : eventListeners) {
+            for (HeartRateSensorEventListener listener : getEventListeners()) {
                 listener.onHeatRateEvent(getHeartRate());
             }
 

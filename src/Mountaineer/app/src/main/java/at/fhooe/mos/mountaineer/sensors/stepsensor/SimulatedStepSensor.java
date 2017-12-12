@@ -34,7 +34,7 @@ public class SimulatedStepSensor extends EventSource<StepSensorEventListener> im
 
         @Override
         public void run() {
-            for (StepSensorEventListener listener : eventListeners) {
+            for (StepSensorEventListener listener : getEventListeners()) {
                 listener.onStepDetectedEvent();
             }
 

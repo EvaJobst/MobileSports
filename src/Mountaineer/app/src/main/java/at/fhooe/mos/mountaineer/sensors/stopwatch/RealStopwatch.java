@@ -46,7 +46,7 @@ public class RealStopwatch extends EventSource<StopwatchEventListener> implement
         stopTimeMs = getUnixTime();
         running = false;
 
-        for (StopwatchEventListener listener : super.eventListeners) {
+        for (StopwatchEventListener listener : super.getEventListeners()) {
             listener.onFinalTimeEvent(startTimeMs, stopTimeMs, getElapsedSeconds());
         }
     }
@@ -75,7 +75,7 @@ public class RealStopwatch extends EventSource<StopwatchEventListener> implement
         public void run() {
 
             if (running) {
-                for (StopwatchEventListener listener : RealStopwatch.super.eventListeners) {
+                for (StopwatchEventListener listener : RealStopwatch.super.getEventListeners()) {
                     listener.onElapsedSecondsEvent(getElapsedSeconds());
                 }
 

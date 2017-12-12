@@ -6,8 +6,6 @@ import android.util.Log;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import at.fhooe.mos.mountaineer.ImageChangedEventListener;
-import at.fhooe.mos.mountaineer.NameChangedEventListener;
 import at.fhooe.mos.mountaineer.model.tour.LocationPoint;
 import at.fhooe.mos.mountaineer.model.tour.Tour;
 import at.fhooe.mos.mountaineer.model.weather.Weather;
@@ -28,8 +26,6 @@ public class TourDataCollector implements
         StepSensorEventListener,
         StopwatchEventListener,
         LocationSensorEventListener,
-        NameChangedEventListener,
-        ImageChangedEventListener,
         HeartRateSensorEventListener {
 
     private static final int PERIODIC_SUMMATION_TIME_MS = 60 * 1000;
@@ -139,18 +135,6 @@ public class TourDataCollector implements
         if (publishTourDataUpdates) {
             EventBus.getDefault().post(new TourDataUpdateEvent(tour));
         }
-    }
-
-    @Override
-    public void onNameChangedEvent(String name) {
-        tour.setName(name);
-        publishData();
-    }
-
-    @Override
-    public void onImageChangedEvent(String path) {
-        tour.setImagePath(path);
-        publishData();
     }
 
     public static class TourDataUpdateEvent {

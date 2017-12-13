@@ -28,17 +28,6 @@ a, a:hover, a:focus {
     background: #f6f6f6;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
 }
-.navbar-brand > img {
-    max-height: 100%;
-    height: 100%;
-    -o-object-fit: contain;
-    object-fit: contain;
-}
-.sidebar-brand {
-    font-family: "Aleo";
-    font-size: xx-large;
-    color: #f6f6f6 !important;
-}
 
 .nav-tabs {
     margin-bottom: 10px;
@@ -61,6 +50,12 @@ a, a:hover, a:focus {
     background: #9cd3d3;
 }
 
+#sidebar .sidebar-brand {
+	font-family: "Aleo";
+    font-size: xx-large;
+    color: #ed7062 !important;
+}
+
 #sidebar .nav-stacked {
     overflow-y: auto;
 	height: 70vh;
@@ -77,9 +72,14 @@ a, a:hover, a:focus {
     background: #f6f6f6;
 }
 
+
 #content {
     padding: 20px;
     width: 100%;
+	background-image:url('res/logo2.png');
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
 }
 
 .map {

@@ -3,6 +3,8 @@ package at.fhooe.mos.mountaineer.sensors.stepsensor;
 import android.content.Context;
 import android.os.Handler;
 
+import java.util.Random;
+
 import at.fhooe.mos.mountaineer.EventSource;
 
 /**
@@ -13,6 +15,7 @@ public class SimulatedStepSensor extends EventSource<StepSensorEventListener> im
     private Handler handler;
     private PeriodicRunnable periodicRunnable;
     private int nextRunInMs;
+    private Random random;
 
     public void setup(Context context) {
         if (handler != null) {
@@ -22,6 +25,8 @@ public class SimulatedStepSensor extends EventSource<StepSensorEventListener> im
         handler = new Handler();
         periodicRunnable = new PeriodicRunnable();
         nextRunInMs = 1000;
+        random = new Random();
+
         handler.postDelayed(periodicRunnable, nextRunInMs);
     }
 
@@ -37,6 +42,8 @@ public class SimulatedStepSensor extends EventSource<StepSensorEventListener> im
             for (StepSensorEventListener listener : getEventListeners()) {
                 listener.onStepDetectedEvent();
             }
+
+            nextRunInMs += (random.nextDouble() - 0.5) * 100;
 
             handler.postDelayed(this, nextRunInMs);
         }

@@ -1,5 +1,5 @@
 
-@import "https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700";
+@import "fonts.css";
 
 @font-face {
     font-family: 'Aleo';
@@ -82,11 +82,18 @@ a, a:hover, a:focus {
 	background-position: center;
 }
 
+.tab-content {
+    background-color: rgba(255,255,255,0.5);
+    
+}
+
+
 .map {
     height: 400px;
     width: 600px;
 }
 
 .diagramContainer{
-    width: 75%;
+    width: 90%;
+    background-color: rgba(255,255,255,0.9);
 }

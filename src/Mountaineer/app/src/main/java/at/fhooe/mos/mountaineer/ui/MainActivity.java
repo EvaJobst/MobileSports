@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     public void onAddTourButtonClick() {
         if (checkPermissions()) {
             startTourActivity();
+            finish();   //end this activity so the user can not use the back button to go back
         }
     }
 

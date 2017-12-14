@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.widget.Toast;
 
 import org.androidannotations.annotations.EService;
 
 import java.util.ArrayList;
 
+import at.fhooe.mos.mountaineer.model.user.UserInformation;
 import at.fhooe.mos.mountaineer.persistence.PersistenceManager;
 import at.fhooe.mos.mountaineer.sensors.RealSensorFactory;
 import at.fhooe.mos.mountaineer.sensors.Sensor;
@@ -35,6 +37,7 @@ public class TourRecorderService extends Service {
     public TourDataCollector tourDataCollector;
 
     private MainNotificationManager mainNotificationManager;
+    private PersistenceManager persistenceManager;
 
     private ArrayList<Sensor> sensors;
 
@@ -48,6 +51,7 @@ public class TourRecorderService extends Service {
         super.onCreate();
 
         mainNotificationManager = new MainNotificationManager(this);
+        persistenceManager = new PersistenceManager(this);
 
         handler = new Handler();
         periodicNotificationUpdater = new PeriodicNotificationUpdater();
@@ -73,7 +77,13 @@ public class TourRecorderService extends Service {
             sensor.registerListener(tourDataCollector);
         }
 
-        tourDataCollector.start();
+        UserInformation userInfo = persistenceManager.getUserInformation();
+
+        if(!userInfo.isCompleteAndValid()){
+            Toast.makeText(this, "User information not complete!", Toast.LENGTH_SHORT);
+        }
+
+        tourDataCollector.start(userInfo);
 
         acquireWakeLock();
         startForeground(mainNotificationManager.getNotificationId(), mainNotificationManager.getNotification());

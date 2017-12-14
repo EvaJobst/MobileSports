@@ -23,6 +23,10 @@ public class SimulatedLocationSensor extends EventSource<LocationSensorEventList
 
     @Override
     public void setup(Context context) {
+        if (handler != null) {
+            throw new RuntimeException("SimulatedLocationSensor is already set up. setup() called more than once!");
+        }
+
         handler = new Handler();
         periodicRunnable = new PeriodicRunnable();
 

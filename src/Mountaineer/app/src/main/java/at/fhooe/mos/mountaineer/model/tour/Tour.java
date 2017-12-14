@@ -1,5 +1,6 @@
 package at.fhooe.mos.mountaineer.model.tour;
 
+import at.fhooe.mos.mountaineer.model.user.UserInformation;
 import at.fhooe.mos.mountaineer.model.weather.Weather;
 
 /**
@@ -15,6 +16,9 @@ public class Tour {
     private long duration;
     private String imagePath;
 
+    //user
+    private UserInformation userInformation;
+
     // Distance
     private int totalSteps;
     private int averageSteps;
@@ -26,15 +30,26 @@ public class Tour {
     private double currentHeartRate;
     private String normalHeartRate;
     private int averageRespiration;
-    private int burnedKcal;
+    private double burnedKcal;
 
     // Weather
     private Weather weather;
-
     private TourDetails tourDetails;
 
     public Tour() {
         tourDetails = new TourDetails();
+    }
+
+    public static Tour getEmptyTour() {
+        return new Tour();
+    }
+
+    public UserInformation getUserInformation() {
+        return userInformation;
+    }
+
+    public void setUserInformation(UserInformation userInformation) {
+        this.userInformation = userInformation;
     }
 
     public String getName() {
@@ -65,24 +80,24 @@ public class Tour {
         return startTimestamp;
     }
 
-    public long getStartTimestampMillis() {
-        return startTimestamp * 1000L;
-    }
-
     public void setStartTimestamp(long startTimestamp) {
         this.startTimestamp = startTimestamp;
+    }
+
+    public long getStartTimestampMillis() {
+        return startTimestamp * 1000L;
     }
 
     public long getStopTimestamp() {
         return stopTimestamp;
     }
 
-    public long getStopTimestampMillis() {
-        return stopTimestamp * 1000L;
-    }
-
     public void setStopTimestamp(long stopTimestamp) {
         this.stopTimestamp = stopTimestamp;
+    }
+
+    public long getStopTimestampMillis() {
+        return stopTimestamp * 1000L;
     }
 
     public int getTotalSteps() {
@@ -149,11 +164,11 @@ public class Tour {
         this.averageRespiration = averageRespiration;
     }
 
-    public int getBurnedKcal() {
+    public double getBurnedKcal() {
         return burnedKcal;
     }
 
-    public void setBurnedKcal(int burnedKcal) {
+    public void setBurnedKcal(double burnedKcal) {
         this.burnedKcal = burnedKcal;
     }
 
@@ -171,6 +186,14 @@ public class Tour {
 
     public void setTourDetails(TourDetails tourDetails) {
         this.tourDetails = tourDetails;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     @Override
@@ -193,17 +216,5 @@ public class Tour {
                 ", weather=" + weather +
                 ", tourDetails=" + tourDetails +
                 '}';
-    }
-
-    public static Tour getEmptyTour() {
-        return new Tour();
-    }
-
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
     }
 }

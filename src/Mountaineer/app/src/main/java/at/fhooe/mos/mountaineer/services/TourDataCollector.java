@@ -6,8 +6,10 @@ import android.util.Log;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import at.fhooe.mos.mountaineer.model.calculations.EnergyExpenditureCalculator;
 import at.fhooe.mos.mountaineer.model.tour.LocationPoint;
 import at.fhooe.mos.mountaineer.model.tour.Tour;
+import at.fhooe.mos.mountaineer.model.user.UserInformation;
 import at.fhooe.mos.mountaineer.model.weather.Weather;
 import at.fhooe.mos.mountaineer.sensors.heartrate.HeartRateSensorEventListener;
 import at.fhooe.mos.mountaineer.sensors.location.LocationSensorEventListener;
@@ -35,7 +37,7 @@ public class TourDataCollector implements
 
     private boolean publishTourDataUpdates;
 
-    private Tour tour = new Tour();
+    private Tour tour;
 
     private double heartRateSum = 0;
     private int heartRateSumCount = 0;
@@ -44,12 +46,22 @@ public class TourDataCollector implements
     private boolean weatherFetched = false;
 
     public TourDataCollector() {
+        tour = new Tour();
         publishTourDataUpdates = true;
 
         handler = new Handler();
         periodicSummation = new PeriodicSummation();
 
         EventBus.getDefault().register(this);
+    }
+
+    public void start(UserInformation userInformation) {
+        tour.setUserInformation(userInformation);
+        startPeriodicSummation();
+    }
+
+    public void stop() {
+        stopPeriodicSummation();
     }
 
     @Override
@@ -112,14 +124,6 @@ public class TourDataCollector implements
     @Subscribe
     public void onMessageEvent(ControlEvent event) {
         publishTourDataUpdates = event.getPublishTourDataUpdates();
-    }
-
-    public void start() {
-        startPeriodicSummation();
-    }
-
-    public void stop() {
-        stopPeriodicSummation();
     }
 
     public void publishFinalTourData() {
@@ -191,7 +195,13 @@ public class TourDataCollector implements
             double averageHeartRateInPeriod = heartRateSum / heartRateSumCount;
             averageHeartRateInPeriod = Math.floor(averageHeartRateInPeriod * 100) / 100;
 
+            double energyExpenditureInPeriod = EnergyExpenditureCalculator.calculateEnergyExpenditureEstimation(tour.getUserInformation(), averageHeartRateInPeriod);
+
+            tour.setBurnedKcal(tour.getBurnedKcal() + energyExpenditureInPeriod);
+
             tour.getTourDetails().addHeartRateAtTime(tour.getDuration(), averageHeartRateInPeriod);
+            tour.getTourDetails().addEnergyExpenditureAtTime(tour.getDuration(), energyExpenditureInPeriod);
+
             heartRateSum = 0;
             heartRateSumCount = 0;
 

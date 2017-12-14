@@ -28,22 +28,22 @@ function initPage() {
         loadTours();
     });
 
-    $(".nav-tabs a").click(function () {
+    $('.nav-tabs a').click(function () {
         $(this).tab('show');
     });
 
 
-    //loadTours();
-    toursLoaded(JSON.parse('{"-L-BFSktECnlidMbLfBx":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":3,"elevation":0,"humidity":0,"maxTemp":0,"minTemp":0,"rain":0,"startTimestamp":1512034127190,"stopTimestamp":1512034130952,"totalSteps":0,"wind":0,"startTimeString":"30.11.2017, 10:28:47","stopTimeString":"30.11.2017, 10:28:50"},"-L-BG7rLKDoKF1DKZapY":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":3,"elevation":0,"humidity":0,"maxTemp":0,"minTemp":0,"rain":0,"startTimestamp":1512034303813,"stopTimestamp":1512034307488,"totalSteps":0,"wind":0,"startTimeString":"30.11.2017, 10:31:43","stopTimeString":"30.11.2017, 10:31:47"},"-L-CxTsASh5pC9wv2Li4":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":32,"elevation":0,"location":"Lat: 48.3709940033504, Long: 14.514109399612822","startTimestamp":1512062676330,"stopTimestamp":1512062709167,"totalSteps":0,"weather":{"main":{"humidity":86,"temp":1,"temp_max":1,"temp_min":1},"wind":{"deg":240,"speed":4.1}},"startTimeString":"30.11.2017, 18:24:36","stopTimeString":"30.11.2017, 18:25:09"},"-L-D1Rx07lyhZZ272Q4i":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":36,"elevation":0,"location":"Lat: 48.37090873652961, Long: 14.51439645556685","locationLat":47.37090873652961,"locationLong":15.51439645556685,"startTimestamp":1512063974855,"stopTimestamp":1512064012010,"totalSteps":0,"weather":{"main":{"humidity":86,"temp":1,"temp_max":1,"temp_min":1},"wind":{"deg":230,"speed":3.6}},"startTimeString":"30.11.2017, 18:46:14","stopTimeString":"30.11.2017, 18:46:52"},"-L-DSXHqC7YM5IvK8YKq":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":20,"elevation":0,"location":"Lat: 48.3707372, Long: 14.5143459","locationLat":48.3707372,"locationLong":14.5143459,"startTimestamp":1512071090517,"stopTimestamp":1512071111718,"totalSteps":10,"weather":{"main":{"humidity":86,"temp":1,"temp_max":1,"temp_min":1},"wind":{"deg":220,"speed":3.1}},"startTimeString":"30.11.2017, 20:44:50","stopTimeString":"30.11.2017, 20:45:11"},"-L-TRSSCUbQwxDCb7i6f":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":2,"elevation":0,"locationLat":0,"locationLong":0,"startTimestamp":1512339262607,"stopTimestamp":1512339265271,"totalSteps":0,"startTimeString":"3.12.2017, 23:14:22","stopTimeString":"3.12.2017, 23:14:25"},"-L-TUdDWhfcpyH5cjASO":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":3,"elevation":0,"locationLat":0,"locationLong":0,"startTimestamp":1512340085690,"stopTimestamp":1512340089646,"totalSteps":0,"startTimeString":"3.12.2017, 23:28:05","stopTimeString":"3.12.2017, 23:28:09"},"-L-TVoWH-XR8nduvnWPu":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":0,"elevation":0,"locationLat":0,"locationLong":0,"startTimestamp":1512340404665,"stopTimestamp":1512340405639,"totalSteps":0,"startTimeString":"3.12.2017, 23:33:24","stopTimeString":"3.12.2017, 23:33:25"},"-L-VfmGpPd4lNY6PuHeY":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":4,"elevation":0,"locationLat":37.421998333333335,"locationLong":-122.08400000000002,"startTimestamp":1512376829625,"stopTimestamp":1512376834394,"totalSteps":0,"startTimeString":"4.12.2017, 09:40:29","stopTimeString":"4.12.2017, 09:40:34"},"-L-VhUHGQrgTVpMzqtCH":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":3,"elevation":0,"locationLat":0,"locationLong":0,"startTimestamp":1512377277579,"stopTimestamp":1512377281600,"totalSteps":0,"startTimeString":"4.12.2017, 09:47:57","stopTimeString":"4.12.2017, 09:48:01"},"-L-cQGLuYUmO6byD-KEz":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":15,"elevation":0,"locationLat":37.421998333333335,"locationLong":-122.08400000000002,"startTimestamp":1512506707543,"stopTimestamp":1512506723359,"totalSteps":0,"startTimeString":"5.12.2017, 21:45:07","stopTimeString":"5.12.2017, 21:45:23"},"-L-cQoLRfkUz1UM2e65K":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":17,"elevation":0,"locationLat":0,"locationLong":0,"startTimestamp":1512506845862,"stopTimestamp":1512506863066,"totalSteps":0,"startTimeString":"5.12.2017, 21:47:25","stopTimeString":"5.12.2017, 21:47:43"},"-L-cRGEBo0fMGCAoZvkC":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":2,"elevation":0,"locationLat":0,"locationLong":0,"startTimestamp":1512506956426,"stopTimestamp":1512506958904,"totalSteps":0,"startTimeString":"5.12.2017, 21:49:16","stopTimeString":"5.12.2017, 21:49:18"},"-L-cUGQNqx64DOv1ookn":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":5,"elevation":0,"locationLat":0,"locationLong":0,"startTimestamp":1512507768159,"stopTimestamp":1512507773341,"totalSteps":0,"startTimeString":"5.12.2017, 22:02:48","stopTimeString":"5.12.2017, 22:02:53"},"-L-cYeg14tNWZBvI_jtL":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":125,"elevation":0,"locationLat":0,"locationLong":0,"startTimestamp":1512508799126,"stopTimestamp":1512508924991,"totalSteps":125,"startTimeString":"5.12.2017, 22:19:59","stopTimeString":"5.12.2017, 22:22:04"},"-L-cq12zFdA-B4ZYkj20":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":133,"elevation":0,"locationLat":45.123,"locationLong":40.567,"startTimestamp":0,"stopTimestamp":1512513739846,"totalSteps":133,"startTimeString":"1.1.1970, 01:00:00","stopTimeString":"5.12.2017, 23:42:19"},"-L-cs-EFC9K1_hfeMg81":{"averageHeartRate":0,"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"distance":0,"duration":68,"elevation":0,"locationLat":45.123,"locationLong":40.567,"startTimestamp":1512514188100,"stopTimestamp":1512514256608,"totalSteps":68,"startTimeString":"5.12.2017, 23:49:48","stopTimeString":"5.12.2017, 23:50:56"},"-L-fffUiJ4s-XGiWWeOe":{"averageRespiration":0,"averageSpeed":0,"averageSteps":0,"burnedKcal":0,"currentHeartRate":152,"distance":0,"duration":189,"elevation":0,"locationLat":45.123,"locationLong":40.567,"startTimestamp":1512561167,"stopTimestamp":1512561357,"totalSteps":187,"weather":{"main":{"humidity":98,"temp":1.6,"temp_max":1.6,"temp_min":1.6},"wind":{"deg":275.001,"speed":3.62}},"startTimeString":"6.12.2017, 12:52:47","stopTimeString":"6.12.2017, 12:55:57"}}'));
+    loadTours();
+    //toursLoaded(JSON.parse('{"-L0F7tYlB_lGX6RubJmz":{"averageRespiration":0,"averageSpeed":0,"averageSteps":56,"burnedKcal":0,"currentHeartRate":152,"distance":0,"duration":880,"elevation":0,"startLocation":{"altitude":100,"latitude":48.123,"longitude":14.567},"startTimestamp":1513172116,"startTimestampMillis":1513172116000,"stopTimestamp":1513172996,"stopTimestampMillis":1513172996000,"totalSteps":841,"weather":{"main":{"humidity":64,"temp":4,"temp_max":4,"temp_min":4},"name":"Haag","weather":[{"description":"clear sky"}],"wind":{"deg":70,"speed":1.5}},"startTimeString":"13.12.2017, 14:35:16","stopTimeString":"13.12.2017, 14:49:56"},"-L0FGl1EUeA8XEeqGLeT":{"averageRespiration":0,"averageSpeed":0,"averageSteps":52,"burnedKcal":-72550.8055367204,"currentHeartRate":162,"distance":0,"duration":672,"elevation":0,"name":"simulation1","startLocation":{"altitude":100,"latitude":48.123,"longitude":14.567},"startTimestamp":1513174649,"startTimestampMillis":1513174649000,"stopTimestamp":1513175321,"stopTimestampMillis":1513175321000,"totalSteps":818,"userInformation":{"age":22,"bodyMass":65,"completeAndValid":true,"gender":"Male","height":165,"id":"user1","par":3,"restingHearRate":60},"weather":{"main":{"humidity":60,"temp":4,"temp_max":4,"temp_min":4},"name":"Haag","weather":[{"description":"clear sky"}],"wind":{"deg":90,"speed":2.6}},"startTimeString":"13.12.2017, 15:17:29","stopTimeString":"13.12.2017, 15:28:41"}}'));
     initMap();
 }
 
 function initMap() {
     gMap = new google.maps.Map(document.getElementById('map'));
 
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        var target = $(e.target).attr("href") // activated tab
-        if (target == "#tourMapTab")
+    $("a[data-toggle='tab']").on('shown.bs.tab', function (e) {
+        var target = $(e.target).attr('href') // activated tab
+        if (target == '#tourMapTab')
         {
             currentCenter = gMap.getCenter();
             google.maps.event.trigger(map, 'resize');
@@ -62,15 +62,26 @@ function toursLoaded(tours) {
     allTours = processTourData(tours);
 
     $('#jsonDataDebug').text(JSON.stringify(allTours, null, 2));
-
+    $('#jsonDataDebugPlain').text(JSON.stringify(allTours));
     generateMenu();
 }
 
 function processTourData(tours) {
     $.each(tours, function (tourId)
     {
-        tours[tourId]['startTimeString'] = timestampToDateString(tours[tourId]['startTimestamp']);
-        tours[tourId]['stopTimeString'] = timestampToDateString(tours[tourId]['stopTimestamp']);
+        tours[tourId]['startTimeString'] = moment(tours[tourId]['startTimestamp'], 'X').format('MMMM Do YYYY, h:mm:ss a');
+        tours[tourId]['stopTimeString'] = moment(tours[tourId]['stopTimestamp'], 'X').format('MMMM Do YYYY, h:mm:ss a');
+
+        tours[tourId]['startDateString'] = moment(tours[tourId]['startTimestamp'], 'X').format('MMM Do YYYY');
+
+        var tourTitle = tours[tourId]['startDateString'];
+
+        if (tours[tourId]['name'] != undefined)
+        {
+            tourTitle = tours[tourId]['name'] + ', ' + tourTitle;
+        }
+
+        tours[tourId]['tourTitle'] = tourTitle;
     });
 
     return tours;
@@ -81,7 +92,7 @@ function generateMenu() {
 
     $.each(allTours, function (tourId)
     {
-        menuItems.push({text: allTours[tourId]['startTimeString'], data: tourId, startTimestamp: allTours[tourId]['startTimestamp']});
+        menuItems.push({text: allTours[tourId]['tourTitle'], data: tourId, startTimestamp: allTours[tourId]['startTimestamp']});
     });
 
     //sort descending by startdate
@@ -112,7 +123,7 @@ function tourSelected(tourId) {
 
     loadTourDetails();
 
-    $('#tourDetailsTitle').text('Your Tour from ' + allTours[selectedTourId]['startTimeString']);
+    $('#tourDetailsTitle').text(allTours[tourId]['tourTitle']);
 
     var tableOverviewRows = [
         ['StartTime', allTours[selectedTourId]['startTimeString']],
@@ -121,8 +132,18 @@ function tourSelected(tourId) {
 
     $('#tourOverviewTable').html(keyValueTableTemplateFn(tableOverviewRows));
 
-    var lat = allTours[selectedTourId]['locationLat'];
-    var long = allTours[selectedTourId]['locationLong'];
+    var tableOverviewRows = [
+        ['Average Heart Rate', allTours[selectedTourId]['currentHeartRate']],
+        ['Min Heart Rate', 'placeholder'],
+        ['Max Heart Rate', 'placeholder']
+    ];
+
+    $('#heartRateTable').html(keyValueTableTemplateFn(tableOverviewRows));
+
+
+
+    var lat = allTours[selectedTourId]['startLocation']['latitude'];
+    var long = allTours[selectedTourId]['startLocation']['longitude'];
 
     if (lat != undefined && long != undefined)
     {
@@ -144,32 +165,33 @@ function tourDetailsLoaded(tourDetails) {
 
     var startTime = allTours[selectedTourId]['startTimestamp'];
 
-    var baseTime = moment(startTime, "X");
-
-    var heartRateChartData = [];
-
-    $.each(tourDetails['heartRateAtTime'], function (timeOffset)
+    if (tourDetails != null)
     {
-        heartRateChartData.push({x: baseTime.clone().add(timeOffset, 's').toDate(), y: tourDetails['heartRateAtTime'][timeOffset]});
-    });
+        var baseTime = moment(startTime, 'X');
+        var heartRateChartData = [];
+        $.each(tourDetails['heartRateAtTime'], function (timeOffset)
+        {
+            heartRateChartData.push({x: baseTime.clone().add(timeOffset, 's').toDate(), y: tourDetails['heartRateAtTime'][timeOffset]});
+        });
+        drawHeartRateChart(heartRateChartData);
 
-    drawHeartRateChart(heartRateChartData);
 
+        var baseTime = moment(startTime, 'X');
+        var stepsChartData = [];
+        $.each(tourDetails['stepCountAtTime'], function (timeOffset)
+        {
+            stepsChartData.push({x: baseTime.clone().add(timeOffset, 's').toDate(), y: tourDetails['stepCountAtTime'][timeOffset]});
+        });
+        drawStepsChart(stepsChartData);
 
-    var baseTime = moment(startTime, "X");
-
-    var stepsChartData = [];
-
-    var prevStepCount = 0;
-
-    $.each(tourDetails['stepCountAtTime'], function (timeOffset)
-    {
-        var stepCountSinceLast = tourDetails['stepCountAtTime'][timeOffset] - prevStepCount;
-        prevStepCount = tourDetails['stepCountAtTime'][timeOffset];
-        stepsChartData.push({x: baseTime.clone().add(timeOffset, 's').toDate(), y: stepCountSinceLast});
-    });
-
-    drawStepsChart(stepsChartData);
+        var baseTime = moment(startTime, 'X');
+        var energyChartData = [];
+        $.each(tourDetails['stepCountAtTime'], function (timeOffset)
+        {
+            energyChartData.push({x: baseTime.clone().add(timeOffset, 's').toDate(), y: tourDetails['energyExpenditureAtTime'][timeOffset]});
+        });
+        drawEnergyChart(energyChartData);
+    }
 }
 
 function centerMap(lat, long) {
@@ -191,62 +213,25 @@ function centerMap(lat, long) {
 }
 
 function drawHeartRateChart(chartData) {
-    var ctx = document.getElementById("heartRateChart").getContext('2d');
-
-    var config = {
-        type: 'line',
-        data: {
-            datasets: [{
-                    label: "Heart Rate",
-                    data: chartData,
-                    borderColor: 'rgb(255, 114, 96)',
-                    backgroundColor: 'rgba(0, 0, 0, 0)',
-                    fill: false,
-                }]
-        },
-        options: {
-            responsive: true,
-            title: {
-                display: true,
-                text: "Heart Rate in BPM over Time"
-            },
-            scales: {
-                xAxes: [{
-                        type: "time",
-                        distribution: 'linear',
-                        display: true,
-                        time: {
-                            displayFormats: {
-                                quarter: 'hh:mm'
-                            }
-                        },
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Time'
-                        }
-                    }],
-                yAxes: [{
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Heart Rate [bpm]'
-                        }
-                    }]
-            }
-        }
-    };
-
-    var heartRateChart = new Chart(ctx, config);
+    drawChart('heartRateChart', chartData, 'Heart Rate', 'Heart Rate in BPM over Time', 'Heart Rate [bpm]', false);
 }
 
 function drawStepsChart(chartData) {
-    var ctx = document.getElementById("stepsChart").getContext('2d');
+    drawChart('stepsChart', chartData, 'Steps per Minute', 'Average Steps per Minute over Time', 'Step Count', true);
+}
+
+function drawEnergyChart(chartData) {
+    drawChart('energyChart', chartData, 'Energy Expenditure per Minute', 'Average Energy Expenditure per Minute over Time', 'Energy Expenditure [?]', true);
+}
+
+function drawChart(id, chartData, label, title, yLabel, yBeginAtZero = false) {
+    var ctx = document.getElementById(id).getContext('2d');
 
     var config = {
         type: 'line',
         data: {
             datasets: [{
-                    label: "Heart Rate",
+                    label: label,
                     data: chartData,
                     borderColor: 'rgb(255, 114, 96)',
                     backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -257,16 +242,17 @@ function drawStepsChart(chartData) {
             responsive: true,
             title: {
                 display: true,
-                text: "Heart Rate in BPM over Time"
+                text: title
             },
             scales: {
                 xAxes: [{
-                        type: "time",
+                        type: 'time',
                         distribution: 'linear',
                         display: true,
                         time: {
                             displayFormats: {
-                                quarter: 'hh:mm'
+                                minute: 'hh:mm',
+                                second: 'hh:mm'
                             }
                         },
                         scaleLabel: {
@@ -278,20 +264,20 @@ function drawStepsChart(chartData) {
                         display: true,
                         scaleLabel: {
                             display: true,
-                            labelString: 'Heart Rate [bpm]'
+                            labelString: yLabel
                         },
                         ticks: {
-                            beginAtZero: true
+                            beginAtZero: yBeginAtZero
                         }
                     }]
             }
         }
     };
 
-    var heartRateChart = new Chart(ctx, config);
+    var chart = new Chart(ctx, config);
 }
 
 function timestampToDateString(timestamp) {
-    date = moment(timestamp, "X").toDate();
+    date = moment(timestamp, 'X').toDate();
     return date.toLocaleString();
 }

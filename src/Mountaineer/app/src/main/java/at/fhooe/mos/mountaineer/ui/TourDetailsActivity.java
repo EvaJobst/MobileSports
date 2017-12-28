@@ -40,7 +40,7 @@ public class TourDetailsActivity extends AppCompatActivity {
     @ViewById
     TextView tourHeartRate;
     @ViewById
-    TextView tourNormalHeartRate;
+    TextView tourRestingHeartRate;
     @ViewById
     TextView tourRespiration;
     @ViewById
@@ -53,8 +53,8 @@ public class TourDetailsActivity extends AppCompatActivity {
     TextView tourMinMaxTemp;
     @ViewById
     TextView tourRain;
-    @ViewById
-    TextView tourHumidity;
+    /*@ViewById
+    TextView tourHumidity;*/
     @ViewById
     TextView tourWind;
 
@@ -83,7 +83,7 @@ public class TourDetailsActivity extends AppCompatActivity {
 
         // HEALTH
         tourHeartRate.setText(""+tour.getCurrentHeartRate());
-        tourNormalHeartRate.setText(tour.getNormalHeartRate());
+        tourRestingHeartRate.setText(tour.getRestingHeartRate());
         tourRespiration.setText(tour.getAverageRespiration());
         tourKcal.setText(tour.getBurnedKcal());
 

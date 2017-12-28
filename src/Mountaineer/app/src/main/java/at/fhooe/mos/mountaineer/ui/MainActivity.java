@@ -12,6 +12,9 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -23,12 +26,20 @@ import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.OptionsMenuItem;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.ArrayList;
+
 import at.fhooe.mos.mountaineer.R;
+import at.fhooe.mos.mountaineer.TourPreviewAdapter;
+import at.fhooe.mos.mountaineer.model.tour.Tour;
+import at.fhooe.mos.mountaineer.persistence.FirebaseFetchEventListener;
+import at.fhooe.mos.mountaineer.persistence.FirebaseManager;
 
 @EActivity(R.layout.activity_main)
 @OptionsMenu(R.menu.main_activity_menu)
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FirebaseFetchEventListener {
     public static final int PERMISSION_REQUEST_CODE = 1;
+    TourPreviewAdapter tourPreviewAdapter;
+    FirebaseManager firebaseManager;
 
     @ViewById
     Toolbar mainToolbar;
@@ -38,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
 
     @ViewById
     FloatingActionButton addTourButton;
+
+    @ViewById
+    RecyclerView previewRecyclerView;
 
     @Click(R.id.addTourButton)
     public void onAddTourButtonClick() {
@@ -62,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         setSupportActionBar(mainToolbar);
+
+        firebaseManager = new FirebaseManager("user1");
+        firebaseManager.fetchTours(this);
     }
 
     private void startTourActivity() {
@@ -142,5 +159,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    @Override
+    public void onFetchEvent(Tour tour) {}
+
+    @Override
+    public void onFetchEvent(ArrayList<Tour> tours) {
+        tourPreviewAdapter = new TourPreviewAdapter(this, tours);
+        previewRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        previewRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        previewRecyclerView.setAdapter(tourPreviewAdapter);
     }
 }

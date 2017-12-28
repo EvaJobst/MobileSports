@@ -6,6 +6,10 @@ import android.util.Log;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
+
 import at.fhooe.mos.mountaineer.model.calculations.EnergyExpenditureCalculator;
 import at.fhooe.mos.mountaineer.model.tour.LocationPoint;
 import at.fhooe.mos.mountaineer.model.tour.Tour;

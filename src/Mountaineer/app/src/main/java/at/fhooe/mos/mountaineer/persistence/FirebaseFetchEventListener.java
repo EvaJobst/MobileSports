@@ -1,6 +1,8 @@
 package at.fhooe.mos.mountaineer.persistence;
 
 
+import java.util.ArrayList;
+
 import at.fhooe.mos.mountaineer.model.tour.Tour;
 
 /**
@@ -9,4 +11,5 @@ import at.fhooe.mos.mountaineer.model.tour.Tour;
 
 public interface FirebaseFetchEventListener {
     void onFetchEvent(Tour tour);
+    void onFetchEvent(ArrayList<Tour> tours);
 }

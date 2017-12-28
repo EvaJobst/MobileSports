@@ -63,7 +63,7 @@ public class MainNotificationManager {
 
     private void initNotificationRemoteViews(Context context) {
         notificationRemoteViews = new RemoteViews(context.getPackageName(), R.layout.main_notification);
-        notificationRemoteViews.setImageViewResource(R.id.firstImageView, R.drawable.ic_sun);
+        notificationRemoteViews.setImageViewResource(R.id.firstImageView, R.drawable.ic_weather_sun);
         notificationRemoteViews.setTextViewText(R.id.firstTextView, "00:00");
         notificationRemoteViews.setImageViewResource(R.id.secondImageView, R.drawable.ic_walk);
         notificationRemoteViews.setTextViewText(R.id.secondTextView, "0000");

@@ -56,13 +56,13 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
                 android:textSize="50sp"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/tourNormalHeartRate"/>
+                app:layout_constraintBottom_toTopOf="@id/tourRestingHeartRate"/>
 
             <TextView
-                android:id="@+id/tourNormalHeartRate"
+                android:id="@+id/tourRestingHeartRate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Normal: 80-120"
+                android:text="Resting"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/tourRespiration"/>

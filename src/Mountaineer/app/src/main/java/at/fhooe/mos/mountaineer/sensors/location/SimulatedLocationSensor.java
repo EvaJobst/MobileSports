@@ -36,7 +36,7 @@ public class SimulatedLocationSensor extends EventSource<LocationSensorEventList
         nextAltitude = 100;
         random = new Random();
 
-        handler.postDelayed(periodicRunnable, nextRunInMs);
+        handler.post(periodicRunnable);
     }
 
     @Override

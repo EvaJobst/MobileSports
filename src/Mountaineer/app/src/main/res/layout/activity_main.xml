@@ -13,16 +13,18 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
         app:title="@string/app_name"
-        app:titleTextAppearance="@android:style/TextAppearance.Medium.Inverse"/>
+        app:titleTextAppearance="@android:style/TextAppearance.Medium.Inverse"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/previewRecyclerView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Your completed tours show up here."
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:overScrollMode="always"
+        android:scrollbars="vertical"
+        app:layout_constraintTop_toBottomOf="@id/mainToolbar"
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addTourButton"

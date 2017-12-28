@@ -6,7 +6,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 
 import at.fhooe.mos.mountaineer.EventSource;
 import at.fhooe.mos.mountaineer.model.tour.Tour;
@@ -59,6 +65,7 @@ public class FirebaseManager extends EventSource<FirebaseFetchEventListener> {
     }
 
     public void fetchTour(String id) {
+
         userToursDb.child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -72,6 +79,34 @@ public class FirebaseManager extends EventSource<FirebaseFetchEventListener> {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e("DATABASE ERROR", databaseError.toString());
+            }
+        });
+    }
+
+    public void fetchTours(final FirebaseFetchEventListener l) {
+        userToursDb.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                registerListener(l);
+
+                ArrayList<Tour> tours = new ArrayList<>();
+                GenericTypeIndicator<Tour> t = new GenericTypeIndicator<Tour>() {};
+
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Tour tour = snapshot.getValue(t);
+                    tours.add(tour);
+                }
+
+                for (FirebaseFetchEventListener listener : FirebaseManager.super.getEventListeners()) {
+                    listener.onFetchEvent(tours);
+                }
+
+                removeListener(l);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }

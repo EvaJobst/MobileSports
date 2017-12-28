@@ -3,6 +3,7 @@ package at.fhooe.mos.mountaineer.model.tour;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v4.content.ContextCompat;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -45,23 +46,93 @@ public class TourDataFormatter {
         return String.format(Locale.ENGLISH, "%02d:%02d", minutes, seconds);
     }
 
-    public String getName(Tour tour) {
-        if(tour.getName() == null) {
+    public String getName(String name) {
+        if(name == null) {
             return "My Tour";
         }
 
-        return tour.getName();
+        return name;
     }
 
-    public Bitmap getImage(Tour tour, Activity activity) {
+    public Bitmap getImage(String path, Activity activity) {
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 8;
+        options.inSampleSize = 4;
 
-        if(tour.getImagePath() == null) {
-            return BitmapFactory.decodeResource(activity.getResources(), R.drawable.stockimage);
+        if(path == null) {
+            return BitmapFactory.decodeResource(activity.getResources(), R.drawable.stockimage, options);
         }
 
-        return BitmapFactory.decodeFile(tour.getImagePath(), options);
+        return BitmapFactory.decodeFile(path, options);
+    }
+
+    public int getWeatherIcon(Tour tour, Activity activity) {
+        int drawable;
+
+        if(tour.getWeather() != null) {
+            switch (tour.getWeather().getWeather().get(0).getDescription()) {
+                case "clear sky":
+                    drawable = R.drawable.ic_weather_sun; break;
+                case "few clouds":
+                    drawable = R.drawable.ic_weather_partly_cloudy; break;
+                case "scattered clouds":
+                    drawable = R.drawable.ic_weather_cloud; break;
+                case "broken clouds":
+                    drawable = R.drawable.ic_weather_cloud; break;
+                case "shower rain":
+                    drawable = R.drawable.ic_weather_rain; break;
+                case "rain":
+                    drawable = R.drawable.ic_weather_rain; break;
+                case "thunderstorm":
+                    drawable = R.drawable.ic_weather_thunderstorm; break;
+                case "snow":
+                    drawable = R.drawable.ic_weather_snow; break;
+                case "mist":
+                    drawable = R.drawable.ic_weather_fog; break;
+                default:
+                    drawable = R.drawable.ic_weather_sun;
+            }
+        }
+
+        else {
+            drawable = R.drawable.ic_weather_sun;
+        }
+
+        return drawable;
+    }
+
+    public int getWeatherIconShadow(Tour tour, Activity activity) {
+        int drawable;
+
+        if(tour.getWeather() != null) {
+            switch (tour.getWeather().getWeather().get(0).getDescription()) {
+                case "clear sky":
+                    drawable = R.drawable.ic_weather_sun_shadow; break;
+                case "few clouds":
+                    drawable = R.drawable.ic_weather_partly_cloudy_shadow; break;
+                case "scattered clouds":
+                    drawable = R.drawable.ic_weather_cloud_shadow; break;
+                case "broken clouds":
+                    drawable = R.drawable.ic_weather_cloud_shadow; break;
+                case "shower rain":
+                    drawable = R.drawable.ic_weather_rain_shadow; break;
+                case "rain":
+                    drawable = R.drawable.ic_weather_rain_shadow; break;
+                case "thunderstorm":
+                    drawable = R.drawable.ic_weather_thunderstorm_shadow; break;
+                case "snow":
+                    drawable = R.drawable.ic_weather_snow_shadow; break;
+                case "mist":
+                    drawable = R.drawable.ic_weather_fog_shadow; break;
+                default:
+                    drawable = R.drawable.ic_weather_sun_shadow;
+            }
+        }
+
+        else {
+            drawable = R.drawable.ic_weather_sun_shadow;
+        }
+
+        return drawable;
     }
 
     public String getStartTime(Tour tour) {
@@ -92,20 +163,13 @@ public class TourDataFormatter {
 
     public String getRain(Tour tour) {
         if(tour.getWeather() == null || tour.getWeather().getRain() == null) {
-            return "-- %";
+            return "0 mm";
         }
 
-        return decimalFormatter.format(tour.getWeather().getRain());
+        return decimalFormatter.format(tour.getWeather().getRain()) + " mm";
     }
 
     public String getLocation(Tour tour) {
-        /*if(tour.getStartLocation() == null){
-            return "Lat: -- , Long: --";
-        }
-
-        return "Lat: " + longDecimalFormatter.format(tour.getStartLocation().getLatitude()) +
-                ", Long: " + longDecimalFormatter.format(tour.getStartLocation().getLongitude());*/
-
         if(tour.getWeather() == null) {
             return "Location";
         }
@@ -122,20 +186,20 @@ public class TourDataFormatter {
                 + shortDecimalFormatter.format(tour.getWeather().getMain().getTemp_min()) + "°C";
     }
 
-    public String getHumidity(Tour tour) {
+    /*public String getHumidity(Tour tour) {
         if (tour.getWeather() == null) {
             return "-- %";
         }
 
         return decimalFormatter.format(tour.getWeather().getMain().getHumidity()) + " %";
-    }
+    }*/
 
     public String getWind(Tour tour) {
         if (tour.getWeather() == null) {
             return "-- km/h";
         }
 
-        return shortDecimalFormatter.format(tour.getWeather().getWind().getSpeed()) + " km/h";
+        return decimalFormatter.format(tour.getWeather().getWind().getSpeed()) + " km/h";
     }
 
     public String getTemp(Tour tour) {
@@ -170,12 +234,12 @@ public class TourDataFormatter {
         return "Elevation: " + tour.getElevation() + " m";
     }
 
-    public String getNormalHeartRate(Tour tour) {
-        if(tour.getNormalHeartRate() == null) {
-            return "Normal: --";
+    public String getRestingHeartRate(int heartRate) {
+        if(heartRate == 0) {
+            return "Resting: -- bpm";
         }
 
-        return "Normal: " + tour.getNormalHeartRate();
+        return "Resting: " + heartRate + " bpm";
     }
 
     public String getRespiration(Tour tour) {
@@ -188,9 +252,9 @@ public class TourDataFormatter {
 
     public String getBurnedCalories(Tour tour) {
         if(tour.getBurnedKcal() == 0) {
-            return "-- kCal";
+            return "0 kCal";
         }
 
-        return tour.getBurnedKcal() + " kCal";
+        return decimalFormatter.format(tour.getBurnedKcal()) + " kCal";
     }
 }

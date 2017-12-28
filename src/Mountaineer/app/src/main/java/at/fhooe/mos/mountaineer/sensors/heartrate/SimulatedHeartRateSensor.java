@@ -30,7 +30,7 @@ public class SimulatedHeartRateSensor extends EventSource<HeartRateSensorEventLi
         periodicRunnable = new PeriodicRunnable();
         nextRunInMs = 10_000;
 
-        handler.postDelayed(periodicRunnable, nextRunInMs);
+        handler.post(periodicRunnable);
     }
 
     @Override

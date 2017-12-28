@@ -15,6 +15,9 @@ public class LocationPoint {
         this.altitude = altitude;
     }
 
+    public LocationPoint() {
+    }
+
     public double getLatitude() {
         return latitude;
     }

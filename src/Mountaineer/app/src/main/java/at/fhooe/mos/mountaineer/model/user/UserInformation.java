@@ -13,6 +13,8 @@ public class UserInformation {
     private int par;
     private int restingHearRate;
 
+
+
     public UserInformation(String id, Gender gender, int age, int height, int bodyMass, int par, int restingHearRate) {
         this.id = id;
         this.gender = gender;
@@ -21,6 +23,9 @@ public class UserInformation {
         this.bodyMass = bodyMass;
         this.par = par;
         this.restingHearRate = restingHearRate;
+    }
+
+    public UserInformation() {
     }
 
     public boolean isCompleteAndValid() {

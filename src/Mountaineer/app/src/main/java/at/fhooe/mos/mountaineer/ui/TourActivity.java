@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -43,15 +42,11 @@ import at.fhooe.mos.mountaineer.ui.fragment.SaveTourDialog;
 @EActivity(R.layout.activity_tour)
 @OptionsMenu(R.menu.tour_activity_menu)
 public class TourActivity extends AppCompatActivity {
+    private Boolean isSaving = false;
     private final static String TAG = TourActivity.class.getSimpleName();
     public static final int REQUEST_CODE_PICK_IMAGE = 2;
 
-    //private EventSource<ImageChangedEventListener> imageChangedEventListener;
     public PersistenceManager persistenceManager;
-    //private TourState currentState;
-    //private String selectedImagePath;
-
-    private Tour tour;
     private String temporaryTourName;
     private String temporaryTourImagePath;
 
@@ -80,7 +75,7 @@ public class TourActivity extends AppCompatActivity {
     @ViewById
     protected TextView tourHeartRate;
     @ViewById
-    protected TextView tourNormalHeartRate;
+    protected TextView tourRestingHeartRate;
     @ViewById
     protected TextView tourRespiration;
     @ViewById
@@ -93,12 +88,18 @@ public class TourActivity extends AppCompatActivity {
     protected TextView tourMinMaxTemp;
     @ViewById
     protected TextView tourRain;
+    /*@ViewById
+    protected TextView tourHumidity;*/
     @ViewById
-    protected TextView tourHumidity;
+    protected TextView tourSunset;
     @ViewById
     protected TextView tourWind;
     @ViewById
     protected TextView tourWeatherDescription;
+    @ViewById
+    protected ImageView tourIcWeather;
+    @ViewById
+    protected ImageView tourIcWeatherShadow;
 
     @StringRes
     protected String tourActivityMenuSettings;
@@ -116,7 +117,7 @@ public class TourActivity extends AppCompatActivity {
     protected Toolbar toolbar;
 
     @ViewById
-    protected CollapsingToolbarLayout collapse_toolbar;
+    protected CollapsingToolbarLayout collapseToolbar;
 
     @ViewById
     protected FloatingActionButton fabAddPhoto;
@@ -128,9 +129,31 @@ public class TourActivity extends AppCompatActivity {
 
     @OptionsItem(R.id.tourActivityMenuItem)
     protected void onOptionsItemClicked() {
-        stopTourRecording();
+        // 1. Instantiate an AlertDialog.Builder with its constructor
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+        // 2. Chain together various setter methods to set the dialog characteristics
+        builder.setMessage("Do you want to save the current tour?")
+                .setTitle(tourDataFormatter.getName(temporaryTourName))
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        isSaving = true;
+                        stopTourRecording();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        isSaving = false;
+                        stopTourRecording();
+                        Intent j = new Intent(TourActivity.this, MainActivity_.class);
+                        startActivity(j);
+                    }
+                });
 
+        // 3. Get the AlertDialog from create()
+        builder.create().show();
     }
 
     @Click(R.id.fabEditName)
@@ -140,7 +163,7 @@ public class TourActivity extends AppCompatActivity {
             @Override
             public void onNameChangedEvent(String name) {
                 temporaryTourName = name;
-                collapse_toolbar.setTitle(temporaryTourName);
+                collapseToolbar.setTitle(name);
             }
         });
         dialog.show(getFragmentManager(), SaveTourDialog.class.getName());
@@ -156,8 +179,6 @@ public class TourActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         persistenceManager = new PersistenceManager(this);
-        //currentState = persistenceManager.getCurrentState();
-        //updateFragment();
     }
 
     @Override
@@ -174,8 +195,8 @@ public class TourActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         EventBus.getDefault().post(new TourDataCollector.ControlEvent(false));
         EventBus.getDefault().unregister(this);
     }
@@ -188,26 +209,18 @@ public class TourActivity extends AppCompatActivity {
 
             if (path != null) {
                 temporaryTourImagePath = path;
-
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize = 8;
-
-                Bitmap image = BitmapFactory.decodeFile(temporaryTourImagePath, options);
-
-                tourImage.setImageBitmap(image);
             }
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(TourDataCollector.TourDataUpdateEvent event) {
-        Tour tour = event.getTour();
-        updateUI(tour);
+        updateUI(event.getTour());
     }
 
     @Subscribe
     public void onMessageEvent(TourDataCollector.FinalTourDataEvent event) {
-        tour = event.getTour();
+        Tour tour = event.getTour();
 
         if (temporaryTourName != null) {
             tour.setName(temporaryTourName);
@@ -217,16 +230,19 @@ public class TourActivity extends AppCompatActivity {
             tour.setImagePath(temporaryTourImagePath);
         }
 
-        askAndSave();
+        if (isSaving) {
+            save(tour);
+        }
     }
 
     private void updateUI(Tour tour) {
         // GENERAL
-        //collapse_toolbar.setTitle(tourDataFormatter.getName(tour));
+        collapseToolbar.setTitle(tourDataFormatter.getName(temporaryTourName));
+        tourImage.setImageBitmap(tourDataFormatter.getImage(temporaryTourImagePath, this));
+
         tourStartTime.setText(tourDataFormatter.getStartTime(tour));
         tourDuration.setText(tourDataFormatter.getDuration(tour));
         tourLocation.setText(tourDataFormatter.getLocation(tour));
-        //tourImage.setImageBitmap(tourDataFormatter.getImage(tour, this));
 
         // TRACK
         tourSteps.setText(tourDataFormatter.getTotalSteps(tour));
@@ -237,61 +253,38 @@ public class TourActivity extends AppCompatActivity {
         // WEATHER
         tourTemp.setText(tourDataFormatter.getTemp(tour));
         tourMinMaxTemp.setText(tourDataFormatter.getMinMaxTemp(tour));
-        tourHumidity.setText(tourDataFormatter.getHumidity(tour));
+        //tourHumidity.setText(tourDataFormatter.getHumidity(tour));
         tourWind.setText(tourDataFormatter.getWind(tour));
         tourWeatherDescription.setText(tourDataFormatter.getDescription(tour));
         tourRain.setText(tourDataFormatter.getRain(tour));
+        tourIcWeather.setImageResource(tourDataFormatter.getWeatherIcon(tour, this));
+        tourIcWeatherShadow.setImageResource(tourDataFormatter.getWeatherIconShadow(tour, this));
 
         // HEALTH
         tourHeartRate.setText(tourDataFormatter.getCurrentHeartRate(tour));
-        tourNormalHeartRate.setText(tourDataFormatter.getNormalHeartRate(tour));
+        tourRestingHeartRate.setText(tourDataFormatter.getRestingHeartRate(persistenceManager.getRestingHeartRate()));
         tourRespiration.setText(tourDataFormatter.getRespiration(tour));
         tourKcal.setText(tourDataFormatter.getBurnedCalories(tour));
-
     }
 
-    private void askAndSave() {
-        // 1. Instantiate an AlertDialog.Builder with its constructor
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    private void save(final Tour tour) {
+        String userId = persistenceManager.getUserId();
+        FirebaseManager firebaseManager = new FirebaseManager(userId);
+        firebaseManager.addTour(tour, new FirebaseAddEventsListener() {
 
-        // 2. Chain together various setter methods to set the dialog characteristics
-        builder.setMessage("Do you want to save the current tour?")
-                .setTitle("My First tour")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String userId = persistenceManager.getUserId();
-                        FirebaseManager firebaseManager = new FirebaseManager(userId);
-                        firebaseManager.addTour(tour, new FirebaseAddEventsListener() {
+            @Override
+            public void addSucceededEvent() {
+                Toast.makeText(TourActivity.this, "Tour Saved!", Toast.LENGTH_SHORT).show();
+            }
 
-                            @Override
-                            public void addSucceededEvent() {
-                                Toast.makeText(TourActivity.this, "Tour Saved!", Toast.LENGTH_SHORT).show();
+            @Override
+            public void addFailedEvent() {
+                Toast.makeText(TourActivity.this, "Tour not saved!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
-                                //tourActivity.doStateTransition();
-                            }
-
-                            @Override
-                            public void addFailedEvent() {
-                                Toast.makeText(TourActivity.this, "Tour not saved!", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-                        Intent j = new Intent(TourActivity.this, MainActivity_.class);
-                        startActivity(j);
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //stopTourRecording();
-                        Intent j = new Intent(TourActivity.this, MainActivity_.class);
-                        startActivity(j);
-                    }
-                });
-
-        // 3. Get the AlertDialog from create()
-        builder.create().show();
+        Intent j = new Intent(TourActivity.this, MainActivity_.class);
+        startActivity(j);
     }
 
     private String getPath(Uri uri) {
@@ -307,7 +300,7 @@ public class TourActivity extends AppCompatActivity {
                     .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             String path = cursor.getString(column_index);
-            cursor.close();
+            //cursor.close();
             return path;
         }
         // this is our fallback here
@@ -321,103 +314,4 @@ public class TourActivity extends AppCompatActivity {
     private void stopTourRecording() {
         TourRecorderService_.intent(this).stop();
     }
-
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        updateOptionsMenu();
-        return super.onCreateOptionsMenu(menu);
-    }*/
-
-    /*public void doStateTransition() {
-        transitionToNextState();
-    }*/
-
-    /*private void transitionToNextState() {
-        if (currentState == TourState.newTour) {
-            if (checkPermissions() == false || checkBLEEnabled() == false || checkLocationEnabled() == false) {
-                return;
-            }
-        }
-
-        switch (currentState) {
-            case newTour:
-                currentState = TourState.currentTour;
-                break;
-            case currentTour:
-                currentState = TourState.saveTour;
-                break;
-            case saveTour:
-                currentState = TourState.newTour;
-                break;
-            default:
-                Log.e(TAG, "undefined state!");
-                currentState = TourState.newTour;
-        }
-
-        if (currentState == TourState.newTour || currentState == TourState.currentTour) {
-            persistenceManager.setCurrentState(currentState);
-        } else if (currentState == TourState.saveTour) {
-            persistenceManager.setCurrentState(TourState.newTour);
-        }
-
-        //updateOptionsMenu();
-        //updateFragment();
-        updateTourRecordingStatus();
-    }*/
-
-    /*private void updateFragment() {
-        Fragment newFragment = getFragmentForCurrentState();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        //transaction.replace(R.id.currentTourFragment, newFragment);
-        transaction.commit();
-    }*/
-
-    /*private void updateOptionsMenu() {
-        switch (currentState) {
-            case newTour:
-                tourActivityMenuItem.setTitle(tourActivityMenuSettings);
-                tourActivityMenuItem.setVisible(true);
-                break;
-            case currentTour:
-                tourActivityMenuItem.setTitle(tourActivityMenuStop);
-                tourActivityMenuItem.setVisible(true);
-                break;
-            case saveTour:
-                tourActivityMenuItem.setTitle(tourActivityMenuDoNotSave);
-                tourActivityMenuItem.setVisible(true);
-                break;
-            default:
-                tourActivityMenuItem.setVisible(false);
-        }
-    }*/
-
-    /*private Fragment getFragmentForCurrentState() {
-        switch (currentState) {
-            case newTour:
-                return new NewTourFragment_();
-            case saveTour:
-                return new SaveTourFragment_();
-            case currentTour:
-                return new CurrentTourFragment_();
-            default:
-                Log.e(TAG, "undefined state!");
-                return null;
-        }
-    }*/
-
-    /*public void updateTourRecordingStatus() {
-        switch (currentState) {
-            case newTour:
-                break;
-            case currentTour:
-                startTourRecording();
-                break;
-            case saveTour:
-                stopTourRecording();
-                break;
-            default:
-                Log.e(TAG, "undefined state!");
-        }
-    }*/
 }

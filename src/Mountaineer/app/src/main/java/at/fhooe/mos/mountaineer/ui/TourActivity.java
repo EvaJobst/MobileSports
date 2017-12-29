@@ -88,8 +88,6 @@ public class TourActivity extends AppCompatActivity {
     protected TextView tourMinMaxTemp;
     @ViewById
     protected TextView tourRain;
-    /*@ViewById
-    protected TextView tourHumidity;*/
     @ViewById
     protected TextView tourSunset;
     @ViewById
@@ -129,12 +127,16 @@ public class TourActivity extends AppCompatActivity {
 
     @OptionsItem(R.id.tourActivityMenuItem)
     protected void onOptionsItemClicked() {
+        getSaveDialog().show();
+    }
+
+    public AlertDialog getSaveDialog() {
         // 1. Instantiate an AlertDialog.Builder with its constructor
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // 2. Chain together various setter methods to set the dialog characteristics
         builder.setMessage("Do you want to save the current tour?")
-                .setTitle(tourDataFormatter.getName(temporaryTourName))
+                .setTitle(tourDataFormatter.getName(Tour.getEmptyTour(), temporaryTourName))
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -149,11 +151,12 @@ public class TourActivity extends AppCompatActivity {
                         stopTourRecording();
                         Intent j = new Intent(TourActivity.this, MainActivity_.class);
                         startActivity(j);
+                        finish();
                     }
                 });
 
         // 3. Get the AlertDialog from create()
-        builder.create().show();
+        return builder.create();
     }
 
     @Click(R.id.fabEditName)
@@ -184,14 +187,17 @@ public class TourActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         setSupportActionBar(toolbar);
 
-        updateUI(Tour.getEmptyTour());
+        if(!EventBus.getDefault().isRegistered(this)) {
+            temporaryTourImagePath = null;
+            temporaryTourName = null;
+            updateUI(Tour.getEmptyTour());
 
-        EventBus.getDefault().post(new TourDataCollector.ControlEvent(true));
-        EventBus.getDefault().register(this);
-        startTourRecording();
+            EventBus.getDefault().post(new TourDataCollector.ControlEvent(true));
+            EventBus.getDefault().register(this);
+            startTourRecording();
+        }
     }
 
     @Override
@@ -199,6 +205,11 @@ public class TourActivity extends AppCompatActivity {
         super.onDestroy();
         EventBus.getDefault().post(new TourDataCollector.ControlEvent(false));
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        getSaveDialog().show();
     }
 
     @Override
@@ -233,12 +244,14 @@ public class TourActivity extends AppCompatActivity {
         if (isSaving) {
             save(tour);
         }
+
+        isSaving = false;
     }
 
     private void updateUI(Tour tour) {
         // GENERAL
-        collapseToolbar.setTitle(tourDataFormatter.getName(temporaryTourName));
-        tourImage.setImageBitmap(tourDataFormatter.getImage(temporaryTourImagePath, this));
+        collapseToolbar.setTitle(tourDataFormatter.getName(tour, temporaryTourName));
+        tourImage.setImageBitmap(tourDataFormatter.getImage(tour, temporaryTourImagePath, this));
 
         tourStartTime.setText(tourDataFormatter.getStartTime(tour));
         tourDuration.setText(tourDataFormatter.getDuration(tour));
@@ -253,11 +266,10 @@ public class TourActivity extends AppCompatActivity {
         // WEATHER
         tourTemp.setText(tourDataFormatter.getTemp(tour));
         tourMinMaxTemp.setText(tourDataFormatter.getMinMaxTemp(tour));
-        //tourHumidity.setText(tourDataFormatter.getHumidity(tour));
         tourWind.setText(tourDataFormatter.getWind(tour));
         tourWeatherDescription.setText(tourDataFormatter.getDescription(tour));
         tourRain.setText(tourDataFormatter.getRain(tour));
-        tourIcWeather.setImageResource(tourDataFormatter.getWeatherIcon(tour, this));
+        tourIcWeather.setImageResource(tourDataFormatter.getWeatherIcon(tour));
         tourIcWeatherShadow.setImageResource(tourDataFormatter.getWeatherIconShadow(tour, this));
 
         // HEALTH
@@ -285,6 +297,7 @@ public class TourActivity extends AppCompatActivity {
 
         Intent j = new Intent(TourActivity.this, MainActivity_.class);
         startActivity(j);
+        finish();
     }
 
     private String getPath(Uri uri) {

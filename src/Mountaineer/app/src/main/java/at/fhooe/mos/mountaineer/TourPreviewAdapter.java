@@ -1,7 +1,6 @@
 package at.fhooe.mos.mountaineer;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,18 +11,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.androidannotations.annotations.EView;
-import org.androidannotations.annotations.EViewGroup;
-import org.androidannotations.annotations.ViewById;
-
 import java.util.ArrayList;
 
 import at.fhooe.mos.mountaineer.model.tour.Tour;
+import at.fhooe.mos.mountaineer.model.tour.TourDataFormatter;
 
 
 public class TourPreviewAdapter extends RecyclerView.Adapter<TourPreviewAdapter.TourPreviewViewHolder> {
+    TourDataFormatter tourDataFormatter = new TourDataFormatter();
     public ArrayList<Tour> tours;
-    private Activity activity;
+    Activity activity;
 
     public TourPreviewAdapter(@NonNull Activity activity, @NonNull ArrayList<Tour> tours) {
         this.activity = activity;
@@ -40,11 +37,11 @@ public class TourPreviewAdapter extends RecyclerView.Adapter<TourPreviewAdapter.
     public void onBindViewHolder(TourPreviewViewHolder holder, int position) {
         final Tour tour = tours.get(position);
 
-        holder.previewTitle.setText(tour.getName());
-        holder.previewDate.setText("Not available");
-        holder.previewDistance.setText(String.valueOf(tour.getDistance()));
-        holder.previewDuration.setText(String.valueOf(tour.getDuration()));
-        holder.previewLocation.setText(tour.getWeather().getName());
+        holder.previewTitle.setText(tourDataFormatter.getName(tour, null));
+        holder.previewImage.setImageBitmap(tourDataFormatter.getImage(tour, null, activity));
+        holder.previewDate.setText(tourDataFormatter.getDate(tour));
+        holder.previewDetails.setText(tourDataFormatter.getPreviewDetails(tour));
+        holder.previewLocation.setText(tourDataFormatter.getLocation(tour));
         holder.previewDetailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,8 +61,7 @@ public class TourPreviewAdapter extends RecyclerView.Adapter<TourPreviewAdapter.
         protected TextView previewTitle;
         protected TextView previewDate;
         protected TextView previewLocation;
-        protected TextView previewDuration;
-        protected TextView previewDistance;
+        protected TextView previewDetails;
         protected Button previewDetailsButton;
 
         TourPreviewViewHolder(View itemView) {
@@ -74,8 +70,7 @@ public class TourPreviewAdapter extends RecyclerView.Adapter<TourPreviewAdapter.
             previewTitle = itemView.findViewById(R.id.previewTitle);
             previewDate = itemView.findViewById(R.id.previewDate);
             previewLocation = itemView.findViewById(R.id.previewLocation);
-            previewDuration = itemView.findViewById(R.id.previewDuration);
-            previewDistance = itemView.findViewById(R.id.previewDistance);
+            previewDetails = itemView.findViewById(R.id.previewDetails);
             previewDetailsButton = itemView.findViewById(R.id.previewDetailsButton);
         }
     }

@@ -19,7 +19,7 @@ import at.fhooe.mos.mountaineer.R;
 
 public class TourDataFormatter {
     private static DateFormat timeFormatter = new SimpleDateFormat("HH:mm");
-    private static DateFormat dateFormatter = new SimpleDateFormat("MM:DD");
+    private static DateFormat dateFormatter = new SimpleDateFormat("EEE, MMM d, yyyy");
     private static DecimalFormat decimalFormatter = new DecimalFormat("0");
     private static DecimalFormat shortDecimalFormatter = new DecimalFormat("0.0");
     private static DecimalFormat longDecimalFormatter = new DecimalFormat("0.000");
@@ -34,6 +34,11 @@ public class TourDataFormatter {
         return instance;
     }
 
+    public String getDate(Tour tour) {
+        Date date = new Date(tour.getStartTimestampMillis());
+        return dateFormatter.format(date);
+    }
+
     public String getTotalSteps(Tour tour) {
         //return String.format(Locale.ENGLISH, "%04d", tour.getTotalSteps());
         return String.valueOf(tour.getTotalSteps());
@@ -46,26 +51,34 @@ public class TourDataFormatter {
         return String.format(Locale.ENGLISH, "%02d:%02d", minutes, seconds);
     }
 
-    public String getName(String name) {
-        if(name == null) {
+    public String getName(Tour tour, String name) {
+        if(tour.getName() == null && name == null) {
             return "My Tour";
+        }
+
+        else if(tour.getName() != null) {
+            return tour.getName();
         }
 
         return name;
     }
 
-    public Bitmap getImage(String path, Activity activity) {
+    public Bitmap getImage(Tour tour, String path, Activity activity) {
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 4;
+        options.inSampleSize = 6;
 
-        if(path == null) {
+        if(tour.getImagePath() == null && path == null) {
             return BitmapFactory.decodeResource(activity.getResources(), R.drawable.stockimage, options);
+        }
+
+        else if(tour.getImagePath() != null) {
+            return BitmapFactory.decodeFile(tour.getImagePath(), options);
         }
 
         return BitmapFactory.decodeFile(path, options);
     }
 
-    public int getWeatherIcon(Tour tour, Activity activity) {
+    public int getWeatherIcon(Tour tour) {
         int drawable;
 
         if(tour.getWeather() != null) {
@@ -133,6 +146,13 @@ public class TourDataFormatter {
         }
 
         return drawable;
+    }
+
+    public String getPreviewDetails(Tour tour) {
+        String duration = getDuration(tour);
+        float km = tour.getDistance() / 1000;
+        String distance = shortDecimalFormatter.format(km);
+        return distance + " km" + ", " + duration + " h";
     }
 
     public String getStartTime(Tour tour) {

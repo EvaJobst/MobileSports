@@ -82,27 +82,35 @@ public class TourDataFormatter {
         int drawable;
 
         if(tour.getWeather() != null) {
-            switch (tour.getWeather().getWeather().get(0).getDescription()) {
-                case "clear sky":
-                    drawable = R.drawable.ic_weather_sun; break;
-                case "few clouds":
-                    drawable = R.drawable.ic_weather_partly_cloudy; break;
-                case "scattered clouds":
-                    drawable = R.drawable.ic_weather_cloud; break;
-                case "broken clouds":
-                    drawable = R.drawable.ic_weather_cloud; break;
-                case "shower rain":
-                    drawable = R.drawable.ic_weather_rain; break;
-                case "rain":
-                    drawable = R.drawable.ic_weather_rain; break;
-                case "thunderstorm":
-                    drawable = R.drawable.ic_weather_thunderstorm; break;
-                case "snow":
-                    drawable = R.drawable.ic_weather_snow; break;
-                case "mist":
-                    drawable = R.drawable.ic_weather_fog; break;
-                default:
-                    drawable = R.drawable.ic_weather_sun;
+            String description = tour.getWeather().getWeather().get(0).getDescription();
+
+            if(description.contains("few clouds")) {
+                drawable = R.drawable.ic_weather_partly_cloudy;
+            }
+
+            else if(description.contains("cloud")) {
+                drawable = R.drawable.ic_weather_cloud;
+            }
+
+            else if(description.contains("rain")) {
+                drawable = R.drawable.ic_weather_rain;
+            }
+
+            else if(description.contains("thunderstorm")) {
+                drawable = R.drawable.ic_weather_thunderstorm;
+            }
+
+            else if(description.contains("snow")) {
+                drawable = R.drawable.ic_weather_snow;
+            }
+
+            else if(description.contains("mist") ||
+                    description.contains("fog")) {
+                drawable = R.drawable.ic_weather_fog;
+            }
+
+            else {
+                drawable = R.drawable.ic_weather_sun;
             }
         }
 
@@ -113,31 +121,51 @@ public class TourDataFormatter {
         return drawable;
     }
 
+    public String getSunset(Tour tour) {
+        if(tour != null &&
+                tour.getWeather() != null &&
+                tour.getWeather().getSys() != null) {
+            long sunset = tour.getWeather().getSys().getSunset();
+            Date date = new Date(sunset * 1000L);
+            return timeFormatter.format(date);
+        }
+
+        return "00:00";
+    }
+
     public int getWeatherIconShadow(Tour tour, Activity activity) {
         int drawable;
 
         if(tour.getWeather() != null) {
-            switch (tour.getWeather().getWeather().get(0).getDescription()) {
-                case "clear sky":
-                    drawable = R.drawable.ic_weather_sun_shadow; break;
-                case "few clouds":
-                    drawable = R.drawable.ic_weather_partly_cloudy_shadow; break;
-                case "scattered clouds":
-                    drawable = R.drawable.ic_weather_cloud_shadow; break;
-                case "broken clouds":
-                    drawable = R.drawable.ic_weather_cloud_shadow; break;
-                case "shower rain":
-                    drawable = R.drawable.ic_weather_rain_shadow; break;
-                case "rain":
-                    drawable = R.drawable.ic_weather_rain_shadow; break;
-                case "thunderstorm":
-                    drawable = R.drawable.ic_weather_thunderstorm_shadow; break;
-                case "snow":
-                    drawable = R.drawable.ic_weather_snow_shadow; break;
-                case "mist":
-                    drawable = R.drawable.ic_weather_fog_shadow; break;
-                default:
-                    drawable = R.drawable.ic_weather_sun_shadow;
+            String description = tour.getWeather().getWeather().get(0).getDescription();
+
+            if(description.contains("few clouds")) {
+                drawable = R.drawable.ic_weather_partly_cloudy_shadow;
+            }
+
+            else if(description.contains("cloud")) {
+                drawable = R.drawable.ic_weather_cloud_shadow;
+            }
+
+            else if(description.contains("rain")) {
+                drawable = R.drawable.ic_weather_rain_shadow;
+            }
+
+            else if(description.contains("thunderstorm")) {
+                drawable = R.drawable.ic_weather_thunderstorm_shadow;
+            }
+
+            else if(description.contains("snow")) {
+                drawable = R.drawable.ic_weather_snow_shadow;
+            }
+
+            else if(description.contains("mist") ||
+                    description.contains("fog")) {
+                drawable = R.drawable.ic_weather_fog_shadow;
+            }
+
+            else {
+                drawable = R.drawable.ic_weather_sun_shadow;
             }
         }
 

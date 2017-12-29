@@ -12,16 +12,18 @@ public class Weather {
     Wind wind;
     Rain rain;
     String name;
+    SystemInformation sys;
 
     public Weather() {
     }
 
-    public Weather(WeatherMain main, ArrayList<WeatherGeneral> weather, Wind wind, Rain rain, String name) {
+    public Weather(WeatherMain main, ArrayList<WeatherGeneral> weather, Wind wind, Rain rain, String name, SystemInformation sys) {
         this.main = main;
         this.weather = weather;
         this.wind = wind;
         this.rain = rain;
         this.name = name;
+        this.sys = sys;
     }
 
     public WeatherMain getMain() {
@@ -64,6 +66,14 @@ public class Weather {
         this.weather = weather;
     }
 
+    public SystemInformation getSys() {
+        return sys;
+    }
+
+    public void setSys(SystemInformation sys) {
+        this.sys = sys;
+    }
+
     @Override
     public String toString() {
         return "Weather{" +
@@ -72,6 +82,7 @@ public class Weather {
                 ", wind=" + wind +
                 ", rain=" + rain +
                 ", name='" + name + '\'' +
+                ", sys=" + sys +
                 '}';
     }
 }

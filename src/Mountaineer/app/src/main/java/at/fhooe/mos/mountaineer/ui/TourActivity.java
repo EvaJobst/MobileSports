@@ -269,6 +269,7 @@ public class TourActivity extends AppCompatActivity {
         tourWind.setText(tourDataFormatter.getWind(tour));
         tourWeatherDescription.setText(tourDataFormatter.getDescription(tour));
         tourRain.setText(tourDataFormatter.getRain(tour));
+        tourSunset.setText(tourDataFormatter.getSunset(tour));
         tourIcWeather.setImageResource(tourDataFormatter.getWeatherIcon(tour));
         tourIcWeatherShadow.setImageResource(tourDataFormatter.getWeatherIconShadow(tour, this));
 

@@ -6,10 +6,6 @@ import android.util.Log;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Date;
-
 import at.fhooe.mos.mountaineer.model.calculations.EnergyExpenditureCalculator;
 import at.fhooe.mos.mountaineer.model.tour.LocationPoint;
 import at.fhooe.mos.mountaineer.model.tour.Tour;
@@ -91,8 +87,7 @@ public class TourDataCollector implements
 
     @Override
     public void onLocationReceivedEvent(double latitude, double longitude, double altitude) {
-        if(tour.getStartLocation() == null)
-        {
+        if (tour.getStartLocation() == null) {
             tour.setStartLocation(new LocationPoint(latitude, longitude, altitude));
         }
 
@@ -100,7 +95,7 @@ public class TourDataCollector implements
 
         publishData();
 
-        if(weatherFetched == false){
+        if (weatherFetched == false) {
             OpenWeatherMap.fetchWeather(latitude, longitude, new Callback<Weather>() {
                 @Override
                 public void onResponse(Call<Weather> call, Response<Weather> response) {
@@ -194,6 +189,19 @@ public class TourDataCollector implements
         public void run() {
             tour.getTourDetails().addStepCountAtTime(tour.getDuration(), stepCountSum);
             tour.setAverageSteps(stepCountSum);
+            tour.setStepFrequency(stepCountSum / PERIODIC_SUMMATION_TIME_MS * 60);
+
+            int strideLength = tour.getUserInformation().getStrideLength();
+            int strideDistance = stepCountSum * strideLength;
+            tour.setDistanceFromSteps(strideDistance + tour.getDistanceFromSteps());
+
+            int speedFromSteps = (int) ((double)strideDistance / 1000 / (PERIODIC_SUMMATION_TIME_MS * 60 * 3600));
+            tour.setSpeedFromSteps(speedFromSteps);
+
+            double energyExpenditureFromSteps = tour.getUserInformation().getAge() * 4.1 * strideDistance/100;
+            double energyExpenditureFromStepsKcal = energyExpenditureFromSteps / 4.2;
+            tour.setEnergyExpenditureFromSteps(energyExpenditureFromStepsKcal + tour.getEnergyExpenditureFromSteps());
+
             stepCountSum = 0;
 
             double averageHeartRateInPeriod = heartRateSum / heartRateSumCount;

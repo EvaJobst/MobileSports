@@ -19,9 +19,13 @@ public class Tour {
     //user
     private UserInformation userInformation;
 
-    // Distance
+    // Steps / Distance
     private int totalSteps;
     private int averageSteps;
+    private int stepFrequency;
+    private int distanceFromSteps;
+    private int speedFromSteps;
+    private double energyExpenditureFromSteps;
     private int distance;
     private int elevation;
 
@@ -116,6 +120,38 @@ public class Tour {
         this.averageSteps = averageSteps;
     }
 
+    public int getStepFrequency() {
+        return stepFrequency;
+    }
+
+    public void setStepFrequency(int stepFrequency) {
+        this.stepFrequency = stepFrequency;
+    }
+
+    public int getDistanceFromSteps() {
+        return distanceFromSteps;
+    }
+
+    public void setDistanceFromSteps(int distanceFromSteps) {
+        this.distanceFromSteps = distanceFromSteps;
+    }
+
+    public int getSpeedFromSteps() {
+        return speedFromSteps;
+    }
+
+    public void setSpeedFromSteps(int speedFromSteps) {
+        this.speedFromSteps = speedFromSteps;
+    }
+
+    public double getEnergyExpenditureFromSteps() {
+        return energyExpenditureFromSteps;
+    }
+
+    public void setEnergyExpenditureFromSteps(double energyExpenditureFromSteps) {
+        this.energyExpenditureFromSteps = energyExpenditureFromSteps;
+    }
+
     public int getDistance() {
         return distance;
     }
@@ -204,8 +240,14 @@ public class Tour {
                 ", startTimestamp=" + startTimestamp +
                 ", stopTimestamp=" + stopTimestamp +
                 ", duration=" + duration +
+                ", imagePath='" + imagePath + '\'' +
+                ", userInformation=" + userInformation +
                 ", totalSteps=" + totalSteps +
                 ", averageSteps=" + averageSteps +
+                ", stepFrequency=" + stepFrequency +
+                ", distanceFromSteps=" + distanceFromSteps +
+                ", speedFromSteps=" + speedFromSteps +
+                ", energyExpenditureFromSteps=" + energyExpenditureFromSteps +
                 ", distance=" + distance +
                 ", elevation=" + elevation +
                 ", averageSpeed=" + averageSpeed +

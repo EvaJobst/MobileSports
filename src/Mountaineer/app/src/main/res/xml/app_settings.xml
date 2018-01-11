@@ -33,6 +33,12 @@
             android:key="@string/preference_par_key"
             android:title="@string/preference_par_title"
             android:inputType="number"/>
+
+        <at.fhooe.mos.mountaineer.ui.IntEditTextPreference
+            android:defaultValue="@string/preference_stridelength_default"
+            android:key="@string/preference_stridelength_key"
+            android:title="@string/preference_stridelength_title"
+            android:inputType="number"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Heart Rate Monitoring">

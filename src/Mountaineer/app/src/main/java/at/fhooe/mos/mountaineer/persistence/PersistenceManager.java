@@ -46,6 +46,7 @@ public class PersistenceManager {
                 getHeight(),
                 getBodyMass(),
                 getPar(),
+                getStrideLength(),
                 getRestingHeartRate()
         );
     }
@@ -98,6 +99,15 @@ public class PersistenceManager {
         int preferenceParValue = preferences.getInt(preferenceParKey, preferenceParDefault);
 
         return preferenceParValue;
+    }
+
+    public int getStrideLength() {
+        String preferenceStrideLengthKey = context.getString(R.string.preference_stridelength_key);
+        int preferenceStrideLengthDefault = Integer.valueOf(context.getString(R.string.preference_stridelength_default));
+
+        int preferenceStrideLengthValue = preferences.getInt(preferenceStrideLengthKey, preferenceStrideLengthDefault);
+
+        return preferenceStrideLengthValue;
     }
 
     public int getRestingHeartRate() {

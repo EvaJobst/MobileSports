@@ -80,7 +80,7 @@ public class TourRecorderService extends Service {
         UserInformation userInfo = persistenceManager.getUserInformation();
 
         if(!userInfo.isCompleteAndValid()){
-            Toast.makeText(this, "User information not complete!", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Info: User information not complete!", Toast.LENGTH_SHORT).show();
         }
 
         tourDataCollector.start(userInfo);

@@ -11,11 +11,12 @@ public class UserInformation {
     private int height;
     private int bodyMass;
     private int par;
+    private int strideLength;
     private int restingHearRate;
 
 
 
-    public UserInformation(String id, Gender gender, int age, int height, int bodyMass, int par, int restingHearRate) {
+    public UserInformation(String id, Gender gender, int age, int height, int bodyMass, int par, int strideLength, int restingHearRate) {
         this.id = id;
         this.gender = gender;
         this.age = age;
@@ -23,6 +24,7 @@ public class UserInformation {
         this.bodyMass = bodyMass;
         this.par = par;
         this.restingHearRate = restingHearRate;
+        this.strideLength = strideLength;
     }
 
     public UserInformation() {
@@ -45,6 +47,9 @@ public class UserInformation {
             return false;
 
         if (par < 0 || par > 10)
+            return false;
+
+        if (strideLength <= 0 || strideLength > 200)
             return false;
 
         if (restingHearRate <= 0)
@@ -101,6 +106,14 @@ public class UserInformation {
         this.par = par;
     }
 
+    public int getStrideLength() {
+        return strideLength;
+    }
+
+    public void setStrideLength(int strideLength) {
+        this.strideLength = strideLength;
+    }
+
     public int getRestingHearRate() {
         return restingHearRate;
     }
@@ -118,6 +131,7 @@ public class UserInformation {
                 ", height=" + height +
                 ", bodyMass=" + bodyMass +
                 ", par=" + par +
+                ", strideLength=" + strideLength +
                 ", restingHearRate=" + restingHearRate +
                 '}';
     }

@@ -12,10 +12,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,9 +33,9 @@ import java.util.Collections;
 import at.fhooe.mos.mountaineer.R;
 import at.fhooe.mos.mountaineer.TourPreviewAdapter;
 import at.fhooe.mos.mountaineer.model.tour.Tour;
-import at.fhooe.mos.mountaineer.model.tour.TourDataFormatter;
 import at.fhooe.mos.mountaineer.persistence.FirebaseFetchEventListener;
 import at.fhooe.mos.mountaineer.persistence.FirebaseManager;
+import at.fhooe.mos.mountaineer.persistence.PersistenceManager;
 
 @EActivity(R.layout.activity_main)
 @OptionsMenu(R.menu.main_activity_menu)
@@ -93,23 +91,22 @@ public class MainActivity extends AppCompatActivity implements FirebaseFetchEven
     }
 
     private void startTourActivity() {
-        if(!checkBLEEnabled() && !checkLocationEnabled()) {
-            Toast.makeText(this, "Please activate the following components: GPS and Bluetooth", Toast.LENGTH_SHORT).show();
+        if (PersistenceManager.Get(this).getSimulateSensorData() == false) {
+            if (!checkBLEEnabled() && !checkLocationEnabled()) {
+                Toast.makeText(this, "Please activate the following components: GPS and Bluetooth", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (!checkBLEEnabled()) {
+                Toast.makeText(this, "Please activate the following component: Bluetooth", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (!checkLocationEnabled()) {
+                Toast.makeText(this, "Please activate the following component: GPS", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
 
-        else if (!checkBLEEnabled()) {
-            Toast.makeText(this, "Please activate the following component: Bluetooth", Toast.LENGTH_SHORT).show();
-        }
-
-        else if (!checkLocationEnabled()) {
-            Toast.makeText(this, "Please activate the following component: GPS", Toast.LENGTH_SHORT).show();
-        }
-
-        else {
-            Intent i = new Intent(this, TourActivity_.class);
-            startActivity(i);
-            finish();   //end this activity so the user can not use the back button to go back
-        }
+        Intent i = new Intent(this, TourActivity_.class);
+        startActivity(i);
+        finish();   //end this activity so the user can not use the back button to go back
     }
 
     private boolean checkPermissions() {
@@ -178,18 +175,17 @@ public class MainActivity extends AppCompatActivity implements FirebaseFetchEven
     }
 
     @Override
-    public void onFetchEvent(Tour tour) {}
+    public void onFetchEvent(Tour tour) {
+    }
 
     @Override
     public void onFetchEvent(ArrayList<Tour> tours) {
-        if(tours.size() > 0) {
+        if (tours.size() > 0) {
             noToursTextView.setVisibility(View.INVISIBLE);
             tourPreviewAdapter.tours = tours;
             Collections.reverse(tourPreviewAdapter.tours);
             tourPreviewAdapter.notifyItemRangeInserted(0, tours.size());
-        }
-
-        else {
+        } else {
             tourPreviewAdapter.notifyItemRangeRemoved(0, tourPreviewAdapter.tours.size());
             tourPreviewAdapter.tours = new ArrayList<>();
             noToursTextView.setVisibility(View.VISIBLE);

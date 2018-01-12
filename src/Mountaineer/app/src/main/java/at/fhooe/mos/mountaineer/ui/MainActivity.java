@@ -30,6 +30,7 @@ import org.androidannotations.annotations.OptionsMenuItem;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import at.fhooe.mos.mountaineer.R;
 import at.fhooe.mos.mountaineer.TourPreviewAdapter;
@@ -184,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseFetchEven
         if(tours.size() > 0) {
             noToursTextView.setVisibility(View.INVISIBLE);
             tourPreviewAdapter.tours = tours;
+            Collections.reverse(tourPreviewAdapter.tours);
             tourPreviewAdapter.notifyItemRangeInserted(0, tours.size());
         }
 

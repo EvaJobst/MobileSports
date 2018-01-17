@@ -13,9 +13,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -43,6 +46,8 @@ import at.fhooe.mos.mountaineer.ui.fragment.SaveTourDialog;
 @OptionsMenu(R.menu.tour_activity_menu)
 public class TourActivity extends AppCompatActivity {
     private Boolean isSaving = false;
+    private Boolean isLive;
+
     private final static String TAG = TourActivity.class.getSimpleName();
     public static final int REQUEST_CODE_PICK_IMAGE = 2;
 
@@ -108,9 +113,6 @@ public class TourActivity extends AppCompatActivity {
     @StringRes
     protected String tourActivityMenuDoNotSave;
 
-    @OptionsMenuItem
-    protected MenuItem tourActivityMenuItem;
-
     @ViewById
     protected Toolbar toolbar;
 
@@ -127,9 +129,11 @@ public class TourActivity extends AppCompatActivity {
 
     @OptionsItem(R.id.tourActivityMenuItem)
     protected void onOptionsItemClicked() {
-        getSaveDialog().show();
+        if(isLive) {
+            getSaveDialog().show();
+        }
     }
-
+  
     public AlertDialog getSaveDialog() {
         // 1. Instantiate an AlertDialog.Builder with its constructor
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -187,29 +191,56 @@ public class TourActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
         setSupportActionBar(toolbar);
+        Intent i = getIntent();
 
-        if(!EventBus.getDefault().isRegistered(this)) {
-            temporaryTourImagePath = null;
-            temporaryTourName = null;
-            updateUI(Tour.getEmptyTour());
+        if(i.getExtras().containsKey("tour")) {
+            // Hide views
+            fabAddPhoto.setVisibility(View.INVISIBLE);
+            fabEditName.setVisibility(View.INVISIBLE);
+            //tourActivityMenuItem.setVisible(false);
 
-            EventBus.getDefault().post(new TourDataCollector.ControlEvent(true));
-            EventBus.getDefault().register(this);
-            startTourRecording();
+            // Set Tour
+            isLive = false;
+            String tourJson = i.getExtras().getString("tour");
+            Tour tour = new Gson().fromJson(tourJson, Tour.class);
+            updateUI(tour);
+        }
+
+        else {
+            isLive = true;
+            if(!EventBus.getDefault().isRegistered(this)) {
+                temporaryTourImagePath = null;
+                temporaryTourName = null;
+                updateUI(Tour.getEmptyTour());
+
+                EventBus.getDefault().post(new TourDataCollector.ControlEvent(true));
+                EventBus.getDefault().register(this);
+                startTourRecording();
+            }
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().post(new TourDataCollector.ControlEvent(false));
-        EventBus.getDefault().unregister(this);
+
+        if(isLive) {
+            EventBus.getDefault().post(new TourDataCollector.ControlEvent(false));
+            EventBus.getDefault().unregister(this);
+        }
     }
 
     @Override
     public void onBackPressed() {
-        getSaveDialog().show();
+        if(isLive) {
+            getSaveDialog().show();
+        }
+
+        else {
+            super.onBackPressed();
+        }
     }
 
     @Override

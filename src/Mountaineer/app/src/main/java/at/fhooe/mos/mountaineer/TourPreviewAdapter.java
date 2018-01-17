@@ -1,6 +1,7 @@
 package at.fhooe.mos.mountaineer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,10 +12,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 
 import at.fhooe.mos.mountaineer.model.tour.Tour;
 import at.fhooe.mos.mountaineer.model.tour.TourDataFormatter;
+import at.fhooe.mos.mountaineer.ui.TourActivity_;
+import at.fhooe.mos.mountaineer.ui.TourDetailsActivity_;
 
 
 public class TourPreviewAdapter extends RecyclerView.Adapter<TourPreviewAdapter.TourPreviewViewHolder> {
@@ -46,6 +51,10 @@ public class TourPreviewAdapter extends RecyclerView.Adapter<TourPreviewAdapter.
             @Override
             public void onClick(View view) {
                 Toast.makeText(activity, "Selected: " + tour.getName(), Toast.LENGTH_SHORT).show();
+
+                Intent i = new Intent(activity, TourActivity_.class);
+                i.putExtra("tour", new Gson().toJson(tour));
+                activity.startActivity(i);
             }
         });
     }

@@ -259,19 +259,31 @@ public class TourDataFormatter {
     }
 
     public String getSpeed(Tour tour) {
-        if(tour.getAverageSpeed() == 0) {
+        /*if(tour.getAverageSpeed() == 0) {
             return "Speed: -- km/h";
         }
 
-        return "Speed: " + tour.getAverageSpeed() + " km/h";
+        return "Speed: " + tour.getAverageSpeed() + " km/h";*/
+
+        if(tour.getSpeedFromSteps() == 0) {
+            return "Speed: -- km/h";
+        }
+
+        return "Speed: " + shortDecimalFormatter.format(tour.getSpeedFromSteps()) + " km/h";
     }
 
     public String getDistance(Tour tour) {
-        if(tour.getDistance() == 0) {
+        /*if(tour.getDistance() == 0) {
             return "Distance: -- m";
         }
 
-        return "Distance: " + tour.getDistance() + " m";
+        return "Distance: " + tour.getDistance() + " m";*/
+
+        if(tour.getDistanceFromSteps() == 0) {
+            return "Distance: -- m";
+        }
+
+        return "Distance: " + tour.getDistanceFromSteps() + " m";
     }
 
     public String getElevation(Tour tour) {

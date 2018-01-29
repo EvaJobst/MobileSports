@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -125,6 +126,8 @@ public class TourActivity extends AppCompatActivity {
     @ViewById
     protected FloatingActionButton fabEditName;
 
+    protected MenuItem tourActivityMenuItem;
+
     private static TourDataFormatter tourDataFormatter = TourDataFormatter.getInstance();
 
     @OptionsItem(R.id.tourActivityMenuItem)
@@ -133,7 +136,7 @@ public class TourActivity extends AppCompatActivity {
             getSaveDialog().show();
         }
     }
-  
+
     public AlertDialog getSaveDialog() {
         // 1. Instantiate an AlertDialog.Builder with its constructor
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -188,6 +191,7 @@ public class TourActivity extends AppCompatActivity {
         persistenceManager = new PersistenceManager(this);
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -195,11 +199,12 @@ public class TourActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Intent i = getIntent();
 
-        if(i.getExtras().containsKey("tour")) {
+        if(i.getExtras() != null && i.getExtras().containsKey("tour")) {
             // Hide views
             fabAddPhoto.setVisibility(View.INVISIBLE);
             fabEditName.setVisibility(View.INVISIBLE);
-            //tourActivityMenuItem.setVisible(false);
+
+
 
             // Set Tour
             isLive = false;

@@ -24,7 +24,7 @@ public class Tour {
     private int averageSteps;
     private int stepFrequency;
     private int distanceFromSteps;
-    private int speedFromSteps;
+    private double speedFromSteps;
     private double energyExpenditureFromSteps;
     private int distance;
     private int elevation;
@@ -136,11 +136,11 @@ public class Tour {
         this.distanceFromSteps = distanceFromSteps;
     }
 
-    public int getSpeedFromSteps() {
+    public double getSpeedFromSteps() {
         return speedFromSteps;
     }
 
-    public void setSpeedFromSteps(int speedFromSteps) {
+    public void setSpeedFromSteps(double speedFromSteps) {
         this.speedFromSteps = speedFromSteps;
     }
 

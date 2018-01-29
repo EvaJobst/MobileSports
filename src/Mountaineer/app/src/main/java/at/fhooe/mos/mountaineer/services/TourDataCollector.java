@@ -30,7 +30,8 @@ public class TourDataCollector implements
         LocationSensorEventListener,
         HeartRateSensorEventListener {
 
-    private static final int PERIODIC_SUMMATION_TIME_MS = 60 * 1000;
+    private static final int PERIODIC_SUMMATION_TIME_S = 10;
+    private static final int PERIODIC_SUMMATION_TIME_MS = PERIODIC_SUMMATION_TIME_S * 1000;
 
     private Handler handler;
     private PeriodicSummation periodicSummation;
@@ -193,9 +194,11 @@ public class TourDataCollector implements
 
             int strideLength = tour.getUserInformation().getStrideLength();
             int strideDistance = stepCountSum * strideLength;
+            strideDistance = strideDistance / 100; // cm -> m
             tour.setDistanceFromSteps(strideDistance + tour.getDistanceFromSteps());
 
-            int speedFromSteps = (int) ((double)strideDistance / 1000 / (PERIODIC_SUMMATION_TIME_MS * 60 * 3600));
+            double speedFromSteps = ((double)strideDistance / PERIODIC_SUMMATION_TIME_S);
+            speedFromSteps = speedFromSteps * 3.6; // m/s -> km/h
             tour.setSpeedFromSteps(speedFromSteps);
 
             double energyExpenditureFromSteps = tour.getUserInformation().getAge() * 4.1 * strideDistance/100;

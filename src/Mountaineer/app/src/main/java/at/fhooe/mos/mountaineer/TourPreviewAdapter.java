@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import at.fhooe.mos.mountaineer.model.tour.Tour;
 import at.fhooe.mos.mountaineer.model.tour.TourDataFormatter;
 import at.fhooe.mos.mountaineer.ui.TourActivity_;
-import at.fhooe.mos.mountaineer.ui.TourDetailsActivity_;
 
 
 public class TourPreviewAdapter extends RecyclerView.Adapter<TourPreviewAdapter.TourPreviewViewHolder> {

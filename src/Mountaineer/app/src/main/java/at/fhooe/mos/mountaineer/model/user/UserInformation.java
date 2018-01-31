@@ -12,18 +12,16 @@ public class UserInformation {
     private int bodyMass;
     private int par;
     private int strideLength;
-    private int restingHearRate;
+    private int restingHeartRate;
 
-
-
-    public UserInformation(String id, Gender gender, int age, int height, int bodyMass, int par, int strideLength, int restingHearRate) {
+    public UserInformation(String id, Gender gender, int age, int height, int bodyMass, int par, int strideLength, int restingHeartRate) {
         this.id = id;
         this.gender = gender;
         this.age = age;
         this.height = height;
         this.bodyMass = bodyMass;
         this.par = par;
-        this.restingHearRate = restingHearRate;
+        this.restingHeartRate = restingHeartRate;
         this.strideLength = strideLength;
     }
 
@@ -52,7 +50,7 @@ public class UserInformation {
         if (strideLength <= 0 || strideLength > 200)
             return false;
 
-        if (restingHearRate <= 0)
+        if (restingHeartRate <= 0)
             return false;
 
         return true;
@@ -114,12 +112,12 @@ public class UserInformation {
         this.strideLength = strideLength;
     }
 
-    public int getRestingHearRate() {
-        return restingHearRate;
+    public int getRestingHeartRate() {
+        return restingHeartRate;
     }
 
-    public void setRestingHearRate(int restingHearRate) {
-        this.restingHearRate = restingHearRate;
+    public void setRestingHeartRate(int restingHeartRate) {
+        this.restingHeartRate = restingHeartRate;
     }
 
     @Override
@@ -132,7 +130,7 @@ public class UserInformation {
                 ", bodyMass=" + bodyMass +
                 ", par=" + par +
                 ", strideLength=" + strideLength +
-                ", restingHearRate=" + restingHearRate +
+                ", restingHeartRate=" + restingHeartRate +
                 '}';
     }
 }

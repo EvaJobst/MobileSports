@@ -2,11 +2,198 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="12dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="at.fhooe.mos.app.mosproject.ui.StepDetectorTestActivity">
+    tools:context="at.fhooe.mos.app.mosproject.ui.PedometerSimulationActivity">
+
+    <TextView
+        android:id="@+id/pedometerHeadline"
+        android:text="Pedometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+        android:id="@+id/pedometerLiveMode"
+        android:text="Live"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/pedometerHeadline"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <Button
+        android:id="@+id/pedometerSimulationMode"
+        android:text="Simulation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        app:layout_constraintTop_toBottomOf="@id/pedometerHeadline"
+        app:layout_constraintLeft_toRightOf="@id/pedometerLiveMode"/>
+
+    <TextView
+        android:id="@+id/heartRateHeadline"
+        android:text="Heart Rate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pedometerLiveMode" />
+
+    <Button
+        android:id="@+id/heartRateLiveMode"
+        android:text="Live"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/heartRateHeadline"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <Button
+        android:id="@+id/heartRateSimulationMode"
+        android:text="Simulation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        app:layout_constraintTop_toBottomOf="@id/heartRateHeadline"
+        app:layout_constraintLeft_toRightOf="@id/heartRateLiveMode"/>
+
+    <TextView
+        android:id="@+id/informationHeadline"
+        android:text="Information"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/heartRateLiveMode" />
+
+    <TextView
+        android:id="@+id/requiredHeadline"
+        android:text="Required"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/informationHeadline" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputAge"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/requiredHeadline" >
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Age" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputHeight"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        app:layout_constraintLeft_toRightOf="@id/textInputAge"
+        app:layout_constraintTop_toBottomOf="@id/requiredHeadline" >
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Height" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputWeight"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        app:layout_constraintLeft_toRightOf="@id/textInputHeight"
+        app:layout_constraintTop_toBottomOf="@id/requiredHeadline" >
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Weight" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Spinner
+        android:id="@+id/spinnerGender"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:spinnerMode="dropdown"
+        android:entries="@array/gender_array"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textInputHeight"/>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputPAR"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        app:layout_constraintLeft_toRightOf="@id/spinnerGender"
+        app:layout_constraintTop_toBottomOf="@id/textInputHeight" >
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="PA-R" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputRestingHR"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        app:layout_constraintLeft_toRightOf="@id/textInputPAR"
+        app:layout_constraintTop_toBottomOf="@id/textInputHeight" >
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Resting HR" />
+    </android.support.design.widget.TextInputLayout>
+
+    <TextView
+        android:id="@+id/optionalHeadline"
+        android:text="Optional"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textInputPAR" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputHRMax"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/optionalHeadline" >
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="HRMax" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputStride"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        app:layout_constraintLeft_toRightOf="@id/textInputHRMax"
+        app:layout_constraintTop_toBottomOf="@id/optionalHeadline" >
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Stride (cm)" />
+    </android.support.design.widget.TextInputLayout>
+
+    <!--<Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/launchStepDetectorTestActivityButton"
@@ -46,6 +233,6 @@
         android:layout_marginTop="4dp"
         android:text="Heart Rate Device"
         app:layout_constraintTop_toBottomOf="@+id/openHeartRateSimulation"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent" />-->
 
 </android.support.constraint.ConstraintLayout>

@@ -3,18 +3,21 @@ package at.fhooe.mos.app.mosproject.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.InstanceState;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import at.fhooe.mos.app.mosproject.R;
-import at.fhooe.mos.app.mosproject.StepDetectorService;
+import at.fhooe.mos.app.mosproject.model.user.Gender;
+import at.fhooe.mos.app.mosproject.model.user.UserInformation;
+import at.fhooe.mos.app.mosproject.pedometer.StepCalculation;
 import at.fhooe.mos.app.mosproject.stopwatch.Stopwatch;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,106 +25,132 @@ import butterknife.OnClick;
 
 @EActivity
 public class MainActivity extends AppCompatActivity {
+    @BindView(R.id.textInputAge)
+    TextInputLayout textInputAge;
 
-    private Intent stepDetectorServiceIntent;
+    @BindView(R.id.textInputHeight)
+    TextInputLayout textInputHeight;
 
-    @InstanceState
-    public boolean isStepDetectorServiceRunning = false;
+    @BindView(R.id.textInputWeight)
+    TextInputLayout textInputWeight;
 
-    private Stopwatch stopwatch = new Stopwatch();
+    @BindView(R.id.textInputHRMax)
+    TextInputLayout textInputHRMax;
 
-    @BindView(R.id.stepCount)
-    TextView stepCountTextView;
+    @BindView(R.id.textInputPAR)
+    TextInputLayout textInputPAR;
 
-    @BindView(R.id.stopwatch)
-    TextView stopwatchTextView;
+    @BindView(R.id.textInputRestingHR)
+    TextInputLayout textInputRestingHR;
 
-    @BindView(R.id.launchStepDetectorTestActivityButton)
-    Button launchStepDetectorTestActivityButton;
+    @BindView(R.id.textInputStride)
+    TextInputLayout textInputStride;
 
-    @BindView(R.id.startStopStepDetectorService)
-    Button startStopStepDetectorService;
+    @BindView(R.id.spinnerGender)
+    Spinner spinnerGender;
 
-    @OnClick(R.id.openHeartRateSimulation)
-    public void onOpenHeartRateSimulationClick() {
+    @OnClick(R.id.heartRateSimulationMode)
+    public void onHeartRateSimulationModeClick() {
         Intent intent = new Intent(MainActivity.this, HeartRateSimulationActivity.class);
-        startActivity(intent);
+        startActivityWithIntent(intent);
     }
 
-    @OnClick(R.id.openHeartRateDevice)
-    public void onOpenHeartRateDeviceClick() {
+    @OnClick(R.id.heartRateLiveMode)
+    public void onHeartRateLiveModeClick() {
         Intent intent = new Intent(MainActivity.this, ScanHeartRateDeviceActivity.class);
-        startActivity(intent);
+        startActivityWithIntent(intent);
     }
 
-    @OnClick(R.id.launchStepDetectorTestActivityButton)
-    public void onStepDetectorTestClick() {
-        Intent intent = new Intent(MainActivity.this, StepDetectorTestActivity.class);
-        startActivity(intent);
+    @OnClick(R.id.pedometerLiveMode)
+    public void onPedometerLiveModeClick() {
+        Intent intent = new Intent(MainActivity.this, PedometerLiveActivity.class);
+        startActivityWithIntent(intent);
     }
 
-    @OnClick(R.id.startStopStepDetectorService)
-    public void onStepDetectorServiceClick() {
-        if (isStepDetectorServiceRunning) {
-            isStepDetectorServiceRunning = false;
+    @OnClick(R.id.pedometerSimulationMode)
+    public void onPedometerSimulationModeClick() {
+        Intent intent = new Intent(MainActivity.this, PedometerSimulationActivity.class);
+        startActivityWithIntent(intent);
+    }
 
-            stopService(stepDetectorServiceIntent);
-            EventBus.getDefault().unregister(this);
+    public void startActivityWithIntent(Intent intent) {
+        UserInformation info = getUserInformation();
+        if (info != null) {
+            String hrMax = textInputHRMax.getEditText().getText().toString();
+            setSharedPreferences(info, hrMax);
+            intent.putExtra("user", new Gson().toJson(info));
+            intent.putExtra("inputHrMaxPercent", hrMax);
+            startActivity(intent);
+        }
+    }
 
-            stopwatch.start();
-        } else {
-            isStepDetectorServiceRunning = true;
+    public void setSharedPreferences(UserInformation info, String hrMax) {
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putString("user", new Gson().toJson(info)).apply();
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putString("hrMax", hrMax).apply();
+    }
 
-            EventBus.getDefault().register(this);
-            startService(stepDetectorServiceIntent);
+    public UserInformation getUserFromSharedPreferences() {
+        String user = PreferenceManager.getDefaultSharedPreferences(this).getString("user", null);
+        return new Gson().fromJson(user, UserInformation.class);
+    }
 
-            stopwatch.stop();
+    public String getHrMaxFromSharedPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(this).getString("hrMax", "");
+    }
+
+    public UserInformation getUserInformation() {
+        if(spinnerGender.getSelectedItem().toString().isEmpty() ||
+                textInputAge.getEditText().getText().toString().isEmpty() ||
+                textInputHeight.getEditText().getText().toString().isEmpty() ||
+                textInputWeight.getEditText().getText().toString().isEmpty() ||
+                textInputPAR.getEditText().getText().toString().isEmpty() ||
+                textInputRestingHR.getEditText().getText().toString().isEmpty()) {
+            Toast.makeText(this, "Please fill in the required information first", Toast.LENGTH_SHORT).show();
+            return null;
         }
 
-        updateStartStopStepDetectorServiceText();
+        else {
+            Gender gender = Gender.fromLongGenderString(spinnerGender.getSelectedItem().toString());
+            int age = Integer.parseInt(textInputAge.getEditText().getText().toString());
+            int height = Integer.parseInt(textInputHeight.getEditText().getText().toString());
+            int weight = Integer.parseInt(textInputWeight.getEditText().getText().toString());
+            int par = Integer.parseInt(textInputPAR.getEditText().getText().toString());
+            int restingHR = Integer.parseInt(textInputRestingHR.getEditText().getText().toString());
+
+            int stride;
+
+            if(textInputStride.getEditText().getText().toString().isEmpty()) {
+                stride = StepCalculation.getStrideLengthInCm(gender, age, height, weight);
+            }
+
+            else {
+                stride = Integer.parseInt(textInputStride.getEditText().getText().toString());
+            }
+
+            return new UserInformation(gender, age, height, weight, par, stride, restingHR);
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-
-        stepDetectorServiceIntent = new Intent(MainActivity.this, StepDetectorService.class);
-
         ButterKnife.bind(this);
 
-        updateStartStopStepDetectorServiceText();
-    }
+        UserInformation info = getUserFromSharedPreferences();
+        String hrMax = getHrMaxFromSharedPreferences();
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+        if(info != null && !hrMax.isEmpty()) {
+            textInputHRMax.getEditText().setText(hrMax);
+            textInputRestingHR.getEditText().setText(String.valueOf(info.getRestingHeartRate()));
+            textInputAge.getEditText().setText(String.valueOf(info.getAge()));
+            textInputHeight.getEditText().setText(String.valueOf(info.getHeight()));
+            textInputWeight.getEditText().setText(String.valueOf(info.getBodyMass()));
+            textInputPAR.getEditText().setText(String.valueOf(info.getPar()));
+            textInputStride.getEditText().setText(String.valueOf(info.getStrideLength()));
 
-        if(isStepDetectorServiceRunning){
-            EventBus.getDefault().register(this);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        if(isStepDetectorServiceRunning){
-            EventBus.getDefault().unregister(this);
-        }
-
-        super.onPause();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onStepCountEvent(StepDetectorService.StepCountEvent event) {
-        stepCountTextView.setText("Steps: " + event.stepCount);
-    }
-
-    private void updateStartStopStepDetectorServiceText(){
-        if (isStepDetectorServiceRunning) {
-            startStopStepDetectorService.setText("Stop Step Detector");
-        } else {
-            startStopStepDetectorService.setText("Start Step Detector");
+            int selection = info.getGender().equals(Gender.Male) ? 0 : 1;
+            spinnerGender.setSelection(selection);
         }
     }
 }

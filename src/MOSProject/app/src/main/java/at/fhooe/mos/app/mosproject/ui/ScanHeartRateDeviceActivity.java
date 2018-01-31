@@ -18,6 +18,7 @@ import butterknife.OnClick;
 public class ScanHeartRateDeviceActivity extends AppCompatActivity {
     String MAC = "E6:5D:9E:F6:06:93";
     BluetoothAdapter bluetoothAdapter;
+    Bundle extras;
 
     @OnClick(R.id.stopScanDevice)
     public void onStopScanDeviceClick() {
@@ -30,6 +31,7 @@ public class ScanHeartRateDeviceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_heart_rate_device);
         ButterKnife.bind(this);
+        extras = getIntent().getExtras();
 
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, "Dude, BLE is not supported.", Toast.LENGTH_SHORT).show();
@@ -61,6 +63,7 @@ public class ScanHeartRateDeviceActivity extends AppCompatActivity {
                 Toast.makeText(ScanHeartRateDeviceActivity.this, "BLE-Device found", Toast.LENGTH_SHORT).show();
                 bluetoothAdapter.stopLeScan(this);
                 Intent intent = new Intent(ScanHeartRateDeviceActivity.this, HeartRateDeviceActivity.class);
+                intent.putExtras(extras);
                 BLEService.bluetoothDevice = bluetoothDevice;
                 startActivity(intent);
             }

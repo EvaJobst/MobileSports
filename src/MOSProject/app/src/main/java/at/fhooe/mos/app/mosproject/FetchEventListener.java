@@ -1,6 +1,6 @@
 package at.fhooe.mos.app.mosproject;
 
-import at.fhooe.mos.app.mosproject.models.Training;
+import at.fhooe.mos.app.mosproject.model.Training;
 
 /**
  * Created by Eva on 17.11.2017.

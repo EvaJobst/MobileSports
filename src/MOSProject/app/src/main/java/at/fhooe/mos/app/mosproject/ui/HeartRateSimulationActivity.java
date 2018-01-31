@@ -1,7 +1,6 @@
 package at.fhooe.mos.app.mosproject.ui;
 
 import android.os.Handler;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
@@ -12,29 +11,36 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.google.gson.Gson;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import at.fhooe.mos.app.mosproject.R;
+import at.fhooe.mos.app.mosproject.heartrate.EnergyExpenditureCalculator;
 import at.fhooe.mos.app.mosproject.heartrate.HRCalculation;
 import at.fhooe.mos.app.mosproject.heartrate.HRM;
 import at.fhooe.mos.app.mosproject.heartrate.SensorFactory;
 import at.fhooe.mos.app.mosproject.heartrate.SimulationFactory;
-import at.fhooe.mos.app.mosproject.heartrate.SimulationHRM;
 import at.fhooe.mos.app.mosproject.heartrate.SimulationTrimp;
 import at.fhooe.mos.app.mosproject.heartrate.Trimp;
+import at.fhooe.mos.app.mosproject.model.user.UserInformation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class HeartRateSimulationActivity extends AppCompatActivity {
     HRCalculation hrCalculation = new HRCalculation();
+    UserInformation userInformation;
     Handler handler = new Handler();
     ArrayList<Integer> heartRateValues = new ArrayList<>();
     ArrayList<Float> trimps = new ArrayList<>();
     HRM heartRateMonitor;
     boolean isRunning = false;
+    String inputHrMaxPercent;
+    //String age;
+    double calories = 0;
 
     @BindView(R.id.currentHR)
     TextView currentHR;
@@ -51,14 +57,11 @@ public class HeartRateSimulationActivity extends AppCompatActivity {
     @BindView(R.id.maxHRPercent)
     TextView maxHRPercent;
 
+    @BindView(R.id.kCal)
+    TextView kCal;
+
     @BindView(R.id.startStopSimulation)
     Button startSensorSimulator;
-
-    @BindView(R.id.ageInput)
-    TextInputLayout ageInput;
-
-    @BindView(R.id.maxHRInput)
-    TextInputLayout maxHRInput;
 
     @BindView(R.id.trimpDataChart)
     LineChart trimpDataChart;
@@ -86,6 +89,10 @@ public class HeartRateSimulationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heart_rate_simulation);
         ButterKnife.bind(this);
+
+        userInformation = new Gson().fromJson(getIntent().getExtras().get("user").toString(), UserInformation.class);
+        //age = String.valueOf(userInformation.getAge());
+        inputHrMaxPercent = getIntent().getExtras().get("inputHrMaxPercent").toString();
 
         SensorFactory sensorFactory;
         sensorFactory = new SimulationFactory();
@@ -123,9 +130,15 @@ public class HeartRateSimulationActivity extends AppCompatActivity {
         maxHR.setText(String.valueOf(Collections.max(heartRateValues)));
         averageHR.setText(String.valueOf(hrCalculation.getAverageHR(heartRateValues)));
 
+        double heartRate = heartRateValues.get(heartRateValues.size()-1);
+        double newCalories = EnergyExpenditureCalculator.calculateEnergyExpenditureEstimation(userInformation, heartRate) / 60;
+        calories = calories + newCalories;
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        kCal.setText(decimalFormat.format(calories));
+
         maxHRPercent.setText(String.valueOf(hrCalculation.getPercentHRmax(
-                maxHRInput.getEditText().getText().toString(),
-                ageInput.getEditText().getText().toString(),
+                inputHrMaxPercent,
+                String.valueOf(userInformation.getAge()),
                 maxHR.getText().toString()
         )));
     }
@@ -137,6 +150,7 @@ public class HeartRateSimulationActivity extends AppCompatActivity {
         maxHR.setText("0");
         averageHR.setText("0");
         maxHRPercent.setText("0");
+        kCal.setText("0");
     }
 
     private void drawTrimpDataChart(){

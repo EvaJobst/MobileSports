@@ -10,6 +10,9 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -17,9 +20,11 @@ import at.fhooe.mos.app.mosproject.R;
 import at.fhooe.mos.app.mosproject.heartrate.BLEService;
 import at.fhooe.mos.app.mosproject.heartrate.DeviceFactory;
 import at.fhooe.mos.app.mosproject.heartrate.DeviceHRM;
+import at.fhooe.mos.app.mosproject.heartrate.EnergyExpenditureCalculator;
 import at.fhooe.mos.app.mosproject.heartrate.HRCalculation;
 import at.fhooe.mos.app.mosproject.heartrate.HRM;
 import at.fhooe.mos.app.mosproject.heartrate.SensorFactory;
+import at.fhooe.mos.app.mosproject.model.user.UserInformation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -30,6 +35,10 @@ public class HeartRateDeviceActivity extends AppCompatActivity {
     Handler handler = new Handler();
     ArrayList<Integer> heartRateValues = new ArrayList<>();
     HRM heartRateMonitor;
+    String inputHrMaxPercent;
+    //String age;
+    double calories = 0;
+    UserInformation userInformation;
 
     @BindView(R.id.currentHR)
     TextView currentHR;
@@ -46,11 +55,8 @@ public class HeartRateDeviceActivity extends AppCompatActivity {
     @BindView(R.id.maxHRPercent)
     TextView maxHRPercent;
 
-    @BindView(R.id.ageInput)
-    TextInputLayout ageInput;
-
-    @BindView(R.id.maxHRInput)
-    TextInputLayout maxHRInput;
+    @BindView(R.id.kCal)
+    TextView kCal;
 
     @BindView(R.id.startStopDevice)
     Button startStopDevice;
@@ -75,6 +81,10 @@ public class HeartRateDeviceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heart_rate_device);
         ButterKnife.bind(this);
+
+        userInformation = new Gson().fromJson(getIntent().getExtras().get("user").toString(), UserInformation.class);
+        //age = String.valueOf(userInformation.getAge());
+        inputHrMaxPercent = getIntent().getExtras().get("inputHrMaxPercent").toString();
 
         SensorFactory sensorFactory;
         sensorFactory = new DeviceFactory();
@@ -107,9 +117,15 @@ public class HeartRateDeviceActivity extends AppCompatActivity {
         maxHR.setText(String.valueOf(Collections.max(heartRateValues)));
         averageHR.setText(String.valueOf(hrCalculation.getAverageHR(heartRateValues)));
 
+        double heartRate = heartRateValues.get(heartRateValues.size()-1);
+        double newCalories = EnergyExpenditureCalculator.calculateEnergyExpenditureEstimation(userInformation, heartRate) / 60;
+        calories = calories + newCalories;
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        kCal.setText(decimalFormat.format(calories));
+
         maxHRPercent.setText(String.valueOf(hrCalculation.getPercentHRmax(
-                maxHRInput.getEditText().getText().toString(),
-                ageInput.getEditText().getText().toString(),
+                inputHrMaxPercent,
+                String.valueOf(userInformation.getAge()),
                 maxHR.getText().toString()
         )));
     }

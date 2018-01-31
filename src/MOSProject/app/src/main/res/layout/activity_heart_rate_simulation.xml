@@ -19,7 +19,7 @@
         layout="@layout/heart_rate_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.35"/>
+        android:layout_weight="0.4"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -36,5 +36,5 @@
         android:id="@+id/trimpDataChart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.55"/>
+        android:layout_weight="0.5"/>
 </LinearLayout>

@@ -1,0 +1,65 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.trees.J48 -C 0.25 -M 2
+Relation:     WISDM
+Instances:    99838
+Attributes:   7
+              xAvg
+              yAvg
+              zAvg
+              xStd
+              yStd
+              zStd
+              class
+Test mode:    split 66.0% train, remainder test
+
+=== Classifier model (full training set) ===
+
+J48 pruned tree
+------------------
+
+...
+
+Number of Leaves  : 	3860
+
+Size of the tree : 	7719
+
+
+Time taken to build model: 13.78 seconds
+
+=== Evaluation on test split ===
+
+Time taken to test model on test split: 0.06 seconds
+
+=== Summary ===
+
+Correctly Classified Instances       27711               81.635  %
+Incorrectly Classified Instances      6234               18.365  %
+Kappa statistic                          0.7438
+Mean absolute error                      0.0758
+Root mean squared error                  0.2291
+Relative absolute error                 31.2374 %
+Root relative squared error             65.7182 %
+Total Number of Instances            33945     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0,940    0,032    0,930      0,940    0,935      0,905    0,964     0,924     Jogging
+                 0,888    0,135    0,803      0,888    0,843      0,740    0,887     0,781     Walking
+                 0,449    0,046    0,551      0,449    0,495      0,441    0,773     0,410     Upstairs
+                 0,378    0,038    0,500      0,378    0,430      0,386    0,744     0,333     Downstairs
+                 0,985    0,000    0,992      0,985    0,988      0,988    0,994     0,982     Sitting
+                 0,967    0,002    0,963      0,967    0,965      0,963    0,987     0,943     Standing
+Weighted Avg.    0,816    0,071    0,804      0,816    0,808      0,749    0,895     0,761     
+
+=== Confusion Matrix ===
+
+     a     b     c     d     e     f   <-- classified as
+ 10035   359   171   111     3     0 |     a = Jogging
+   263 11522   658   526     0     8 |     b = Walking
+   324  1228  1721   529     4    29 |     c = Upstairs
+   163  1240   532  1179     2     6 |     d = Downstairs
+     1     1     9     5  1804    12 |     e = Sitting
+     0     6    30     8     6  1450 |     f = Standing
+

@@ -1,0 +1,4 @@
+<layout id="MainLayout">
+	<label id="startTime" x="120" y="40" text="Start Time" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" font="Gfx.FONT_SMALL" />
+    <label id="elapsed" x="120" y="95" text="aaaa" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
+</layout>

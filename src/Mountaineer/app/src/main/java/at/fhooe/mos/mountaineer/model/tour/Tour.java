@@ -27,7 +27,7 @@ public class Tour {
     private double speedFromSteps;
     private double energyExpenditureFromSteps;
     private int distance;
-    private int elevation;
+    private int cadence;
 
     // Health
     private int averageSpeed;
@@ -160,12 +160,12 @@ public class Tour {
         this.distance = distance;
     }
 
-    public int getElevation() {
-        return elevation;
+    public int getCadence() {
+        return cadence;
     }
 
-    public void setElevation(int elevation) {
-        this.elevation = elevation;
+    public void setCadence(int cadence) {
+        this.cadence = cadence;
     }
 
     public int getAverageSpeed() {
@@ -249,7 +249,7 @@ public class Tour {
                 ", speedFromSteps=" + speedFromSteps +
                 ", energyExpenditureFromSteps=" + energyExpenditureFromSteps +
                 ", distance=" + distance +
-                ", elevation=" + elevation +
+                ", cadence=" + cadence +
                 ", averageSpeed=" + averageSpeed +
                 ", currentHeartRate=" + currentHeartRate +
                 ", normalHeartRate='" + normalHeartRate + '\'' +

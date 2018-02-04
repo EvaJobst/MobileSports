@@ -3,7 +3,7 @@ package at.fhooe.mos.mountaineer.ui;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -12,25 +12,39 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.gson.Gson;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
-import org.androidannotations.annotations.OptionsMenuItem;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import at.fhooe.mos.mountaineer.R;
 import at.fhooe.mos.mountaineer.model.tour.Tour;
@@ -46,8 +60,10 @@ import at.fhooe.mos.mountaineer.ui.fragment.SaveTourDialog;
 @EActivity(R.layout.activity_tour)
 @OptionsMenu(R.menu.tour_activity_menu)
 public class TourActivity extends AppCompatActivity {
+    ArrayList<Entry> entries = new ArrayList<>();
     private Boolean isSaving = false;
     private Boolean isLive;
+    private Animation heartBeatAnimation;
 
     private final static String TAG = TourActivity.class.getSimpleName();
     public static final int REQUEST_CODE_PICK_IMAGE = 2;
@@ -75,7 +91,9 @@ public class TourActivity extends AppCompatActivity {
     @ViewById
     protected TextView tourDistance;
     @ViewById
-    protected TextView tourElevation;
+    protected TextView tourCadence;
+    @ViewById
+    protected View helperViewDark;
 
     // HEALTH
     @ViewById
@@ -83,9 +101,11 @@ public class TourActivity extends AppCompatActivity {
     @ViewById
     protected TextView tourRestingHeartRate;
     @ViewById
-    protected TextView tourRespiration;
-    @ViewById
     protected TextView tourKcal;
+    @ViewById
+    protected ImageView tourIcHeart;
+    @ViewById
+    protected ImageView tourIcHeartShadow;
 
     // WEATHER
     @ViewById
@@ -104,6 +124,8 @@ public class TourActivity extends AppCompatActivity {
     protected ImageView tourIcWeather;
     @ViewById
     protected ImageView tourIcWeatherShadow;
+    @ViewById
+    protected LineChart tourChart;
 
     @StringRes
     protected String tourActivityMenuSettings;
@@ -197,14 +219,44 @@ public class TourActivity extends AppCompatActivity {
         super.onStart();
 
         setSupportActionBar(toolbar);
+        heartBeatAnimation = AnimationUtils.loadAnimation(this, R.anim.pulse);
+        tourIcHeart.setAnimation(heartBeatAnimation);
+        tourIcHeartShadow.setAnimation(heartBeatAnimation);
+        tourChart.clear();
+
+        tourChart.setNoDataText("");
+        tourChart.setViewPortOffsets(0f, 0f, 0f, 0f);
+
+        tourChart.getAxisLeft().setDrawLabels(false);
+        tourChart.getAxisLeft().setDrawGridLines(false);
+        tourChart.getAxisLeft().setDrawAxisLine(false);
+        tourChart.getAxisLeft().setDrawTopYLabelEntry(false);
+        tourChart.getAxisLeft().setDrawZeroLine(false);
+        tourChart.getAxisLeft().setDrawLimitLinesBehindData(false);
+
+        tourChart.getAxisRight().setDrawLabels(false);
+        tourChart.getAxisRight().setDrawGridLines(false);
+        tourChart.getAxisRight().setDrawAxisLine(false);
+        tourChart.getAxisRight().setDrawTopYLabelEntry(false);
+        tourChart.getAxisRight().setDrawZeroLine(false);
+        tourChart.getAxisRight().setDrawLimitLinesBehindData(false);
+
+        tourChart.getXAxis().setDrawLabels(false);
+        tourChart.getXAxis().setDrawGridLines(false);
+        tourChart.getXAxis().setDrawAxisLine(false);
+        tourChart.getXAxis().setDrawLimitLinesBehindData(false);
+
+        tourChart.setDescription(null);    // Hide the description
+        tourChart.getLegend().setEnabled(false);   // Hide the legend
+        tourChart.setDrawGridBackground(false);
+        tourChart.setDrawMarkers(false);
+
         Intent i = getIntent();
 
         if(i.getExtras() != null && i.getExtras().containsKey("tour")) {
             // Hide views
             fabAddPhoto.setVisibility(View.INVISIBLE);
             fabEditName.setVisibility(View.INVISIBLE);
-
-
 
             // Set Tour
             isLive = false;
@@ -297,7 +349,8 @@ public class TourActivity extends AppCompatActivity {
         tourSteps.setText(tourDataFormatter.getTotalSteps(tour));
         tourSpeed.setText(tourDataFormatter.getSpeed(tour));
         tourDistance.setText(tourDataFormatter.getDistance(tour));
-        tourElevation.setText(tourDataFormatter.getElevation(tour));
+        tourCadence.setText(tourDataFormatter.getCadence(tour));
+        updateChart(tour.getCadence(), tour.getDuration());
 
         // WEATHER
         tourTemp.setText(tourDataFormatter.getTemp(tour));
@@ -312,8 +365,102 @@ public class TourActivity extends AppCompatActivity {
         // HEALTH
         tourHeartRate.setText(tourDataFormatter.getCurrentHeartRate(tour));
         tourRestingHeartRate.setText(tourDataFormatter.getRestingHeartRate(persistenceManager.getRestingHeartRate()));
-        tourRespiration.setText(tourDataFormatter.getRespiration(tour));
+        //tourRespiration.setText(tourDataFormatter.getRespiration(tour));
         tourKcal.setText(tourDataFormatter.getBurnedCalories(tour));
+
+        double minForOneHeartBeat = (1 / tour.getCurrentHeartRate());
+        double sekForOneHeartBeat = minForOneHeartBeat * 60;
+        double msForOneHeartBeat = sekForOneHeartBeat * 1000;
+        long duration = (long) (msForOneHeartBeat / 2);
+
+        if(duration != heartBeatAnimation.getDuration()) {
+            heartBeatAnimation.setDuration(duration);
+            //heartBeatAnimation.start();
+            tourIcHeart.startAnimation(heartBeatAnimation);
+            tourIcHeartShadow.startAnimation(heartBeatAnimation);
+        }
+    }
+
+    public Entry getMinEntryOfSection(List<Entry> section) {
+        Entry min = section.get(0);
+
+        for(Entry entry : section) {
+            if(entry.getY() < min.getY()) {
+                min = entry;
+            }
+        }
+
+        return min;
+    }
+
+    public Entry getMaxEntryOfSection(List<Entry> section) {
+        Entry max = section.get(0);
+
+        for(Entry entry : section) {
+            if(entry.getY() > max.getY()) {
+                max = entry;
+            }
+        }
+
+        return max;
+    }
+
+    public void sortEntriesAscending() {
+        Collections.sort(entries, new Comparator<Entry>() {
+            @Override
+            public int compare(Entry entry, Entry other) {
+                return Float.compare(entry.getX(), other.getX());
+            }
+        });
+    }
+
+    public void updateChart(int cadence, long duration) {
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+
+        if(entries.isEmpty()) {
+            entries.add(new Entry(duration, cadence));
+        }
+
+        else if(entries.get(entries.size()-1).getY() != cadence) {
+            entries.add(new Entry(duration, cadence));
+        }
+
+        if(cadence != 0) {
+            helperViewDark.setVisibility(View.VISIBLE);
+        }
+
+        if(entries.size() == 10) {
+            ArrayList<Entry> temp = new ArrayList<>();
+
+            for (int i = 0; i < entries.size(); i++) {
+                if(i != 0 && (i+1) % 5 == 0) {
+                    Entry min = getMinEntryOfSection(entries.subList(i-4, i+1));
+                    Entry max = getMaxEntryOfSection(entries.subList(i-4, i+1));
+                    temp.add(min);
+                    temp.add(max);
+                }
+            }
+
+            entries = temp;
+            sortEntriesAscending();
+        }
+
+        final LineDataSet dataSet = new LineDataSet(entries, "");
+        dataSet.setDrawCircles(false);
+        dataSet.setDrawFilled(true);
+        dataSet.setColor(Color.WHITE, 255);
+        dataSet.setLineWidth(2);
+        dataSet.setFillColor(getResources().getColor(R.color.colorPrimaryDark));
+        dataSet.setFillAlpha(255);
+        dataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+        dataSet.setCubicIntensity(0.5f);
+        dataSets.add(dataSet);
+
+        LineData data = new LineData(dataSets);
+        data.setDrawValues(false);
+
+        tourChart.clear();
+        tourChart.setData(data);
     }
 
     private void save(final Tour tour) {

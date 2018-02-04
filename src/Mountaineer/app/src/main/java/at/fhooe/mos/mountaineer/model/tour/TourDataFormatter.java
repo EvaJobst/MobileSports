@@ -3,7 +3,6 @@ package at.fhooe.mos.mountaineer.model.tour;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v4.content.ContextCompat;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -185,7 +184,7 @@ public class TourDataFormatter {
 
     public String getStartTime(Tour tour) {
         Date date = new Date(tour.getStartTimestampMillis());
-        return timeFormatter.format(date);
+        return "Start: " + timeFormatter.format(date);
     }
 
     public String getStopTime(Tour tour) {
@@ -286,12 +285,12 @@ public class TourDataFormatter {
         return "Distance: " + tour.getDistanceFromSteps() + " m";
     }
 
-    public String getElevation(Tour tour) {
-        if(tour.getElevation() == 0) {
-            return "Elevation: -- m";
+    public String getCadence(Tour tour) {
+        if(tour.getCadence() == 0) {
+            return "Cadence: --";
         }
 
-        return "Elevation: " + tour.getElevation() + " m";
+        return "Cadence: " + tour.getCadence();
     }
 
     public String getRestingHeartRate(int heartRate) {
@@ -299,7 +298,7 @@ public class TourDataFormatter {
             return "Resting: -- bpm";
         }
 
-        return "Resting: " + heartRate + " bpm";
+        return heartRate + " bpm";
     }
 
     public String getRespiration(Tour tour) {

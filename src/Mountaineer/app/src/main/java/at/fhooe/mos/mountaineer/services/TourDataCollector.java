@@ -205,6 +205,10 @@ public class TourDataCollector implements
             double energyExpenditureFromStepsKcal = energyExpenditureFromSteps / 4.2;
             tour.setEnergyExpenditureFromSteps(energyExpenditureFromStepsKcal + tour.getEnergyExpenditureFromSteps());
 
+            double cadence =  ((double)stepCountSum / PERIODIC_SUMMATION_TIME_S);
+            cadence = cadence * 60;
+            tour.setCadence((int)cadence);
+
             stepCountSum = 0;
 
             double averageHeartRateInPeriod = heartRateSum / heartRateSumCount;

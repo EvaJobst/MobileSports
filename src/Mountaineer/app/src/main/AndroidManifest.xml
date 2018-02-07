@@ -34,7 +34,6 @@
 
         <activity android:name=".ui.SettingsActivity" />
         <activity android:name=".ui.TourActivity_" />
-        <activity android:name=".ui.TourDetailsActivity_" />
     </application>
 
 </manifest>

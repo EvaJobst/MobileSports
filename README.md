@@ -13,11 +13,12 @@
 | Step detection method by Jimenez | | X |
 | ConnectIQ app | | X |
 | Activity classification | | X |
+| Website | | X |
 | Design | X | |
 | Documentation | X | |
 
 ### Assignments
-| Assignment | MOSProject | Mountaineer | Matlab | Other\* |
+| Assignment | MOSProject | Mountaineer | Matlab | Other |
 |---|:---:|:---:|:---:|:---:|
 | App with server and step detection |  | X | | |
 | Heart-rate-related extensions | X | X | | |
@@ -30,15 +31,71 @@
 | Prediction of finishing times | | | | |
 | Activity classification | | | | X |
 
-\* Activity classification: Realized with Weka; ConnectIQ app: Realized for Garmin
+### Locations
+#### MOSProject
+[Link](https://github.com/EvaJobst/MobileSports/tree/master/src/MOSProject)
 
-##### Locations
-- [MOSProject](https://github.com/EvaJobst/MobileSports/tree/master/src/MOSProject)
-- [Mountaineer](https://github.com/EvaJobst/MobileSports/tree/master/src/Mountaineer)
-- [Website](https://github.com/EvaJobst/MobileSports/tree/master/src/MountaineerWeb)
-- [Matlab](https://github.com/EvaJobst/MobileSports/tree/master/matlab)
-- [Weka](https://github.com/EvaJobst/MobileSports/tree/master/weka)
-- [Garmin](https://github.com/EvaJobst/MobileSports/tree/master/src/Garmin/Stopwatch)
+##### Step Detection
+- Base Directory for Step Detection: [Link](https://github.com/EvaJobst/MobileSports/tree/master/src/MOSProject/app/src/main/java/at/fhooe/mos/app/mosproject/pedometer)
+
+- Class [Pedometer](https://github.com/EvaJobst/MobileSports/blob/master/src/MOSProject/app/src/main/java/at/fhooe/mos/app/mosproject/pedometer/Pedometer.java) is responsible for the actual detection of steps
+
+
+##### Heart Rate
+- Base Directory for Heart Rate related extensions: [Link](https://github.com/EvaJobst/MobileSports/tree/master/src/MOSProject/app/src/main/java/at/fhooe/mos/app/mosproject/heartrate)
+
+- Class [HRCalculation](https://github.com/EvaJobst/MobileSports/blob/master/src/MOSProject/app/src/main/java/at/fhooe/mos/app/mosproject/heartrate/HRCalculation.java) is responsible for:
+  - Fitness, Fatigue, Performance
+  - HRMax
+  - Average Heart Rate
+  - Trimp    
+
+
+- [EnergyExpenditureCalculator](https://github.com/EvaJobst/MobileSports/blob/master/src/MOSProject/app/src/main/java/at/fhooe/mos/app/mosproject/heartrate/EnergyExpenditureCalculator.java) is, as the name says, responsible for calculating kCal out of the messed Heart Rate values
+
+#### Mountaineer
+[Link](https://github.com/EvaJobst/MobileSports/tree/master/src/Mountaineer)
+
+##### Server
+- Base Directory for Firebase Server implementation: [Link](https://github.com/EvaJobst/MobileSports/tree/master/src/Mountaineer/app/src/main/java/at/fhooe/mos/mountaineer/persistence)
+
+##### Step Detection
+- Base Directory for Step Detection: [Link](https://github.com/EvaJobst/MobileSports/tree/master/src/Mountaineer/app/src/main/java/at/fhooe/mos/mountaineer/sensors/stepsensor)
+
+- Class [Pedometer](https://github.com/EvaJobst/MobileSports/blob/master/src/Mountaineer/app/src/main/java/at/fhooe/mos/mountaineer/sensors/stepsensor/Pedometer.java) is responsible for the actual detection of steps
+
+##### Heart Rate
+- Base Directory for Heart Rate related extensions: [Link](https://github.com/EvaJobst/MobileSports/tree/master/src/Mountaineer/app/src/main/java/at/fhooe/mos/mountaineer/sensors/heartrate)
+
+- Class [HeartRateCalculation](https://github.com/EvaJobst/MobileSports/blob/master/src/Mountaineer/app/src/main/java/at/fhooe/mos/mountaineer/model/calculations/HeartRateCalculation.java) is responsible for:
+  - Fitness, Fatigue, Performance
+  - HRMax
+  - Average Heart Rate
+  - Trimp  
+
+
+- [EnergyExpenditureCalculator](https://github.com/EvaJobst/MobileSports/blob/master/src/Mountaineer/app/src/main/java/at/fhooe/mos/mountaineer/model/calculations/EnergyExpenditureCalculator.java) is, as the name says, responsible for calculating kCal out of the messed Heart Rate values
+
+
+
+#### Website
+[Link](https://github.com/EvaJobst/MobileSports/tree/master/src/MountaineerWeb)
+
+#### Matlab
+[Link](https://github.com/EvaJobst/MobileSports/tree/master/matlab)
+
+##### Step Detection by Jimenez
+[Link](https://github.com/EvaJobst/MobileSports/tree/master/matlab/detectStepsAcceleration)
+
+##### Respiration Rate
+[Link](https://github.com/EvaJobst/MobileSports/tree/master/matlab/heartRateVariation)
+
+
+#### Activity classification
+[Link](https://github.com/EvaJobst/MobileSports/tree/master/weka)
+
+#### IQ Connect
+[Link](https://github.com/EvaJobst/MobileSports/tree/master/src/Garmin/Stopwatch)
 
 ### Demonstration
 ##### Mountaineer

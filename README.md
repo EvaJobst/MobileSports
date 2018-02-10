@@ -16,17 +16,3 @@
 | Activity classification | | | | X |
 
 \* Activity classification: Realized with Weka; ConnectIQ app: Realized for Garmin
-
-### Screenshots
-##### Mountaineer
-![Demo of App](https://github.com/EvaJobst/MobileSports/blob/master/images/gifs/app_demo_small.gif)
-
-##### Website
-![Demo of Website](https://github.com/EvaJobst/MobileSports/blob/master/images/gifs/website_demo.gif)
-
-##### Garmin
-![Button Description](https://github.com/EvaJobst/MobileSports/blob/master/images/garmin_images/button_description.png)
-
-![Start](https://github.com/EvaJobst/MobileSports/blob/master/images/garmin_images/screenshot_1.png)
-
-![Stop](https://github.com/EvaJobst/MobileSports/blob/master/images/garmin_images/screenshot_2.png)

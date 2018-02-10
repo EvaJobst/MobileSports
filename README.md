@@ -21,14 +21,8 @@
 ##### Mountaineer
 ![Demo of App](https://github.com/EvaJobst/MobileSports/blob/master/images/gifs/app_demo_small.gif)
 
-![Screenshots of App](https://github.com/EvaJobst/MobileSports/blob/master/images/app_screenshots/screenshots.png)
-
 ##### Website
 ![Demo of Website](https://github.com/EvaJobst/MobileSports/blob/master/images/gifs/website_demo.gif)
-
-![Screenshot of Website](https://github.com/EvaJobst/MobileSports/blob/master/images/website_screenshot_1.JPG)
-
-
 
 ##### Garmin
 ![Button Description](https://github.com/EvaJobst/MobileSports/blob/master/images/garmin_images/button_description.png)

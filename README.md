@@ -1,6 +1,6 @@
 # Mobile Sports
-Github: https://github.com/EvaJobst/MobileSports
-Team: Eva Jobst & Stefan Schwaighofer
+- Github: https://github.com/EvaJobst/MobileSports
+- Team: Eva Jobst & Stefan Schwaighofer
 
 ### Work Distribution
 | Assignment | Eva | Stefan |
@@ -33,12 +33,12 @@ Team: Eva Jobst & Stefan Schwaighofer
 \* Activity classification: Realized with Weka; ConnectIQ app: Realized for Garmin
 
 ##### Locations
-[MOSProject](https://github.com/EvaJobst/MobileSports/tree/master/src/MOSProject)
-[Mountaineer](https://github.com/EvaJobst/MobileSports/tree/master/src/Mountaineer)
-[Website](https://github.com/EvaJobst/MobileSports/tree/master/src/MountaineerWeb)
-[Matlab](https://github.com/EvaJobst/MobileSports/tree/master/matlab)
-[Weka](https://github.com/EvaJobst/MobileSports/tree/master/weka)
-[Garmin](https://github.com/EvaJobst/MobileSports/tree/master/src/Garmin/Stopwatch)
+- [MOSProject](https://github.com/EvaJobst/MobileSports/tree/master/src/MOSProject)
+- [Mountaineer](https://github.com/EvaJobst/MobileSports/tree/master/src/Mountaineer)
+- [Website](https://github.com/EvaJobst/MobileSports/tree/master/src/MountaineerWeb)
+- [Matlab](https://github.com/EvaJobst/MobileSports/tree/master/matlab)
+- [Weka](https://github.com/EvaJobst/MobileSports/tree/master/weka)
+- [Garmin](https://github.com/EvaJobst/MobileSports/tree/master/src/Garmin/Stopwatch)
 
 ### Demonstration
 ##### Mountaineer

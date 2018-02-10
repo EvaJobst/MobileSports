@@ -3,7 +3,7 @@
 ### Assignments
 
 | Assignment | MOSProject | Mountaineer | Matlab | Other\* |
-|---|:---:|:---:|:---:|:---:|:---:|
+|---|:---:|:---:|:---:|:---:|
 | App with server and step detection |  | X | | |
 | Heart-rate-related extensions | X | X | | |
 | Calculation of energy expenditure from heart-rate | X | X | | |
